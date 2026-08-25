@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+resources :entries, except: %i[show index]
   resources :claims
   resources :properties, only: [:new, :show, :create, :update, :destroy]
   resources :chats, only: [:new, :create, :destroy]
