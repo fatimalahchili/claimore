@@ -1,10 +1,5 @@
 Rails.application.routes.draw do
-  get "claims/index"
-  get "claims/show"
-  get "claims/new"
-  get "claims/create"
-  get "claims/destroy"
-  get "claims/update"
+    resources :claims
   devise_for :users
   root to: "pages#home"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
