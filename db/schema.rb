@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_25_095652) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_25_125209) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,8 +18,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_095652) do
     t.string "category"
     t.datetime "created_at", null: false
     t.string "status"
+    t.datetime "updated_at", null: false
   end
-  
+
+  create_table "entries", force: :cascade do |t|
+    t.string "category"
+    t.bigint "claim_id", null: false
+    t.datetime "created_at", null: false
+    t.date "date"
+    t.string "description"
+    t.string "status"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.index ["claim_id"], name: "index_entries_on_claim_id"
+  end
+
   create_table "properties", force: :cascade do |t|
     t.string "address"
     t.datetime "created_at", null: false
@@ -39,4 +52,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_095652) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
+
+  add_foreign_key "entries", "claims"
 end
