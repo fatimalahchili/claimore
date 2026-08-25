@@ -1,8 +1,9 @@
 class TenantsController < ApplicationController
 
-  
+  before_action :set_tenant, only: %i[show edit update destroy]
 
-   def index
+
+  def index
     @tenants = Tenant.all
   end
 
