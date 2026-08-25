@@ -2,8 +2,10 @@ Rails.application.routes.draw do
 resources :entries, except: %i[show index]
   resources :claims
   resources :properties, only: [:new, :show, :create, :update, :destroy]
+  resources :chats, only: [:new, :create, :destroy]
   devise_for :users
   root to: "pages#home"
+  resources :templates
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
