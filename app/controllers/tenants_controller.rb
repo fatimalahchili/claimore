@@ -1,5 +1,7 @@
 class TenantsController < ApplicationController
 
+  
+
    def index
     @tenants = Tenant.all
   end
@@ -27,7 +29,7 @@ class TenantsController < ApplicationController
     @tenant.destroy
     redirect_to tenants_path, notice: "Tenant was successfully removed."
   end
-  
+
   private
   def set_tenant
     @tenant = Tenant.find(params[:id])
