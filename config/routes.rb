@@ -1,8 +1,5 @@
 Rails.application.routes.draw do
-  get "entries/new"
-  get "entries/create"
-  get "entries/update"
-  get "entries/destroy"
+resources :entries, except: %i[show index]
   resources :claims
   resources :properties, only: [:new, :show, :create, :update, :destroy]
   devise_for :users
