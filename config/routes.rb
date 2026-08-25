@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   resources :claims
   resources :properties, only: [:new, :show, :create, :update, :destroy]
+  resources :chats, only: [:new, :create, :destroy]
   devise_for :users
   root to: "pages#home"
   resources :templates
