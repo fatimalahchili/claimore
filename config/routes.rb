@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :claims
+  resources :properties, only: [:new, :show, :create, :update, :destroy]
   devise_for :users
   root to: "pages#home"
   resources :templates
