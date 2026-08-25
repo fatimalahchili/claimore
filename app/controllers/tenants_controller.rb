@@ -25,7 +25,13 @@ class TenantsController < ApplicationController
 
   def edit
   end
-
+  def update
+    if @tenant.update(tenant_params)
+      redirect_to @tenant, notice: "Tenant was successfully updated."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
   def destroy
     @tenant.destroy
     redirect_to tenants_path, notice: "Tenant was successfully removed."
