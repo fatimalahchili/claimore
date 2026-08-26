@@ -4,7 +4,7 @@ class ClaimsController < ApplicationController
 
   def timeline
     @claim = Claim.find(params[:claim_id])
-    @entries = @claim.entries
+    @entries = @claim.entries.order(:created_at)
   end
 
   def show
