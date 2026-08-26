@@ -45,6 +45,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_131712) do
     t.index ["claim_id"], name: "index_entries_on_claim_id"
   end
 
+  create_table "letters", force: :cascade do |t|
+    t.bigint "claim_id", null: false
+    t.datetime "created_at", null: false
+    t.date "sent_on"
+    t.text "summary"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.index ["claim_id"], name: "index_letters_on_claim_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.bigint "chat_id", null: false
+    t.string "content"
+    t.datetime "created_at", null: false
+    t.string "role"
+    t.datetime "updated_at", null: false
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
+  end
+
   create_table "properties", force: :cascade do |t|
     t.string "address"
     t.datetime "created_at", null: false
@@ -75,4 +94,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_131712) do
   add_foreign_key "chats", "users"
   add_foreign_key "claims", "properties"
   add_foreign_key "entries", "claims"
+  add_foreign_key "letters", "claims"
+  add_foreign_key "messages", "chats"
 end
