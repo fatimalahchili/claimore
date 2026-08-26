@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
 resources :entries, except: %i[show index]
-  resources :claims
+  resources :claims do
+    collection do
+      get :timeline
+    end
+  end
   resources :properties, only: [:new, :show, :create, :update, :destroy]
   resources :chats, only: [:new, :create, :destroy]
   devise_for :users
