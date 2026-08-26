@@ -47,4 +47,3 @@ class ContactsController < ApplicationController
     params.require(:contact).permit(:property_id, :name, :role, :email, :address, :phone_number, :website)
   end
 end
-
