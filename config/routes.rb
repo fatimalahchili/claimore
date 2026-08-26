@@ -1,12 +1,10 @@
 Rails.application.routes.draw do
-resources :entries, except: %i[show index]
-  resources :claims do
-    collection do
-      get :timeline
-    end
+  resources :entries, except: %i[show index]
+  resources :claims
+  resources :properties, only: %i[new show create update destroy]
+  resources :chats, only: %i[new create destroy] do
+    resources :messages, only: %i[create]
   end
-  resources :properties, only: [:new, :show, :create, :update, :destroy]
-  resources :chats, only: [:new, :create, :destroy]
   devise_for :users
   root to: "pages#home"
   resources :templates
