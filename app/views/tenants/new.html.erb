@@ -1,0 +1,7 @@
+<h1>Add a tenant</h1>
+
+<%= form_with model: @tenant, url: tenants_path do |f| %>
+  <%= f.hidden_field :property_id, value: @property.id %>
+  <%= f.collection_select :user_id, User.all, :id, :email %>
+  <%= f.submit "Add tenant" %>
+<% end %>

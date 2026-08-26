@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_25_125209) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_26_133043) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -27,8 +27,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_125209) do
   create_table "claims", force: :cascade do |t|
     t.string "category"
     t.datetime "created_at", null: false
+    t.bigint "property_id", null: false
     t.string "status"
     t.datetime "updated_at", null: false
+    t.index ["property_id"], name: "index_claims_on_property_id"
   end
 
   create_table "entries", force: :cascade do |t|
@@ -43,6 +45,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_125209) do
     t.index ["claim_id"], name: "index_entries_on_claim_id"
   end
 
+  create_table "letters", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "properties", force: :cascade do |t|
     t.string "address"
     t.datetime "created_at", null: false
@@ -54,6 +62,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_125209) do
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "tenants", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "property_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["property_id"], name: "index_tenants_on_property_id"
+    t.index ["user_id"], name: "index_tenants_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -71,5 +88,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_125209) do
 
   add_foreign_key "chats", "claims"
   add_foreign_key "chats", "users"
+  add_foreign_key "claims", "properties"
   add_foreign_key "entries", "claims"
+  add_foreign_key "tenants", "properties"
+  add_foreign_key "tenants", "users"
 end

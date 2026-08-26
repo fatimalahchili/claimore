@@ -7,6 +7,7 @@ resources :entries, except: %i[show index]
   end
   resources :properties, only: [:new, :show, :create, :update, :destroy]
   resources :chats, only: [:new, :create, :destroy]
+  resources :tenants, only: [:new, :create, :update, :destroy]
   devise_for :users
   root to: "pages#home"
   resources :templates

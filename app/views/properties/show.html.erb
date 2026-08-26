@@ -1,0 +1,10 @@
+<h2>Tenants</h2>
+<ul>
+  <% @property.tenants.each do |tenant| %>
+    <li>
+      <%= tenant.user.email %>
+      <%= button_to "Remove", tenant_path(tenant), method: :delete %>
+    </li>
+  <% end %>
+</ul>
+<%= link_to "Add tenant", new_tenant_path(property_id: @property.id) %>
