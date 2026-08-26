@@ -1,4 +1,15 @@
 Rails.application.routes.draw do
+<<<<<<< HEAD
+resources :entries, except: %i[show index]
+  resources :claims do
+    collection do
+      get :timeline
+    end
+  end
+  resources :properties, only: [:edit, :new, :show, :create, :update, :destroy]
+  resources :chats, only: [:new, :create, :destroy]
+=======
+>>>>>>> master
   devise_for :users
   root to: "pages#home"
 

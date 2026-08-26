@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_26_094534) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_26_131712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -27,8 +27,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_094534) do
   create_table "claims", force: :cascade do |t|
     t.string "category"
     t.datetime "created_at", null: false
+    t.bigint "property_id", null: false
     t.string "status"
     t.datetime "updated_at", null: false
+    t.index ["property_id"], name: "index_claims_on_property_id"
   end
 
   create_table "contacts", force: :cascade do |t|
@@ -112,6 +114,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_094534) do
 
   add_foreign_key "chats", "claims"
   add_foreign_key "chats", "users"
+  add_foreign_key "claims", "properties"
   add_foreign_key "contacts", "properties"
   add_foreign_key "entries", "claims"
   add_foreign_key "letters", "claims"
