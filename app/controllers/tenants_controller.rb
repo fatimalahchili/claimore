@@ -34,7 +34,7 @@ class TenantsController < ApplicationController
 
   def destroy
     @tenant.destroy
-    redirect_to tenants_path, notice: "Tenant was successfully removed."
+    redirect_to root_path, notice: "Tenant was successfully removed."
   end
 
   private
