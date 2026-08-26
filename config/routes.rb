@@ -22,5 +22,3 @@ Rails.application.routes.draw do
   # root "posts#index"
   resources :tenants, only: %i[index show new create edit update destroy]
 end
-
-

@@ -47,5 +47,3 @@ class TenantsController < ApplicationController
     params.require(:tenant).permit(:user_id, :property_id)
   end
 end
-
-
