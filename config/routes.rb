@@ -6,7 +6,6 @@ resources :entries, except: %i[show index]
   resources :chats, only: [:new, :create, :destroy] do
     resources :messages, only: [:create]
   end
-  resources :messages, only: [:create]
   devise_for :users
   root to: "pages#home"
   resources :templates
