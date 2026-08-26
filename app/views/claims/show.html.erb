@@ -1,1 +1,9 @@
 <%= link_to "Start chat", new_chat_path(claim_id: @claim.id) %>
+
+<h2>Letters</h2>
+<ul>
+  <% @claim.letters.each do |letter| %>
+    <li><%= link_to letter.content.truncate(50), letter %></li>
+  <% end %>
+</ul>
+<%= link_to "New letter", new_letter_path(claim_id: @claim.id) %>

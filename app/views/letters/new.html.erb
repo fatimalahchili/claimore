@@ -1,0 +1,15 @@
+<h1>New letter</h1>
+
+<%= form_with model: @letter, url: letters_path do |f| %>
+  <% if @letter.errors.any? %>
+    <ul>
+      <% @letter.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <%= f.hidden_field :claim_id, value: @claim.id %>
+  <%= f.text_area :content %>
+  <%= f.submit "Create letter" %>
+<% end %>

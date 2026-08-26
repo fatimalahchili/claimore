@@ -3,7 +3,7 @@ class Claim < ApplicationRecord
 
   has_many :tenants, through: :property
   has_many :chats, dependent: :destroy
-  has_many :letters
+  has_many :letters, dependent: :destroy
   has_many :entries
 
   has_many :messages, through: :chats

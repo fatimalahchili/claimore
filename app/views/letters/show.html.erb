@@ -1,0 +1,6 @@
+<h1>Letter</h1>
+
+<p><%= simple_format(@letter.content) %></p>
+
+<%= link_to "Back to claim", @letter.claim %>
+<%= button_to "Delete letter", letter_path(@letter), method: :delete, data: { turbo_confirm: "Are you sure?" } %>
