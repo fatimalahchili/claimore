@@ -1,7 +1,5 @@
 class TenantsController < ApplicationController
-
   before_action :set_tenant, only: %i[show edit update destroy]
-
 
   def index
     @tenants = Tenant.all
@@ -25,6 +23,7 @@ class TenantsController < ApplicationController
 
   def edit
   end
+
   def update
     if @tenant.update(tenant_params)
       redirect_to @tenant, notice: "Tenant was successfully updated."
@@ -32,17 +31,20 @@ class TenantsController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
+
   def destroy
     @tenant.destroy
     redirect_to tenants_path, notice: "Tenant was successfully removed."
   end
 
   private
+
   def set_tenant
     @tenant = Tenant.find(params[:id])
   end
 
   def tenant_params
-    params.require(:tenant).permit(:user_id, :claim_id, :property_id)
+    params.require(:tenant).permit(:user_id, :claim_id)
   end
 end
+

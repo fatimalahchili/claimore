@@ -1,2 +1,5 @@
-<h1>Chats#new</h1>
-<p>Find me in app/views/chats/new.html.erb</p>
+<%= form_with model: @chat, url: chats_path do |f| %>
+  <%= f.hidden_field :claim_id, value: @claim.id %>
+  <%= f.text_field :title %>
+  <%= f.submit "Start chat" %>
+<% end %>

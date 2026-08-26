@@ -1,5 +1,5 @@
 class PropertiesController < ApplicationController
-  before_action :set_property, only: [:update, :destroy, :show]
+  before_action :set_property, only: %i[update destroy show]
   def new
     @property = Property.new
   end
@@ -14,7 +14,6 @@ class PropertiesController < ApplicationController
   end
 
   def show
-
   end
 
   def update
