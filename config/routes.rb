@@ -14,7 +14,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-
   resources :claims do
     collection do
       get :timeline
@@ -30,7 +29,5 @@ Rails.application.routes.draw do
   resources :entries, except: %i[show index]
   resources :templates
   resources :contacts
-  resources :tenants
+  resources :tenants, only: %i[new create edit update destroy]
 end
-
-
