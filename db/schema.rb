@@ -50,6 +50,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_125209) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "templates", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
@@ -63,7 +69,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_125209) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "entries", "claims"
   add_foreign_key "chats", "claims"
   add_foreign_key "chats", "users"
+  add_foreign_key "entries", "claims"
 end
