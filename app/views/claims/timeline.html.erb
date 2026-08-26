@@ -1,0 +1,11 @@
+<h1>Timeline for claim #<%= @claim.id %></h1>
+
+<ul>
+  <% @entries.each do |entry| %>
+    <li>
+      <strong><%= entry.date %></strong> —
+      <%= entry.title %> (<%= entry.category %>, <%= entry.status %>)
+      <p><%= entry.description %></p>
+    </li>
+  <% end %>
+</ul>
