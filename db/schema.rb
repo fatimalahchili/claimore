@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_25_144506) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_26_094534) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -31,6 +31,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_144506) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "contacts", force: :cascade do |t|
+    t.string "address"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "name"
+    t.string "phone_number"
+    t.bigint "property_id", null: false
+    t.string "role"
+    t.datetime "updated_at", null: false
+    t.string "website"
+    t.index ["property_id"], name: "index_contacts_on_property_id"
+  end
+
   create_table "entries", force: :cascade do |t|
     t.string "category"
     t.bigint "claim_id", null: false
@@ -41,6 +54,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_144506) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.index ["claim_id"], name: "index_entries_on_claim_id"
+  end
+
+  create_table "letters", force: :cascade do |t|
+    t.bigint "claim_id", null: false
+    t.datetime "created_at", null: false
+    t.date "sent_on"
+    t.text "summary"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.index ["claim_id"], name: "index_letters_on_claim_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -65,6 +88,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_144506) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tenants", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phone"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
@@ -80,6 +112,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_25_144506) do
 
   add_foreign_key "chats", "claims"
   add_foreign_key "chats", "users"
+  add_foreign_key "contacts", "properties"
   add_foreign_key "entries", "claims"
+  add_foreign_key "letters", "claims"
   add_foreign_key "messages", "chats"
 end
