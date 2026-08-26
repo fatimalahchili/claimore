@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get "messages/create"
   resources :entries, except: %i[show index]
   resources :claims
   resources :properties, only: %i[new show create update destroy]
