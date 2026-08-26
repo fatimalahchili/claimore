@@ -1,5 +1,5 @@
 class PropertiesController < ApplicationController
-  before_action :set_property, only: [:update, :destroy, :show]
+  before_action :set_property, only: %i[edit update destroy show]
   def new
     @property = Property.new
   end
@@ -14,14 +14,16 @@ class PropertiesController < ApplicationController
   end
 
   def show
+  end
 
+  def edit
   end
 
   def update
     if @property.update(property_params)
       redirect_to @property
     else
-      render "properties/new"
+      render "properties/edit"
     end
   end
 
