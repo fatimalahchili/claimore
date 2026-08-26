@@ -1,0 +1,6 @@
+<h1>Add a tenant</h1>
+
+<%= simple_form_for @tenant, url: claim_tenants_path(@claim) do |f| %>
+  <%= f.input :user_id %>
+  <%= f.button :submit %>
+<% end %>
