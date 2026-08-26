@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
 resources :entries, except: %i[show index]
-  resources :claims
+  resources :claims do
+    resources :letters, only: %i[new create]
+  end
+  resources :letters, only: %i[show destroy]
   resources :properties, only: [:new, :show, :create, :update, :destroy]
   resources :chats, only: [:new, :create, :destroy]
   devise_for :users

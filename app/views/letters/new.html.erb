@@ -1,0 +1,33 @@
+<div class="container my-5">
+  <h2>Draft a New Letter for Claim #<%= @claim.id %></h2>
+
+  <%= form_with(model: [@claim, @letter], local: true, class: "mt-4") do |form| %>
+    <% if @letter.errors.any? %>
+      <div class="alert alert-danger">
+        <ul>
+          <% @letter.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-3">
+      <%= form.label :title, class: "form-label" %>
+      <%= form.text_field :title, class: "form-control", placeholder: "e.g., Formal Notice of Repair Request" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :summary, "Letter Content / Summary", class: "form-label" %>
+      <%= form.text_area :summary, rows: 6, class: "form-control", placeholder: "Write the content of the letter here..." %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :sent_on, "Date Sent", class: "form-label" %>
+      <%= form.date_field :sent_on, class: "form-control" %>
+    </div>
+
+    <%= form.submit "Create Letter", class: "btn btn-primary" %>
+    <%= link_to "Cancel", claim_path(@claim), class: "btn btn-outline-secondary ms-2" %>
+  <% end %>
+</div>
