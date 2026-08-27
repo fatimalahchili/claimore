@@ -9,4 +9,3 @@ class UpdateTemplates < ActiveRecord::Migration[8.1]
     add_column :templates, :description_en, :text
   end
 end
-  
