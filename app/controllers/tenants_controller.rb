@@ -1,6 +1,6 @@
 class TenantsController < ApplicationController
-  before_action :set_property, only: %i[index new create]
-  before_action :set_tenant, only: %i[edit update destroy]
+  before_action :set_property, only: %i[new create]
+  before_action :set_tenant, only: %i[update destroy]
 
   def index
     @tenants = @property.tenants
@@ -34,7 +34,7 @@ class TenantsController < ApplicationController
 
   def destroy
     @tenant.destroy
-    redirect_to root_path
+    redirect_to @tenant.property
   end
 
   private
