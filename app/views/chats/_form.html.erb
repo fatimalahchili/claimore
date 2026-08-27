@@ -11,15 +11,6 @@
       </ul>
     </div>
   <% end %>
-
-  <div>
-    <%= form.label :model, "Select AI model:", style: "display: block" %>
-    <%= form.select :model,
-        options_for_select(@chat_models.map { |model| [model.label, model.id] }.unshift([default_model_display_name, nil]), @selected_model),
-        {},
-        style: "width: 100%; max-width: 600px; padding: 5px;" %>
-  </div>
-
   <div style="margin-top: 15px;">
     <%= form.text_field :prompt, style: "width: 100%; max-width: 600px;", placeholder: "What would you like to discuss?", autofocus: true %>
   </div>

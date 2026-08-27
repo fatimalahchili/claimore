@@ -1,30 +1,26 @@
 class ChatsController < ApplicationController
   before_action :set_chat, only: [ :show, :destroy ]
-  before_action :set_claim, only: [ :new, :create ]
-  before_action :authorize_claim!, only: [ :new, :create ]
-  before_action :authorize_chat!, only: [ :show, :destroy ]
+  # before_action :set_claim, only: [ :new, :create ]
+  # before_action :authorize_claim!, only: [ :new, :create ]
+  # before_action :authorize_chat!, only: [ :show, :destroy ]
 
   def index
     @chats = current_user.chats.order(created_at: :desc)
   end
 
   def new
-    @chat = @claim.chats.new
-    @selected_model = params[:model]
-    @chat_models = available_chat_models
+    @chat = Chat.new
   end
 
   def create
     prompt = params.dig(:chat, :prompt)
     if prompt.present?
-      @chat = current_user.chats.create!(claim: @claim, model: params.dig(:chat, :model).presence)
+      @chat = current_user.chats.create!(claim: @claim)
       ChatResponseJob.perform_later(@chat.id, prompt)
 
       redirect_to @chat, notice: "Chat was successfully created."
     else
       @chat = @claim.chats.new
-      @selected_model = params.dig(:chat, :model)
-      @chat_models = available_chat_models
       render :new, status: :unprocessable_entity
     end
   end
