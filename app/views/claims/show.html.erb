@@ -1,1 +1,123 @@
-<%= link_to "Start chat", new_claim_chat_path(@claim) %>
+<div class="container my-5" style="max-width: 960px;">
+  <!-- Back link & Top bar -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <%= link_to claims_path, class: "text-decoration-none text-muted d-inline-flex align-items-center gap-1 small fw-semibold" do %>
+      <i class="fa-solid fa-arrow-left"></i> All Claims
+    <% end %>
+    <span class="badge px-3 py-2 rounded-pill <%= @claim.status == 'resolved' ? 'bg-success' : 'bg-primary' %> text-white text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+      <%= @claim.status.presence || "In Progress" %>
+    </span>
+  </div>
+
+  <!-- Claim Summary Header Card -->
+  <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 1rem; background: #FFFFFF;">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+      <div>
+        <div class="d-inline-flex align-items-center gap-2 px-2.5 py-1 mb-2 rounded" style="background-color: #F0ECFF; color: #6D4AFF; font-size: 0.8125rem; font-weight: 600;">
+          <i class="fa-solid fa-folder-open"></i> Claim #<%= @claim.id %>
+        </div>
+        <h2 class="fw-bold text-dark mb-1"><%= @claim.category.presence || "Tenancy Claim" %></h2>
+        <% if @claim.property.present? %>
+          <p class="text-muted mb-0 small">
+            <i class="fa-solid fa-location-dot me-1"></i> <%= @claim.property.address %>
+          </p>
+        <% end %>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="d-flex flex-wrap gap-2">
+        <%= link_to new_claim_chat_path(@claim), class: "btn btn-primary d-inline-flex align-items-center gap-1.5 px-3 py-2 shadow-sm fw-semibold" do %>
+          <i class="fa-solid fa-comment-dots"></i> Start Chat
+        <% end %>
+
+        <%= link_to new_claim_letter_path(@claim), class: "btn btn-outline-secondary d-inline-flex align-items-center gap-1.5 px-3 py-2 fw-semibold" do %>
+          <i class="fa-solid fa-file-lines"></i> Draft Letter
+        <% end %>
+
+        <%= link_to new_entry_path(claim_id: @claim.id), class: "btn btn-outline-primary d-inline-flex align-items-center gap-1.5 px-3 py-2 fw-semibold" do %>
+          <i class="fa-solid fa-plus"></i> Add Entry
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline Section -->
+  <div class="card border-0 shadow-sm p-4" style="border-radius: 1rem; background: #FFFFFF;">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+      <div>
+        <h4 class="fw-bold text-dark mb-0">Claim Timeline</h4>
+        <small class="text-muted">Chronological record of all updates, notifications, and responses</small>
+      </div>
+      <span class="badge bg-light text-secondary border px-2.5 py-1.5 rounded-pill small">
+        <%= pluralize(@entries.count, "Entry") %>
+      </span>
+    </div>
+
+    <% if @entries.any? %>
+      <div class="position-relative ps-4 ps-md-5" style="border-left: 2px solid #E2E8F0; margin-left: 1rem;">
+        <% @entries.each do |entry| %>
+          <div class="position-relative mb-4 pb-2">
+            <!-- Timeline dot icon -->
+            <span class="position-absolute translate-middle rounded-circle bg-primary border border-white d-flex align-items-center justify-center text-white" 
+                  style="left: -1.0625rem; top: 1.25rem; width: 22px; height: 22px; box-shadow: 0 0 0 4px #F0ECFF;">
+              <i class="fa-solid fa-circle text-white" style="font-size: 8px; margin: auto;"></i>
+            </span>
+
+            <!-- Entry Card (Clickable link to entry) -->
+            <div class="card border border-light p-3.5 shadow-sm hover-shadow transition-all" style="border-radius: 0.75rem; background: #FAFAFD;">
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                <div class="d-flex align-items-center gap-2">
+                  <h6 class="fw-bold mb-0">
+                    <%= link_to entry.title, entry_path(entry), class: "text-decoration-none text-dark hover-primary" %>
+                  </h6>
+                  <% if entry.category.present? %>
+                    <span class="badge bg-light text-dark border px-2 py-0.5" style="font-size: 0.75rem;">
+                      <%= entry.category %>
+                    </span>
+                  <% end %>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                  <% if entry.status.present? %>
+                    <span class="badge bg-light text-primary border border-primary-subtle px-2 py-0.5" style="font-size: 0.75rem;">
+                      <%= entry.status %>
+                    </span>
+                  <% end %>
+                  <span class="text-muted small fw-medium">
+                    <i class="fa-regular fa-calendar me-1"></i>
+                    <%= entry.date&.strftime("%b %d, %Y") || entry.created_at.strftime("%b %d, %Y") %>
+                  </span>
+                </div>
+              </div>
+
+              <% if entry.description.present? %>
+                <p class="text-secondary small mb-2 text-truncate-2">
+                  <%= entry.description %>
+                </p>
+              <% end %>
+
+              <div class="d-flex justify-content-end gap-2 pt-1 border-top border-light">
+                <%= link_to entry_path(entry), class: "btn btn-sm btn-link text-decoration-none p-0 text-primary small fw-semibold" do %>
+                  View details <i class="fa-solid fa-chevron-right ms-0.5" style="font-size: 10px;"></i>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <!-- Empty state -->
+      <div class="text-center py-5">
+        <div class="w-12 h-12 rounded-circle bg-light text-muted d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 48px; height: 48px;">
+          <i class="fa-solid fa-clock-rotate-left fs-5"></i>
+        </div>
+        <h6 class="fw-semibold text-dark">No timeline entries yet</h6>
+        <p class="text-muted small max-w-sm mx-auto mb-3">Add your first update, correspondence, or evidence log to track this claim.</p>
+        <%= link_to new_entry_path(claim_id: @claim.id), class: "btn btn-sm btn-primary" do %>
+          <i class="fa-solid fa-plus me-1"></i> Add First Entry
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
