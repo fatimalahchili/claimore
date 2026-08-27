@@ -1,5 +1,4 @@
-<%= form_with model: @chat, url: chats_path do |f| %>
-  <%= f.hidden_field :claim_id, value: @claim.id %>
+<%= form_with model: @chat, url: claim_chats_path(@claim) do |f| %>
   <%= f.text_field :title %>
   <%= f.submit "Start chat" %>
 <% end %>
