@@ -40,6 +40,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_142228) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+
+  create_table "admistrations", force: :cascade do |t|
+    t.text "address"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "name"
+    t.string "phone_number"
+    t.string "role"
+    t.datetime "updated_at", null: false
+    t.string "website"
   end
 
   create_table "chats", force: :cascade do |t|
@@ -291,8 +301,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_142228) do
   end
 
   create_table "templates", force: :cascade do |t|
-    t.text "content"
     t.datetime "created_at", null: false
+    t.text "description_de"
+    t.text "description_en"
+    t.text "instructions_de"
+    t.text "instructions_en"
+    t.string "name"
+    t.text "template"
     t.datetime "updated_at", null: false
   end
 

@@ -30,11 +30,12 @@ Rails.application.routes.draw do
   end
   resources :letters, only: %i[show destroy]
   resources :properties, only: %i[new show create update destroy] do
-    resources :tenants, only: %i[index]
+    resources :tenants, only: %i[index new create]
   end
 
   resources :entries
   resources :templates, only: %i[show index]
   resources :contacts
-  resources :tenants, only: %i[new create edit update destroy]
+  resources :administrations, only: %i[show index]
+  resources :tenants, only: %i[edit update destroy]
 end
