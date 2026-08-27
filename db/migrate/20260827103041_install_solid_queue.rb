@@ -1,4 +1,6 @@
-ActiveRecord::Schema[7.1].define(version: 1) do
+class InstallSolidQueue < ActiveRecord::Migration[8.1]
+  def change
+    ActiveRecord::Schema[7.1].define(version: 1) do
   create_table "solid_queue_blocked_executions", force: :cascade do |t|
     t.bigint "job_id", null: false
     t.string "queue_name", null: false
@@ -157,4 +159,7 @@ ActiveRecord::Schema[7.1].define(version: 1) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+end
+
+  end
 end
