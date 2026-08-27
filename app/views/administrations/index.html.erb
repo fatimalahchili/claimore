@@ -1,2 +1,7 @@
-<h1>Administrations#index</h1>
-<p>Find me in app/views/administrations/index.html.erb</p>
+<h1>Administrations</h1>
+
+<ul>
+  <% @admistrations.each do |admistration| %>
+    <li><%= link_to admistration.name, administration_path(admistration) %></li>
+  <% end %>
+</ul>
