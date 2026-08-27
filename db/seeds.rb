@@ -37,6 +37,43 @@ Tenant.find_or_create_by!(user: co_tenant_user, property: property) do |tenant|
   tenant.role = "co_tenant"
 end
 
+contacts_data = [
+  {
+    name: "Klaus Meier Sanitär",
+    role: "Plumber",
+    phone_number: "030 4471 2298",
+    email: "kontakt@meier-sanitaer-berlin.de",
+    address: "Grünberger Straße 45, 10245 Berlin",
+    website: "https://meier-sanitaer-berlin.de"
+  },
+  {
+    name: "Berliner Hausverwaltung GmbH",
+    role: "Property management",
+    phone_number: "030 8892 1034",
+    email: "verwaltung@berliner-hausverwaltung.de",
+    address: "Frankfurter Allee 12, 10247 Berlin",
+    website: "https://berliner-hausverwaltung.de"
+  },
+  {
+    name: "Elektro Schulz",
+    role: "Electrician",
+    phone_number: "030 5573 8820",
+    email: "info@elektro-schulz-berlin.de",
+    address: "Warschauer Straße 33, 10243 Berlin",
+    website: "https://elektro-schulz-berlin.de"
+  }
+]
+
+contacts_data.each do |contact_data|
+  Contact.find_or_create_by!(property: property, name: contact_data[:name]) do |contact|
+    contact.role = contact_data[:role]
+    contact.phone_number = contact_data[:phone_number]
+    contact.email = contact_data[:email]
+    contact.address = contact_data[:address]
+    contact.website = contact_data[:website]
+  end
+end
+
 claims_data = [
   {
     category: "Mold in bathroom",
