@@ -1,10 +1,31 @@
-// Define variables for your color scheme
+// Brand Colors
+$brand-primary: #6D4AFF;        // Claimore Signature Purple
+$brand-primary-hover: #5835E5;
+$brand-primary-light: #F0ECFF;
+$brand-primary-subtle: #FAF8FF;
 
-// For example:
-$red: #FD1015;
-$blue: #0D6EFD;
-$yellow: #FFC65A;
-$orange: #E67E22;
-$green: #1EDD88;
-$gray: #0E0000;
-$light-gray: #F4F4F4;
+// Neutral & Text Colors
+$text-main: #0F172A;            // Deep Slate
+$text-secondary: #475569;       // Medium Slate
+$text-muted: #94A3B8;           // Light Slate
+$text-white: #FFFFFF;
+
+// Backgrounds & Surface
+$bg-page: #F8FAFC;              // Off-white canvas
+$bg-surface: #FFFFFF;           // Clean card white
+$bg-subtle: #F1F5F9;
+
+// Borders
+$border-light: #E2E8F0;
+$border-medium: #CBD5E1;
+$border-focus: #6D4AFF;
+
+// Status & Alert Colors
+$success: #10B981;              // Green
+$success-light: #ECFDF5;
+$warning: #F59E0B;              // Amber / Urgency
+$warning-light: #FFFBEB;
+$danger: #EF4444;               // Red / Error
+$danger-light: #FEF2F2;
+$info: #3B82F6;                 // Blue / AI Notice
+$info-light: #EFF6FF;
