@@ -1,0 +1,15 @@
+<h1>New claim</h1>
+
+<%= form_with model: @claim, url: claims_path do |f| %>
+  <% if @claim.errors.any? %>
+    <ul>
+      <% @claim.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <%= f.text_field :category, placeholder: "Category" %>
+  <%= f.text_field :status, placeholder: "Status" %>
+  <%= f.submit "Create claim" %>
+<% end %>
