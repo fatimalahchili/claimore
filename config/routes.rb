@@ -31,6 +31,6 @@ Rails.application.routes.draw do
   resources :entries
   resources :templates, only: %i[show index]
   resources :contacts
-  resources :administrations, only: [:index, :show]
+  resources :administrations, only: %i[show index]
   resources :tenants, only: %i[new create edit update destroy]
 end
