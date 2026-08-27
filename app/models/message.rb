@@ -1,3 +1,4 @@
 class Message < ApplicationRecord
-  belongs_to :chat
+  acts_as_message
+  has_many_attached :attachments
 end
