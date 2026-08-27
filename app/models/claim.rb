@@ -5,4 +5,5 @@ class Claim < ApplicationRecord
   has_many :letters
   has_many :entries
   has_many :users, through: :tenants
+  has_many :chats, dependent: :destroy
 end

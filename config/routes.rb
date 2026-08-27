@@ -1,4 +1,12 @@
 Rails.application.routes.draw do
+  resources :chats do
+    resources :messages, only: [ :create ]
+  end
+  resources :models, only: [ :index, :show ] do
+    collection do
+      post :refresh
+    end
+  end
   devise_for :users
   root to: "pages#home"
 
@@ -21,7 +29,6 @@ Rails.application.routes.draw do
     resources :letters, only: %i[new create]
   end
   resources :letters, only: %i[show destroy]
-
   resources :properties, only: %i[new show create update destroy] do
     resources :tenants, only: %i[index]
   end

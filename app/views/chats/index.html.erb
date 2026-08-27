@@ -1,0 +1,28 @@
+<% if notice.present? %>
+  <p style="color: green"><%= notice %></p>
+<% end %>
+
+<% content_for :title, "Chats" %>
+
+<h1>Chats</h1>
+<p>
+  <%= link_to "Models", models_path %>
+</p>
+
+<div id="chats">
+  <% if @chats.any? %>
+    <% @chats.each do |chat| %>
+      <%= render chat %>
+      <p>
+        <%= link_to "Show this chat", chat %>
+      </p>
+      <p>
+        <%= link_to "Destroy this chat", chat, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+      </p>
+    <% end %>
+  <% else %>
+    <p>No chats found.</p>
+  <% end %>
+</div>
+
+<%= link_to "New chat", new_chat_path %>

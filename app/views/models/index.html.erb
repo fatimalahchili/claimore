@@ -1,0 +1,38 @@
+<% if notice.present? %>
+  <p style="color: green"><%= notice %></p>
+<% end %>
+
+<% content_for :title, "Models" %>
+
+<h1>Models</h1>
+<p>
+  <%= link_to "Chats", chats_path %>
+</p>
+
+<p>
+  <%= button_to "Refresh Models", refresh_models_path, method: :post %>
+</p>
+
+<div id="models">
+  <% if @models.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>Provider</th>
+          <th>Model</th>
+          <th>Context Window</th>
+          <th>$/1M tokens (In/Out)</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @models.each do |model_info| %>
+          <%= render "models/model",
+            model: model_info %>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p>No chat models found.</p>
+  <% end %>
+</div>

@@ -1,0 +1,28 @@
+class MessagesController < ApplicationController
+  before_action :set_chat
+  before_action :authorize_chat!
+
+  def create
+    content = params.dig(:message, :content)
+    if content.present?
+      ChatResponseJob.perform_later(@chat.id, content)
+
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @chat }
+      end
+    end
+  end
+
+  private
+
+  def set_chat
+    @chat = Chat.find(params[:chat_id])
+  end
+
+  def authorize_chat!
+    return if @chat.claim.users.include?(current_user)
+
+    redirect_to root_path, alert: "Not authorized."
+  end
+end
