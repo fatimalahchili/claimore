@@ -1,13 +1,7 @@
 Rails.application.routes.draw do
-resources :entries, except: %i[show index]
-  resources :claims do
-    resources :tenants, only: %i[new create update destroy], shallow: true
-  end
-  resources :properties, only: [:new, :show, :create, :update, :destroy]
-  resources :chats, only: [:new, :create, :destroy]
   devise_for :users
   root to: "pages#home"
-  resources :templates
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -20,4 +14,22 @@ resources :entries, except: %i[show index]
 
   # Defines the root path route ("/")
   # root "posts#index"
+  resources :claims do
+    collection do
+      get :timeline
+    end
+    resources :letters, only: %i[new create]
+  end
+  resources :letters, only: %i[show destroy]
+
+  resources :properties, only: %i[new show create update destroy] do
+    resources :tenants, only: %i[index]
+  end
+  resources :chats, only: %i[new create destroy show] do
+    resources :messages, only: %i[create]
+  end
+  resources :entries
+  resources :templates, only: %i[show index]
+  resources :contacts
+  resources :tenants, only: %i[new create edit update destroy]
 end

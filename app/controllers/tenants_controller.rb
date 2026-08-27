@@ -2,6 +2,13 @@ class TenantsController < ApplicationController
   before_action :set_claim, only: %i[new create]
   before_action :set_tenant, only: %i[update destroy]
 
+  def index
+    @tenants = Tenant.all
+  end
+
+  def show
+  end
+
   def new
     @tenant = Tenant.new
     @tenant.claim = @claim
@@ -42,5 +49,6 @@ class TenantsController < ApplicationController
 
   def tenant_params
     params.require(:tenant).permit(:user_id)
+    before_action :set_tenant, only: %i[show edit update destroy]
   end
 end
