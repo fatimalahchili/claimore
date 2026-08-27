@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_26_131712) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_27_121852) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "admistrations", force: :cascade do |t|
+    t.text "address"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "name"
+    t.string "phone_number"
+    t.string "role"
+    t.datetime "updated_at", null: false
+    t.string "website"
+  end
 
   create_table "chats", force: :cascade do |t|
     t.bigint "claim_id", null: false
@@ -85,8 +96,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_131712) do
   end
 
   create_table "templates", force: :cascade do |t|
-    t.text "content"
     t.datetime "created_at", null: false
+    t.text "description_de"
+    t.text "description_en"
+    t.text "instructions_de"
+    t.text "instructions_en"
+    t.string "name"
+    t.text "template"
     t.datetime "updated_at", null: false
   end
 
