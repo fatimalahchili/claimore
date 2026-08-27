@@ -19,17 +19,19 @@ Rails.application.routes.draw do
       get :timeline
     end
     resources :letters, only: %i[new create]
+    resources :chats, only: %i[new create]
   end
   resources :letters, only: %i[show destroy]
 
   resources :properties, only: %i[new show create update destroy] do
     resources :tenants, only: %i[index]
   end
-  resources :chats, only: %i[new create destroy show] do
+  resources :chats, only: %i[destroy show] do
     resources :messages, only: %i[create]
   end
   resources :entries
   resources :templates, only: %i[show index]
   resources :contacts
+  resources :administrations, only: %i[show index]
   resources :tenants, only: %i[new create edit update destroy]
 end
