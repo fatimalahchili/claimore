@@ -1,6 +1,6 @@
 <h1>Add a tenant</h1>
 
-<%= simple_form_for @tenant, url: claim_tenants_path(@claim) do |f| %>
-  <%= f.input :user_id %>
-  <%= f.button :submit %>
+<%= form_with model: @tenant, url: property_tenants_path(@property) do |f| %>
+  <%= f.collection_select :user_id, User.all, :id, :email %>
+  <%= f.submit %>
 <% end %>
