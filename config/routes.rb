@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   resources :letters, only: %i[show destroy]
 
   resources :properties, only: %i[new show create update destroy] do
-    resources :tenants, only: %i[index]
+    resources :tenants, only: %i[index new create]
   end
   resources :chats, only: %i[destroy show] do
     resources :messages, only: %i[create]
@@ -33,5 +33,5 @@ Rails.application.routes.draw do
   resources :templates, only: %i[show index]
   resources :contacts
   resources :administrations, only: %i[show index]
-  resources :tenants, only: %i[new create edit update destroy]
+  resources :tenants, only: %i[edit update destroy]
 end
