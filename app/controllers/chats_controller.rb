@@ -2,7 +2,7 @@ class ChatsController < ApplicationController
   before_action :set_chat, only: %i[destroy show]
   before_action :set_claim, only: %i[create new]
   before_action :authorize_claim!, only: %i[new create]
-  before_action :authorize_chat!, only: %i[destroy]
+  before_action :authorize_chat!, only: %i[destroy show]
 
   def new
     @chat = Chat.new
@@ -10,6 +10,7 @@ class ChatsController < ApplicationController
   end
 
   def show
+    @messages = @chat.messages
   end
 
   def create
