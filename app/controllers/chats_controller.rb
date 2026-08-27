@@ -1,8 +1,8 @@
 class ChatsController < ApplicationController
-  before_action :set_chat, only: [ :show, :destroy ]
-  # before_action :set_claim, only: [ :new, :create ]
-  # before_action :authorize_claim!, only: [ :new, :create ]
-  # before_action :authorize_chat!, only: [ :show, :destroy ]
+  before_action :set_chat, only: %i[show destroy]
+  before_action :set_claim, only: %i[new create]
+  before_action :authorize_claim!, only: %i[new create]
+  before_action :authorize_chat!, only: %i[show destroy]
 
   def index
     @chats = current_user.chats.order(created_at: :desc)
