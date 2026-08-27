@@ -92,11 +92,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_131712) do
 
   create_table "tenants", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.bigint "property_id", null: false
+    t.string "email"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phone"
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.index ["property_id"], name: "index_tenants_on_property_id"
-    t.index ["user_id"], name: "index_tenants_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -119,6 +119,4 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_26_131712) do
   add_foreign_key "entries", "claims"
   add_foreign_key "letters", "claims"
   add_foreign_key "messages", "chats"
-  add_foreign_key "tenants", "properties"
-  add_foreign_key "tenants", "users"
 end
