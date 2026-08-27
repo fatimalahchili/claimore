@@ -1,6 +1,5 @@
 class Chat < ApplicationRecord
-  belongs_to :user
+  acts_as_chat
   belongs_to :claim
-  has_one :property, through: :claim
-  has_many :messages, dependent: :destroy
+  belongs_to :user
 end
