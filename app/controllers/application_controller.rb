@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   # before every action runs, first do -> check_if_signed_in_or_redirect_to_login
-  before_action :authenticate_user!
+  before_action :authenticate_user!, unless: :devise_controller?
 
   # before every action runs, IF this is a devise controller (signup/login/etc)
   #         THEN do -> configure_permitted_parameters (defined below)

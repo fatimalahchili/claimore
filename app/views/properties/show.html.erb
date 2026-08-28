@@ -1,0 +1,12 @@
+<h1><%= @property.address %></h1>
+
+<h2>Tenants</h2>
+<ul>
+  <% @property.tenants.each do |tenant| %>
+    <li><%= tenant.user.email %> (<%= tenant.role %>)</li>
+  <% end %>
+</ul>
+
+<% if @property.tenants.exists?(user: current_user, role: "main_tenant") %>
+  <%= link_to "Add tenant", new_property_tenant_path(@property) %>
+<% end %>

@@ -1,6 +1,7 @@
 class TenantsController < ApplicationController
   before_action :set_property, only: %i[new create]
   before_action :set_tenant, only: %i[update destroy]
+  before_action :authorize_main_tenant!, only: %i[new create]
 
   def index
     @tenants = @property.tenants
@@ -9,6 +10,8 @@ class TenantsController < ApplicationController
   def new
     @tenant = Tenant.new
     @tenant.property = @property
+    @query = params[:query]
+    @users = @query.present? ? search_users(@query) : User.none
   end
 
   def create
@@ -17,7 +20,7 @@ class TenantsController < ApplicationController
     if @tenant.save
       redirect_to @tenant.property
     else
-      render "tenants/new"
+      redirect_to new_property_tenant_path(@property), alert: @tenant.errors.full_messages.to_sentence
     end
   end
 
@@ -38,6 +41,17 @@ class TenantsController < ApplicationController
   end
 
   private
+
+  def search_users(query)
+    User.where.not(id: @property.tenants.select(:user_id))
+        .where("email ILIKE ?", "%#{query}%")
+  end
+
+  def authorize_main_tenant!
+    return if @property.tenants.exists?(user: current_user, role: "main_tenant")
+
+    redirect_to root_path, alert: "Not authorized."
+  end
 
   def set_property
     @property = Property.find(params[:property_id])

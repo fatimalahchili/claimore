@@ -1,6 +1,9 @@
 <h1>Add a tenant</h1>
 
-<%= form_with model: @tenant, url: property_tenants_path(@property) do |f| %>
-  <%= f.collection_select :user_id, User.all, :id, :email %>
-  <%= f.submit %>
+<%= form_with url: new_property_tenant_path(@property), method: :get, data: { turbo_frame: "tenant_search_results", controller: "tenant-search" } do |f| %>
+  <%= f.text_field :query, value: @query, placeholder: "Search by email", data: { tenant_search_target: "input", action: "input->tenant-search#search" } %>
+<% end %>
+
+<%= turbo_frame_tag "tenant_search_results" do %>
+  <%= render "results", users: @users %>
 <% end %>
