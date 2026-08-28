@@ -10,3 +10,8 @@
 .navbar-lewagon .navbar-brand img {
   width: 40px;
 }
+
+.navbar-lewagon .nav-link.active {
+  color: $brand-primary;
+  font-weight: 600;
+}
