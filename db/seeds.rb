@@ -1,29 +1,63 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+########### DESTRUCTION ###########
 
-property = Property.find_or_create_by!(address: "Jungstraße 10, 10247, 2nd floor VH 2.OG MR")
+puts "Clearing existing data... 🧹"
+
+Entry.destroy_all
+Claim.destroy_all
+Contact.destroy_all
+Tenant.destroy_all
+Property.destroy_all
+User.destroy_all
+Admistration.destroy_all
+
+puts "Existing data sweeped out... 🧹✨"
+
+
+########### CREATION ###########
+
+puts "🌱🌱 Seeding database... 🌱🌱"
+
+##### USER #####
+
+puts "1 - Creating users..."
 
 main_tenant_user = User.find_or_create_by!(email: "main.tenant@claimore.app") do |user|
-  user.name = "Anna Weber"
+  user.name = "Joey Tribbian"
   user.password = "password123"
 end
 
 sub_tenant_user = User.find_or_create_by!(email: "sub.tenant@claimore.app") do |user|
-  user.name = "Jonas Becker"
+  user.name = "Phoebe Buffay"
   user.password = "password123"
 end
 
-co_tenant_user = User.find_or_create_by!(email: "co.tenant@claimore.app") do |user|
-  user.name = "Laura Fischer"
+life_partner_user = User.find_or_create_by!(email: "co.tenant@claimore.app") do |user|
+  user.name = "Rachel Green"
   user.password = "password123"
 end
+
+co_tenant_user = User.find_or_create_by!(email: "life.partner@claimore.app") do |user|
+  user.name = "Chandler Bing"
+  user.password = "password123"
+end
+
+puts "#{User.count} users created\n\n"
+
+
+
+##### PROPERTY #####
+
+puts "2 - Creating properties..."
+
+property = Property.find_or_create_by!(address: "Jungstraße 10, 10247, 2nd floor VH 2.OG MR")
+
+puts "#{Property.count} properties created\n\n"
+
+
+
+##### TENANT #####
+
+puts "3 - Creating tenants..."
 
 Tenant.find_or_create_by!(user: main_tenant_user, property: property) do |tenant|
   tenant.role = "main_tenant"
@@ -36,6 +70,18 @@ end
 Tenant.find_or_create_by!(user: co_tenant_user, property: property) do |tenant|
   tenant.role = "co_tenant"
 end
+
+Tenant.find_or_create_by!(user: life_partner_user, property: property) do |tenant|
+  tenant.role = "life_partner"
+end
+
+puts "#{Tenant.count} tenants created\n\n"
+
+
+
+##### CONTACT #####
+
+puts "4 - Creating contacts..."
 
 contacts_data = [
   {
@@ -73,6 +119,13 @@ contacts_data.each do |contact_data|
     contact.website = contact_data[:website]
   end
 end
+
+puts "#{Contact.count} contacts created\n\n"
+
+
+##### CLAIM #####
+
+puts "5 - Creating claims..."
 
 claims_data = [
   {
@@ -247,6 +300,7 @@ claims_data = [
   }
 ]
 
+
 claims_data.each do |claim_data|
   claim = Claim.find_or_create_by!(property: property, category: claim_data[:category]) do |c|
     c.status = claim_data[:status]
@@ -262,8 +316,30 @@ claims_data.each do |claim_data|
   end
 end
 
+puts "#{Claim.count} claims created\n\n"
+
+
+
+##### ADMINISTRATION #####
+
+puts "6 - Creating administrations..."
+
 Admistration.find_or_create_by!(name: "Gesundheitsamt Friedrichshain-Kreuzberg") do |admistration|
   admistration.role = "Gesundheitsamt"
   admistration.address = "Curt Bejach Gesundheitshaus, Urbanstraße 24, 10967 Berlin-Bezirk Friedrichshain-Kreuzberg"
   admistration.phone_number = "030 115"
 end
+
+puts "#{Admistration.count} administrations created\n\n"
+
+
+
+##### LETTER TEMPLATES #####
+
+puts "7 - Creating letter templates..."
+
+# TO-DO: templates
+
+puts "#{Template.count} letter templates created\n\n"
+
+puts "To see things in the seed, that is genius 🌱 — Lao Tzu"
