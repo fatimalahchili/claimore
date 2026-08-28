@@ -14,6 +14,11 @@
           <li class="nav-item active">
             <%= link_to "Home", "#", class: "nav-link" %>
           </li>
+          <% if current_property %>
+            <li class="nav-item">
+              <%= link_to "My Property", property_path(current_property), class: "nav-link" %>
+            </li>
+          <% end %>
           <li class="nav-item">
             <%= link_to "Messages", "#", class: "nav-link" %>
           </li>
