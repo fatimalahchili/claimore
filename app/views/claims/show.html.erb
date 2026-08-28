@@ -1,1 +1,74 @@
-<%= link_to "Start chat", new_chat_path(claim_id: @claim.id) %>
+<div class="container my-5" style="max-width: 960px;">
+  <header class="claim-sticky-header py-3 mb-4">
+    <%= render "shared/back_link", fallback_path: claims_path, label: "All Claims" %>
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+      <div>
+        <div class="d-inline-flex align-items-center gap-2 px-2 py-1 mb-2 rounded bg-light text-primary small fw-semibold">
+          <i class="fa-solid fa-folder-open"></i> Claim #<%= @claim.id %>
+        </div>
+        <h2 class="fw-bold text-dark mb-1"><%= @claim.category.presence || "Tenancy Claim" %></h2>
+        <% if @claim.property.present? %>
+          <p class="text-muted mb-0 small"><i class="fa-solid fa-location-dot me-1"></i> <%= @claim.property.address %></p>
+        <% end %>
+      </div>
+      <span class="badge rounded-pill px-3 py-2 text-uppercase <%= claim_status_classes(@claim.status) %>"><%= @claim.status %></span>
+    </div>
+  </header>
+
+  <section class="card border-0 shadow-sm p-4 rounded-4" data-controller="timeline-focus">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+      <div>
+        <h4 class="fw-bold text-dark mb-0">Claim Timeline</h4>
+      </div>
+      <span class="badge bg-light text-secondary border rounded-pill"><%= pluralize(@entries.count, "Entry") %></span>
+    </div>
+
+    <% if @entries.any? %>
+      <div class="position-relative ps-4 ps-md-5 border-start border-2 ms-3">
+        <% @entries.each do |entry| %>
+          <% focused = entry == @focused_entry %>
+          <article class="position-relative mb-4 pb-2">
+            <span class="position-absolute translate-middle rounded-circle bg-primary border border-white" style="left: -3rem; top: 1.25rem; width: 22px; height: 22px;"></span>
+            <div class="timeline-entry <%= entry_status_classes(entry.status) %> card p-3 shadow-sm rounded-3"
+                 tabindex="-1"
+                 <%= 'data-timeline-focus-target="current"'.html_safe if focused %>>
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                <h6 class="fw-bold mb-0"><%= link_to entry.title, entry_path(entry), class: "text-decoration-none text-dark" %></h6>
+                <div class="d-flex align-items-center gap-2">
+                  <% if entry.status.present? %>
+                    <span class="badge bg-white text-dark border text-capitalize"><%= entry.status %></span>
+                  <% end %>
+                  <span class="text-muted small"><%= entry.date&.strftime("%b %d, %Y") || entry.created_at.strftime("%b %d, %Y") %></span>
+                </div>
+              </div>
+              <% if entry.description.present? %>
+                <p class="text-secondary small mb-2"><%= truncate(entry.description, length: 180) %></p>
+              <% end %>
+              <%= link_to "View details", entry_path(entry), class: "small fw-semibold text-decoration-none" %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-5">
+        <h6 class="fw-semibold">No timeline entries yet</h6>
+        <p class="text-muted small">Add the first update to start tracking this claim.</p>
+        <%= link_to "Add First Entry", new_entry_path(claim_id: @claim.id), class: "btn btn-sm btn-primary" %>
+      </div>
+    <% end %>
+  </section>
+
+  <aside class="claim-action-bar card border-0 shadow-sm p-4 mt-4 rounded-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <div>
+        <h5 class="fw-bold mb-1">Continue this claim</h5>
+        <p class="text-muted small mb-0">Record the next step or get help with your case.</p>
+      </div>
+      <div class="d-flex flex-wrap gap-2">
+        <%= link_to "Add Entry", new_entry_path(claim_id: @claim.id), class: "btn btn-primary" %>
+        <%= link_to "Start Chat", new_chat_path(claim_id: @claim.id), class: "btn btn-outline-primary" %>
+        <%= link_to "Draft Letter", new_claim_letter_path(@claim), class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </aside>
+</div>
