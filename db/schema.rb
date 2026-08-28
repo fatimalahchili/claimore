@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_28_111500) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_28_114014) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,7 +42,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_28_111500) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "admistrations", force: :cascade do |t|
+  create_table "administrations", force: :cascade do |t|
     t.text "address"
     t.datetime "created_at", null: false
     t.string "email"
@@ -302,13 +302,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_28_111500) do
   end
 
   create_table "templates", force: :cascade do |t|
+    t.text "content"
     t.datetime "created_at", null: false
     t.text "description_de"
     t.text "description_en"
     t.text "instructions_de"
     t.text "instructions_en"
+    t.jsonb "metadata", default: {}, null: false
     t.string "name"
-    t.text "template"
     t.datetime "updated_at", null: false
   end
 

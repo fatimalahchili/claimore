@@ -1,2 +1,0 @@
-class Admistration < ApplicationRecord
-end
