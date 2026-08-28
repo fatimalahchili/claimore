@@ -1,12 +1,8 @@
-$navbar-height: clamp(68px, 9vw, 92px);
-$navbar-bottom-offset: clamp(12px, 3vw, 28px);
-$navbar-padding: clamp(6px, 1.2vw, 12px);
-
 body {
   padding-bottom: calc(#{$navbar-height} + #{$navbar-bottom-offset} + 12px + env(safe-area-inset-bottom));
 }
 
-.navbar-instagram {
+.navbar-air {
   position: fixed;
   left: 50%;
   bottom: calc(#{$navbar-bottom-offset} + env(safe-area-inset-bottom));
@@ -34,8 +30,8 @@ body {
   }
 }
 
-.navbar-instagram .nav-icon-link,
-.navbar-instagram .dropdown-toggle-icon {
+.navbar-air .nav-icon-link,
+.navbar-air .dropdown-toggle-icon {
   position: relative;
   display: flex;
   align-items: center;
@@ -49,14 +45,14 @@ body {
   transition: color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
 }
 
-.navbar-instagram .nav-icon-link:active,
-.navbar-instagram .dropdown-toggle-icon:active {
+.navbar-air .nav-icon-link:active,
+.navbar-air .dropdown-toggle-icon:active {
   transform: scale(0.9);
 }
 
-.navbar-instagram .nav-icon-link.active,
-.navbar-instagram .dropdown-toggle-icon.show,
-.navbar-instagram .dropup.show .dropdown-toggle-icon {
+.navbar-air .nav-icon-link.active,
+.navbar-air .dropdown-toggle-icon.show,
+.navbar-air .dropup.show .dropdown-toggle-icon {
   color: $brand-primary;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), $brand-primary-light);
   box-shadow:
@@ -64,11 +60,11 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.navbar-instagram .dropdown-toggle-icon::after {
+.navbar-air .dropdown-toggle-icon::after {
   display: none;
 }
 
-.navbar-instagram .dropdown-menu {
+.navbar-air .dropdown-menu {
   margin-bottom: 0.75rem;
   border-radius: 16px;
   border: 1px solid $border-light;
