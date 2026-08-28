@@ -1,37 +1,67 @@
+$navbar-height: clamp(68px, 9vw, 92px);
+$navbar-bottom-offset: clamp(12px, 3vw, 28px);
+$navbar-padding: clamp(6px, 1.2vw, 12px);
+
 body {
-  padding-bottom: calc(56px + env(safe-area-inset-bottom));
+  padding-bottom: calc(#{$navbar-height} + #{$navbar-bottom-offset} + 12px + env(safe-area-inset-bottom));
 }
 
 .navbar-instagram {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  bottom: calc(#{$navbar-bottom-offset} + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
   z-index: 1030;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 56px;
-  padding-bottom: env(safe-area-inset-bottom);
+  gap: clamp(2px, 1vw, 10px);
+  width: clamp(300px, 92vw, 620px);
+  height: #{$navbar-height};
+  padding: #{$navbar-padding};
+  border-radius: 999px;
   background: $bg-surface;
-  border-top: 1px solid $border-light;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 8px 32px rgba(15, 23, 42, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    inset 0 -1px 8px rgba(255, 255, 255, 0.4);
+
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+  }
 }
 
 .navbar-instagram .nav-icon-link,
 .navbar-instagram .dropdown-toggle-icon {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 1;
+  min-width: 0;
   height: 100%;
-  font-size: 1.4rem;
+  border-radius: 999px;
+  font-size: clamp(1.35rem, 2.6vw, 1.85rem);
   color: $text-secondary;
+  transition: color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+}
+
+.navbar-instagram .nav-icon-link:active,
+.navbar-instagram .dropdown-toggle-icon:active {
+  transform: scale(0.9);
 }
 
 .navbar-instagram .nav-icon-link.active,
 .navbar-instagram .dropdown-toggle-icon.show,
 .navbar-instagram .dropup.show .dropdown-toggle-icon {
   color: $brand-primary;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), $brand-primary-light);
+  box-shadow:
+    0 2px 8px rgba(109, 74, 255, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .navbar-instagram .dropdown-toggle-icon::after {
@@ -39,5 +69,8 @@ body {
 }
 
 .navbar-instagram .dropdown-menu {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  border-radius: 16px;
+  border: 1px solid $border-light;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.15);
 }
