@@ -7,7 +7,7 @@ export default class extends Controller {
     if (!this.hasCurrentTarget) return
 
     requestAnimationFrame(() => {
-      this.currentTarget.scrollIntoView({ behavior: "smooth", block: "center" })
+      this.currentTarget.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" })
       this.currentTarget.focus({ preventScroll: true })
     })
   }

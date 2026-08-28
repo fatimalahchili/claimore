@@ -7,11 +7,5 @@ class Claim < ApplicationRecord
   has_many :users, through: :tenants
   has_many :chats, dependent: :destroy
 
-  enum :role,
-       { guest: "guest",
-         main_tenant: "main_tenant",
-         sub_tenant: "sub_tenant",
-         co_tenant: "co_tenant",
-         life_partner: "life_partner" },
-       default: :guest
+  enum :status, { active: "active", archived: "archived" }, default: :active
 end

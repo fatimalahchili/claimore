@@ -39,8 +39,8 @@ class ClaimsController < ApplicationController
   end
 
   def destroy
-    @claim.destroy
-    redirect_to claims_path, notice: "Claim was successfully deleted."
+    @claim.archived!
+    redirect_to claims_path, notice: "Claim was successfully archived."
   end
 
   private

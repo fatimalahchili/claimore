@@ -1,14 +1,6 @@
 <div class="container my-5" style="max-width: 960px;">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <%= link_to claims_path, class: "text-decoration-none text-muted small fw-semibold" do %>
-      <i class="fa-solid fa-arrow-left"></i> All Claims
-    <% end %>
-    <span class="badge px-3 py-2 rounded-pill <%= @claim.status == 'resolved' ? 'bg-success' : 'bg-primary' %> text-white text-uppercase">
-      <%= @claim.status.presence || "In Progress" %>
-    </span>
-  </div>
-
-  <div class="card border-0 shadow-sm p-4 mb-4 rounded-4">
+  <header class="claim-sticky-header py-3 mb-4">
+    <%= render "shared/back_link", fallback_path: claims_path, label: "All Claims" %>
     <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
       <div>
         <div class="d-inline-flex align-items-center gap-2 px-2 py-1 mb-2 rounded bg-light text-primary small fw-semibold">
@@ -19,19 +11,14 @@
           <p class="text-muted mb-0 small"><i class="fa-solid fa-location-dot me-1"></i> <%= @claim.property.address %></p>
         <% end %>
       </div>
-      <div class="d-flex flex-wrap gap-2">
-        <%= link_to "Start Chat", new_chat_path(claim_id: @claim.id), class: "btn btn-primary" %>
-        <%= link_to "Draft Letter", new_claim_letter_path(@claim), class: "btn btn-outline-secondary" %>
-        <%= link_to "Add Entry", new_entry_path(claim_id: @claim.id), class: "btn btn-outline-primary" %>
-      </div>
+      <span class="badge rounded-pill px-3 py-2 text-uppercase <%= claim_status_classes(@claim.status) %>"><%= @claim.status %></span>
     </div>
-  </div>
+  </header>
 
   <section class="card border-0 shadow-sm p-4 rounded-4" data-controller="timeline-focus">
     <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
       <div>
         <h4 class="fw-bold text-dark mb-0">Claim Timeline</h4>
-        <small class="text-muted">Newest entries first; the current or next entry is focused automatically.</small>
       </div>
       <span class="badge bg-light text-secondary border rounded-pill"><%= pluralize(@entries.count, "Entry") %></span>
     </div>
@@ -70,4 +57,18 @@
       </div>
     <% end %>
   </section>
+
+  <aside class="claim-action-bar card border-0 shadow-sm p-4 mt-4 rounded-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <div>
+        <h5 class="fw-bold mb-1">Continue this claim</h5>
+        <p class="text-muted small mb-0">Record the next step or get help with your case.</p>
+      </div>
+      <div class="d-flex flex-wrap gap-2">
+        <%= link_to "Add Entry", new_entry_path(claim_id: @claim.id), class: "btn btn-primary" %>
+        <%= link_to "Start Chat", new_chat_path(claim_id: @claim.id), class: "btn btn-outline-primary" %>
+        <%= link_to "Draft Letter", new_claim_letter_path(@claim), class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </aside>
 </div>

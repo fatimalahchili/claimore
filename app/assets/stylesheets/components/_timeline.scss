@@ -18,11 +18,31 @@
   border-left-color: #22c55e !important;
 }
 
-.timeline-entry--urgent {
+.timeline-entry--escalated {
   background-color: #fff1f2 !important;
   border-left-color: #ef4444 !important;
 }
 
+.timeline-entry--reported,
+.timeline-entry--open {
+  background-color: $info-light !important;
+  border-left-color: $info !important;
+}
+
 .timeline-entry--default {
   background-color: #fafafd !important;
+}
+
+.claim-sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  background: rgba($bg-page, 0.94);
+  backdrop-filter: blur(12px);
+}
+
+.claim-action-bar {
+  border: 1px solid $border-light;
+  background: $bg-surface;
+  margin-bottom: calc(#{$navbar-height} + #{$navbar-bottom-offset} + 1rem);
 }

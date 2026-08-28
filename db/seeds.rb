@@ -77,7 +77,7 @@ end
 claims_data = [
   {
     category: "Mold in bathroom",
-    status: "escalated",
+    status: "active",
     entries: [
       {
         date: Date.new(2025, 1, 10),
@@ -111,7 +111,7 @@ claims_data = [
   },
   {
     category: "Broken pipe under kitchen sink",
-    status: "open",
+    status: "active",
     entries: [
       {
         date: Date.new(2025, 2, 20),
@@ -145,7 +145,7 @@ claims_data = [
   },
   {
     category: "Heating failure in winter",
-    status: "resolved",
+    status: "archived",
     entries: [
       {
         date: Date.new(2024, 12, 5),
@@ -179,7 +179,7 @@ claims_data = [
   },
   {
     category: "Cockroach infestation in kitchen",
-    status: "open",
+    status: "active",
     entries: [
       {
         date: Date.new(2025, 4, 2),
@@ -213,7 +213,7 @@ claims_data = [
   },
   {
     category: "Water damage on living room ceiling",
-    status: "escalated",
+    status: "active",
     entries: [
       {
         date: Date.new(2025, 5, 15),
