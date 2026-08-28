@@ -18,6 +18,11 @@ class EntriesController < ApplicationController
 
   def create
     @entry = Entry.new(entry_params)
+    unless @entry.claim.users.include?(current_user)
+      redirect_to root_path, alert: "Not authorized."
+      return
+    end
+
     if @entry.save
       redirect_to @entry
     else
@@ -51,6 +56,6 @@ class EntriesController < ApplicationController
   end
 
   def entry_params
-    params.require(:entry).permit(:title, :description, :category, :claim_id)
+    params.require(:entry).permit(:title, :description, :category, :status, :date, :claim_id)
   end
 end

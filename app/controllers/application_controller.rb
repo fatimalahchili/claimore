@@ -19,4 +19,10 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:account_update, keys:
     [:name])
   end
+  private
+
+  def available_chat_models
+    RubyLLM.models.chat_models.all
+           .sort_by { |model| [ model.provider.to_s, model.name.to_s ] }
+  end
 end

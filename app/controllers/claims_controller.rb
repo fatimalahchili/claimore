@@ -1,16 +1,17 @@
 class ClaimsController < ApplicationController
   before_action :set_claim, only: %i[show edit update destroy timeline]
+  before_action :authorize_claim!, only: %i[show edit update destroy timeline]
 
   def index
-    @claims = Claim.all
+    @claims = Claim.joins(property: :tenants).where(tenants: { user: current_user }).distinct
   end
 
   def show
-    @entries = @claim.entries.order(date: :desc, created_at: :desc)
+    load_timeline
   end
 
   def timeline
-    @entries = @claim.entries.order(date: :desc, created_at: :desc)
+    load_timeline
   end
 
   def new
@@ -44,6 +45,23 @@ class ClaimsController < ApplicationController
 
   private
 
+  def authorize_claim!
+    return if @claim.users.include?(current_user)
+
+    redirect_to root_path, alert: "Not authorized."
+  end
+
+  def load_timeline
+    @entries = @claim.entries.order(date: :desc, created_at: :desc)
+    @focused_entry = next_or_current_entry(@entries)
+  end
+
+  def next_or_current_entry(entries)
+    dated_entries = entries.select(&:date?)
+    upcoming_entry = dated_entries.select { |entry| entry.date >= Date.current }.min_by(&:date)
+    upcoming_entry || dated_entries.max_by(&:date) || entries.first
+  end
+
   def set_claim
     @claim = Claim.find(params[:id] || params[:claim_id])
   end
@@ -52,4 +70,3 @@ class ClaimsController < ApplicationController
     params.require(:claim).permit(:category, :status, :property_id)
   end
 end
-

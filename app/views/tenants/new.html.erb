@@ -1,0 +1,6 @@
+<h1>Add a tenant</h1>
+
+<%= form_with model: @tenant, url: property_tenants_path(@property) do |f| %>
+  <%= f.collection_select :user_id, User.all, :id, :email %>
+  <%= f.submit %>
+<% end %>

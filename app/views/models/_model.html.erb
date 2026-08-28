@@ -1,0 +1,15 @@
+<% model_id = model.respond_to?(:model_id) ? model.model_id : model.id %>
+<% row_id = [model.provider, model_id].join("_").parameterize(separator: "_") %>
+<tr id="model_<%= row_id %>">
+  <td><%= model.provider_class&.name || model.provider %></td>
+  <td><%= model.respond_to?(:display_name) ? model.display_name : model.name %></td>
+  <td><%= number_with_delimiter(model.context_window) if model.context_window %></td>
+  <td>
+    <% input = model.input_price_per_million %>
+    <% output = model.output_price_per_million %>
+    <% if input && output %>
+      $<%= "%.2f" % input %> / $<%= "%.2f" % output %>
+    <% end %>
+  </td>
+  <td><%= link_to "Start chat", new_chat_path(model: model_id) %></td>
+</tr>
