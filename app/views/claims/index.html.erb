@@ -1,2 +1,76 @@
-<h1>Claims#index</h1>
-<p>Find me in app/views/claims/index.html.erb</p>
+<main class="claims-index container my-5">
+  <section class="claims-index__hero rounded-4 p-4 p-md-5 mb-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+      <div>
+        <p class="text-primary fw-semibold small text-uppercase mb-2">Claim workspace</p>
+        <h1 class="display-6 fw-bold mb-2">Your claims</h1>
+        <p class="text-secondary mb-0">Track active housing issues and review archived cases when needed.</p>
+      </div>
+      <%= link_to "New claim", new_claim_path(property_id: @property&.id), class: "btn btn-primary" %>
+    </div>
+  </section>
+
+  <% if @properties.any? %>
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+      <%= form_with url: claims_path, method: :get, class: "flex-grow-1", data: { turbo_frame: "_top" } do |form| %>
+        <%= form.label :property_id, "Property", class: "form-label small fw-semibold" %>
+        <%= form.select :property_id,
+                        options_from_collection_for_select(@properties, :id, :address, @property&.id),
+                        {},
+                        class: "form-select",
+                        onchange: "this.form.requestSubmit()" %>
+      <% end %>
+
+      <div class="d-flex gap-2">
+        <span class="badge rounded-pill text-bg-primary px-3 py-2"><%= @active_claims_count %> active</span>
+        <span class="badge rounded-pill text-bg-secondary px-3 py-2"><%= @archived_claims_count %> archived</span>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="h4 fw-bold mb-0"><%= @property.address %></h2>
+      <% if @archived_claims_count.positive? %>
+        <% if @show_archived %>
+          <%= link_to "Hide archived claims", claims_path(property_id: @property.id), class: "btn btn-sm btn-outline-secondary" %>
+        <% else %>
+          <%= link_to "Show archived claims",
+                      claims_path(property_id: @property.id, show_archived: 1),
+                      class: "btn btn-sm btn-outline-secondary" %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <% if @claims.any? %>
+      <div class="row g-3">
+        <% @claims.each do |claim| %>
+          <div class="col-12 col-md-6">
+            <article class="claim-index-card <%= 'claim-index-card--archived' if claim.status == 'archived' %> card h-100 rounded-4 shadow-sm p-4">
+              <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                <div>
+                  <p class="text-muted small mb-1">Claim #<%= claim.id %></p>
+                  <h3 class="h5 fw-bold mb-0"><%= claim.category.presence || "Housing claim" %></h3>
+                </div>
+                <span class="badge rounded-pill <%= claim.status == 'archived' ? 'text-bg-secondary' : 'text-bg-success' %> text-uppercase">
+                  <%= claim.status.presence || "active" %>
+                </span>
+              </div>
+              <p class="text-muted small mb-3">Updated <%= time_ago_in_words(claim.updated_at) %> ago</p>
+              <%= link_to "Open claim", claim_path(claim), class: "btn btn-sm btn-outline-primary align-self-start" %>
+            </article>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <section class="text-center border rounded-4 p-5 bg-white">
+        <h3 class="h5 fw-bold">No <%= @show_archived ? "claims" : "active claims" %> found</h3>
+        <p class="text-muted mb-3">This property has no claims in the selected view.</p>
+        <%= link_to "Create a claim", new_claim_path(property_id: @property.id), class: "btn btn-primary" %>
+      </section>
+    <% end %>
+  <% else %>
+    <section class="text-center border rounded-4 p-5 bg-white">
+      <h2 class="h4 fw-bold">No property connected</h2>
+      <p class="text-muted mb-0">Connect a property before creating and tracking claims.</p>
+    </section>
+  <% end %>
+</main>
