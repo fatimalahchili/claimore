@@ -1,17 +1,43 @@
-.navbar-lewagon {
-  justify-content: space-between;
-  background: white;
+body {
+  padding-bottom: calc(56px + env(safe-area-inset-bottom));
 }
 
-.navbar-lewagon .navbar-collapse {
-  flex-grow: 0;
+.navbar-instagram {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 56px;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: $bg-surface;
+  border-top: 1px solid $border-light;
 }
 
-.navbar-lewagon .navbar-brand img {
-  width: 40px;
+.navbar-instagram .nav-icon-link,
+.navbar-instagram .dropdown-toggle-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  font-size: 1.4rem;
+  color: $text-secondary;
 }
 
-.navbar-lewagon .nav-link.active {
+.navbar-instagram .nav-icon-link.active,
+.navbar-instagram .dropdown-toggle-icon.show,
+.navbar-instagram .dropup.show .dropdown-toggle-icon {
   color: $brand-primary;
-  font-weight: 600;
+}
+
+.navbar-instagram .dropdown-toggle-icon::after {
+  display: none;
+}
+
+.navbar-instagram .dropdown-menu {
+  margin-bottom: 0.5rem;
 }
