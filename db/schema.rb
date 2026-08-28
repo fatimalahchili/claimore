@@ -68,7 +68,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_28_114014) do
     t.string "category"
     t.datetime "created_at", null: false
     t.bigint "property_id", null: false
-    t.string "status", default: "active"
+    t.string "status"
     t.datetime "updated_at", null: false
     t.index ["property_id"], name: "index_claims_on_property_id"
   end
