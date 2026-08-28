@@ -2,24 +2,31 @@
 
 puts "Clearing existing data... 🧹"
 
+puts "-------------------------"
+puts "-------------------------"
+
 Entry.destroy_all
 Claim.destroy_all
 Contact.destroy_all
 Tenant.destroy_all
 Property.destroy_all
 User.destroy_all
-Admistration.destroy_all
+Administration.destroy_all
+Template.destroy_all
 
 puts "Existing data sweeped out... 🧹✨"
-
+puts "-------------------------"
 
 ########### CREATION ###########
 
 puts "🌱🌱 Seeding database... 🌱🌱"
+puts "-------------------------"
+
 
 ##### USER #####
 
 puts "1 - Creating users..."
+puts "-------------------------"
 
 main_tenant_user = User.find_or_create_by!(email: "main.tenant@claimore.app") do |user|
   user.name = "Joey Tribbian"
@@ -41,23 +48,28 @@ co_tenant_user = User.find_or_create_by!(email: "life.partner@claimore.app") do 
   user.password = "password123"
 end
 
-puts "#{User.count} users created\n\n"
+puts "➔ #{User.count} users created\n\n"
+puts "-------------------------"
+puts "-------------------------"
 
 
 
 ##### PROPERTY #####
 
 puts "2 - Creating properties..."
+puts "-------------------------"
 
 property = Property.find_or_create_by!(address: "Jungstraße 10, 10247, 2nd floor VH 2.OG MR")
 
-puts "#{Property.count} properties created\n\n"
-
+puts "➔ #{Property.count} properties created\n\n"
+puts "-------------------------"
+puts "-------------------------"
 
 
 ##### TENANT #####
 
 puts "3 - Creating tenants..."
+puts "-------------------------"
 
 Tenant.find_or_create_by!(user: main_tenant_user, property: property) do |tenant|
   tenant.role = "main_tenant"
@@ -75,13 +87,15 @@ Tenant.find_or_create_by!(user: life_partner_user, property: property) do |tenan
   tenant.role = "life_partner"
 end
 
-puts "#{Tenant.count} tenants created\n\n"
-
+puts "➔ #{Tenant.count} tenants created\n\n"
+puts "-------------------------"
+puts "-------------------------"
 
 
 ##### CONTACT #####
 
 puts "4 - Creating contacts..."
+puts "-------------------------"
 
 contacts_data = [
   {
@@ -120,17 +134,20 @@ contacts_data.each do |contact_data|
   end
 end
 
-puts "#{Contact.count} contacts created\n\n"
+puts "➔ #{Contact.count} contacts created\n\n"
+puts "-------------------------"
+puts "-------------------------"
 
 
 ##### CLAIM #####
 
 puts "5 - Creating claims..."
+puts "-------------------------"
 
 claims_data = [
   {
     category: "Mold in bathroom",
-    status: "escalated",
+    status: "active",
     entries: [
       {
         date: Date.new(2025, 1, 10),
@@ -164,7 +181,7 @@ claims_data = [
   },
   {
     category: "Broken pipe under kitchen sink",
-    status: "open",
+    status: "archived",
     entries: [
       {
         date: Date.new(2025, 2, 20),
@@ -198,7 +215,7 @@ claims_data = [
   },
   {
     category: "Heating failure in winter",
-    status: "resolved",
+    status: "archived",
     entries: [
       {
         date: Date.new(2024, 12, 5),
@@ -232,7 +249,7 @@ claims_data = [
   },
   {
     category: "Cockroach infestation in kitchen",
-    status: "open",
+    status: "archived",
     entries: [
       {
         date: Date.new(2025, 4, 2),
@@ -266,7 +283,7 @@ claims_data = [
   },
   {
     category: "Water damage on living room ceiling",
-    status: "escalated",
+    status: "active",
     entries: [
       {
         date: Date.new(2025, 5, 15),
@@ -316,27 +333,32 @@ claims_data.each do |claim_data|
   end
 end
 
-puts "#{Claim.count} claims created\n\n"
+puts "➔ #{Claim.count} claims created\n\n"
+puts "-------------------------"
+puts "-------------------------"
 
 
 
 ##### ADMINISTRATION #####
 
 puts "6 - Creating administrations..."
+puts "-------------------------"
 
-Admistration.find_or_create_by!(name: "Gesundheitsamt Friedrichshain-Kreuzberg") do |admistration|
-  admistration.role = "Gesundheitsamt"
-  admistration.address = "Curt Bejach Gesundheitshaus, Urbanstraße 24, 10967 Berlin-Bezirk Friedrichshain-Kreuzberg"
-  admistration.phone_number = "030 115"
+Administration.find_or_create_by!(name: "Gesundheitsamt Friedrichshain-Kreuzberg") do |administration|
+  administration.role = "Gesundheitsamt"
+  administration.address = "Curt Bejach Gesundheitshaus, Urbanstraße 24, 10967 Berlin-Bezirk Friedrichshain-Kreuzberg"
+  administration.phone_number = "030 115"
 end
 
-puts "#{Admistration.count} administrations created\n\n"
-
+puts "➔ #{Administration.count} administrations created\n\n"
+puts "-------------------------"
+puts "-------------------------"
 
 
 ##### LETTER TEMPLATES #####
 
 puts "7 - Creating letter templates..."
+puts "-------------------------"
 
 Template.find_or_create_by!(name: "Mängelanzeige an Vermieter oder Verwalter") do |template|
   template.description_de = "Formelle Mängelanzeige an den Vermieter oder die Hausverwaltung zur Meldung von Wohnungsmängeln."
@@ -558,6 +580,9 @@ Template.find_or_create_by!(name: "Mahnung – Zurückweisung") do |template|
 end
 
 
-puts "#{Template.count} letter templates created\n\n"
-
+puts "➔ #{Template.count} letter templates created\n\n"
+puts "-------------------------"
+puts "-------------------------"
+puts "-------------------------"
+puts "-------------------------"
 puts "To see things in the seed, that is genius 🌱 — Lao Tzu"
