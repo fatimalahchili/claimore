@@ -1,7 +1,10 @@
 <nav class="navbar-air">
   <% if user_signed_in? %>
-    <%= link_to claims_path, class: "nav-icon-link #{'active' if request.path.start_with?(claims_path)}", "aria-label": "Claims", title: "Claims" do %>
+    <%= link_to dashboard_path, class: "nav-icon-link #{'active' if current_page?(dashboard_path)}", "aria-label": "Dashboard", title: "Dashboard" do %>
       <i class="fa-solid fa-house"></i>
+    <% end %>
+    <%= link_to claims_path, class: "nav-icon-link #{'active' if request.path.start_with?(claims_path)}", "aria-label": "Claims", title: "Claims" do %>
+      <i class="fa-solid fa-list-check"></i>
     <% end %>
     <%= link_to contacts_path, class: "nav-icon-link #{'active' if request.path.start_with?(contacts_path)}", "aria-label": "Contacts", title: "Contacts" do %>
       <i class="fa-solid fa-address-book"></i>
