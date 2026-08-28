@@ -18,6 +18,7 @@ class TenantsController < ApplicationController
     @tenant = Tenant.new(tenant_params)
     @tenant.property = @property
     if @tenant.save
+      TenantMailer.added(@tenant).deliver_later
       redirect_to @tenant.property
     else
       redirect_to new_property_tenant_path(@property), alert: @tenant.errors.full_messages.to_sentence
