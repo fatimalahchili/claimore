@@ -6,7 +6,7 @@ class EntriesControllerTest < ActionDispatch::IntegrationTest
     sign_in @user
     @property = Property.create!(address: "123 Main St", moved_on: Date.current)
     Tenant.create!(user: @user, property: @property)
-    @claim = Claim.create!(property: @property, category: "damage", status: "open")
+    @claim = Claim.create!(property: @property, category: "damage", status: "active")
     @entry = Entry.create!(claim: @claim, title: "Broken window", description: "Cracked pane", category: "damage")
   end
 
@@ -22,7 +22,9 @@ class EntriesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create entry" do
     assert_difference("Entry.count") do
-      post entries_url, params: { entry: { title: "Water damage", description: "Leaky roof", category: "damage", claim_id: @claim.id } }
+      post entries_url, params: {
+        entry: { title: "Water damage", description: "Leaky roof", category: "damage", claim_id: @claim.id }
+      }
     end
     assert_redirected_to entry_url(Entry.last)
   end
