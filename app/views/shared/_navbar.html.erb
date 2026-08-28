@@ -1,38 +1,34 @@
-<nav class="navbar navbar-expand-sm navbar-light navbar-lewagon">
-  <div class="container-fluid">
-    <%= link_to "#", class: "navbar-brand" do %>
-      <%= image_tag "https://raw.githubusercontent.com/lewagon/fullstack-images/master/uikit/logo.png" %>
+<nav class="navbar-air">
+  <% if user_signed_in? %>
+    <%= link_to claims_path, class: "nav-icon-link #{'active' if request.path.start_with?(claims_path)}", "aria-label": "Claims", title: "Claims" do %>
+      <i class="fa-solid fa-house"></i>
+    <% end %>
+    <%= link_to contacts_path, class: "nav-icon-link #{'active' if request.path.start_with?(contacts_path)}", "aria-label": "Contacts", title: "Contacts" do %>
+      <i class="fa-solid fa-address-book"></i>
+    <% end %>
+    <%= link_to templates_path, class: "nav-icon-link #{'active' if request.path.start_with?(templates_path)}", "aria-label": "Templates", title: "Templates" do %>
+      <i class="fa-solid fa-file-lines"></i>
+    <% end %>
+    <%= link_to administrations_path, class: "nav-icon-link #{'active' if request.path.start_with?(administrations_path)}", "aria-label": "Administrations", title: "Administrations" do %>
+      <i class="fa-solid fa-building"></i>
     <% end %>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto">
-        <% if user_signed_in? %>
-          <li class="nav-item active">
-            <%= link_to "Home", "#", class: "nav-link" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Messages", "#", class: "nav-link" %>
-          </li>
-          <li class="nav-item dropdown">
-          <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <%= image_tag "https://kitt.lewagon.com/placeholder/users/ssaunier", class: "avatar", alt: "dropdown menu" %>
-          </a>
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <%= link_to "Action", "#", class: "dropdown-item" %>
-              <%= link_to "Another action", "#", class: "dropdown-item" %>
-              <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" %>
-            </div>
-          </li>
-        <% else %>
-          <li class="nav-item">
-            <%= link_to "Login", new_user_session_path, class: "nav-link" %>
-          </li>
-        <% end %>
-      </ul>
+    <div class="dropup nav-icon-link">
+      <a href="#" class="dropdown-toggle-icon" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Account" title="Account">
+        <i class="fa-solid fa-user"></i>
+      </a>
+      <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+        <span class="dropdown-item-text text-muted small"><%= current_user.email %></span>
+        <div class="dropdown-divider"></div>
+        <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "dropdown-item" %>
+      </div>
     </div>
-  </div>
+  <% else %>
+    <%= link_to new_user_session_path, class: "nav-icon-link #{'active' if current_page?(new_user_session_path)}", "aria-label": "Login", title: "Login" do %>
+      <i class="fa-solid fa-right-to-bracket"></i>
+    <% end %>
+    <%= link_to new_user_registration_path, class: "nav-icon-link #{'active' if current_page?(new_user_registration_path)}", "aria-label": "Sign up", title: "Sign up" do %>
+      <i class="fa-solid fa-user-plus"></i>
+    <% end %>
+  <% end %>
 </nav>
