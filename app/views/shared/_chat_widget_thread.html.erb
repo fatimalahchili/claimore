@@ -1,0 +1,49 @@
+<% if chat.nil? %>
+  <div class="chat-widget__greeting">
+    <%= render "shared/claim_blob", size: "float" %>
+    <p class="chat-widget__greeting-title">
+      <% if user_signed_in? %>
+        Hello, <%= current_user.name.presence&.split&.first || "there" %>!
+      <% else %>
+        Hi, I'm Claim!
+      <% end %>
+    </p>
+    <p class="chat-widget__greeting-text">
+      <%= claim ? "How can I help with this claim?" : "How can I help you today?" %>
+    </p>
+  </div>
+
+  <div class="chat-widget__chips">
+    <% chips = claim ? [
+      "Summarize this claim",
+      "What should I do next?",
+      "Explain my rights",
+      "Draft a message to my landlord",
+    ] : [
+      "Summarize my open claims",
+      "What should I do next?",
+      "Explain my rights as a tenant",
+      "Help me draft a message",
+    ] %>
+    <% chips.each do |chip| %>
+      <%= button_to chip, chats_path, params: { chat: { claim_id: claim&.id, prompt: chip } }, class: "chat-widget__chip" %>
+    <% end %>
+  </div>
+
+  <%= form_with model: Chat.new, url: chats_path, class: "chat-widget__form" do |form| %>
+    <%= form.hidden_field :claim_id, value: claim&.id %>
+    <%= form.text_field :prompt, placeholder: "Ask me anything…", autocomplete: "off", class: "chat-widget__input" %>
+    <button type="submit" class="chat-widget__send" aria-label="Send message">
+      <i class="fa-solid fa-paper-plane"></i>
+    </button>
+  <% end %>
+<% else %>
+  <%= turbo_stream_from "chat_#{chat.id}" %>
+  <div class="chat-widget__messages" id="messages" data-chat-widget-target="messages">
+    <% chat.messages.where.not(id: nil).each do |message| %>
+      <%= render message %>
+    <% end %>
+  </div>
+
+  <%= render "messages/form", chat: chat, message: chat.messages.build %>
+<% end %>

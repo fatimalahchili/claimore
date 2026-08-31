@@ -9,7 +9,8 @@ class TenantInvitationsController < ApplicationController
     @invitation = @property.tenant_invitations.new(user: user, invited_by: current_user)
 
     if @invitation.save
-      redirect_to property_tenant_invitation_path(@property, @invitation)
+      deliver_invitation(@invitation) if params[:delivery_method] == "email"
+      redirect_to property_tenant_invitation_path(@property, @invitation), notice: @notice
     else
       redirect_to new_property_tenant_path(@property), alert: @invitation.errors.full_messages.to_sentence
     end
@@ -58,5 +59,10 @@ class TenantInvitationsController < ApplicationController
 
   def set_invitation_by_token
     @invitation = TenantInvitation.find_by!(token: params[:token])
+  end
+
+  def deliver_invitation(invitation)
+    TenantMailer.with(invitation: invitation).invited.deliver_later
+    @notice = "Invitation email sent to #{invitation.user.email}."
   end
 end

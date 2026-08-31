@@ -1,5 +1,5 @@
 class TenantsController < ApplicationController
-  before_action :set_property, only: %i[new create]
+  before_action :set_property, only: %i[index new create]
   before_action :set_tenant, only: %i[update destroy]
   before_action :authorize_main_tenant!, only: %i[new create]
 
@@ -67,6 +67,6 @@ class TenantsController < ApplicationController
   end
 
   def tenant_params
-    params.require(:tenant).permit(:user_id)
+    params.require(:tenant).permit(:user_id, :status)
   end
 end

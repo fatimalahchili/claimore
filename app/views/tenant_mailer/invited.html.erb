@@ -1,0 +1,5 @@
+<p>Hi <%= @invitation.user.name || @invitation.user.email %>,</p>
+
+<p><%= @invitation.invited_by.name || @invitation.invited_by.email %> has invited you to join <%= @property.address %> as a <%= @invitation.role.humanize.downcase %>.</p>
+
+<p><%= link_to "Accept invitation", @invite_url %></p>

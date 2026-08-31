@@ -1,0 +1,36 @@
+<% claim = current_context_claim %>
+<% chat = if user_signed_in?
+  current_user.chats.where(claim: claim).order(created_at: :desc).first
+else
+  Chat.find_by(session_id: guest_chat_session_id, user_id: nil)
+end %>
+
+<div class="chat-widget" data-controller="chat-widget">
+  <div class="chat-widget__panel" id="chat_widget_panel" data-chat-widget-target="panel" role="dialog" aria-label="Assistant chat" aria-hidden="true">
+    <header class="chat-widget__header">
+      <%= render "shared/claim_blob", size: "sm" %>
+      <div class="chat-widget__heading">
+        <strong>Claim</strong>
+        <span><%= claim ? (claim.category.presence || "Tenancy Claim") : "Your AI Assistant" %></span>
+      </div>
+      <button type="button" class="chat-widget__close" data-action="chat-widget#close" aria-label="Close chat">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </header>
+
+    <div class="chat-widget__body" id="chat_widget_body" data-chat-widget-target="body">
+      <%= render "shared/chat_widget_thread", claim: claim, chat: chat %>
+    </div>
+  </div>
+
+  <button type="button"
+          class="chat-widget__launcher"
+          data-chat-widget-target="launcher"
+          data-action="chat-widget#toggle"
+          aria-expanded="false"
+          aria-controls="chat_widget_panel"
+          aria-label="Open assistant chat">
+    <%= render "shared/claim_blob" %>
+    <i class="fa-solid fa-xmark chat-widget__launcher-close" aria-hidden="true"></i>
+  </button>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_31_074411) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_31_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,7 +42,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_074411) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "admistrations", force: :cascade do |t|
+  create_table "administrations", force: :cascade do |t|
     t.text "address"
     t.datetime "created_at", null: false
     t.string "email"
@@ -54,13 +54,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_074411) do
   end
 
   create_table "chats", force: :cascade do |t|
-    t.bigint "claim_id", null: false
+    t.bigint "claim_id"
     t.datetime "created_at", null: false
     t.bigint "model_id"
+    t.string "session_id"
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.index ["claim_id"], name: "index_chats_on_claim_id"
     t.index ["model_id"], name: "index_chats_on_model_id"
+    t.index ["session_id"], name: "index_chats_on_session_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
   end
 
@@ -302,13 +304,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_074411) do
   end
 
   create_table "templates", force: :cascade do |t|
+    t.text "content"
     t.datetime "created_at", null: false
     t.text "description_de"
     t.text "description_en"
     t.text "instructions_de"
     t.text "instructions_en"
+    t.jsonb "metadata", default: {}, null: false
     t.string "name"
-    t.text "template"
     t.datetime "updated_at", null: false
   end
 
@@ -331,10 +334,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_074411) do
     t.datetime "created_at", null: false
     t.bigint "property_id", null: false
     t.string "role", default: "guest", null: false
+    t.string "status", default: "invited", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["property_id"], name: "index_tenants_on_property_id"
     t.index ["role"], name: "index_tenants_on_role"
+    t.index ["status"], name: "index_tenants_on_status"
     t.index ["user_id"], name: "index_tenants_on_user_id"
   end
 

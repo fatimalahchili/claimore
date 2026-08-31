@@ -1,41 +1,105 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+########### DESTRUCTION ###########
 
-property = Property.find_or_create_by!(address: "Jungstraße 10, 10247, 2nd floor VH 2.OG MR")
+puts "Clearing existing data... 🧹"
+
+puts "-------------------------"
+puts "-------------------------"
+
+Entry.destroy_all
+Claim.destroy_all
+Contact.destroy_all
+Tenant.destroy_all
+Property.destroy_all
+User.destroy_all
+Administration.destroy_all
+Template.destroy_all
+
+puts "Existing data sweeped out... 🧹✨"
+puts "-------------------------"
+
+########### CREATION ###########
+
+puts "🌱🌱 Seeding database... 🌱🌱"
+puts "-------------------------"
+
+
+##### USER #####
+
+puts "1 - Creating users..."
+puts "-------------------------"
 
 main_tenant_user = User.find_or_create_by!(email: "main.tenant@claimore.app") do |user|
-  user.name = "Anna Weber"
+  user.name = "Joey Tribbian"
   user.password = "password123"
 end
 
 sub_tenant_user = User.find_or_create_by!(email: "sub.tenant@claimore.app") do |user|
-  user.name = "Jonas Becker"
+  user.name = "Phoebe Buffay"
   user.password = "password123"
 end
 
-co_tenant_user = User.find_or_create_by!(email: "co.tenant@claimore.app") do |user|
-  user.name = "Laura Fischer"
+life_partner_user = User.find_or_create_by!(email: "co.tenant@claimore.app") do |user|
+  user.name = "Rachel Green"
   user.password = "password123"
 end
+
+co_tenant_user = User.find_or_create_by!(email: "life.partner@claimore.app") do |user|
+  user.name = "Chandler Bing"
+  user.password = "password123"
+end
+
+puts "➔ #{User.count} users created\n\n"
+puts "-------------------------"
+puts "-------------------------"
+
+
+
+##### PROPERTY #####
+
+puts "2 - Creating properties..."
+puts "-------------------------"
+
+property = Property.find_or_create_by!(address: "Jungstraße 10, 10247, 2nd floor VH 2.OG MR")
+
+puts "➔ #{Property.count} properties created\n\n"
+puts "-------------------------"
+puts "-------------------------"
+
+
+##### TENANT #####
+
+puts "3 - Creating tenants..."
+puts "-------------------------"
 
 Tenant.find_or_create_by!(user: main_tenant_user, property: property) do |tenant|
   tenant.role = "main_tenant"
+  tenant.status = "tenant"
 end
 
 Tenant.find_or_create_by!(user: sub_tenant_user, property: property) do |tenant|
   tenant.role = "sub_tenant"
+  tenant.status = "tenant"
 end
 
 Tenant.find_or_create_by!(user: co_tenant_user, property: property) do |tenant|
   tenant.role = "co_tenant"
+  tenant.status = "tenant"
 end
+
+Tenant.find_or_create_by!(user: life_partner_user, property: property) do |tenant|
+  tenant.role = "life_partner"
+  tenant.status = "tenant"
+end
+
+puts "➔ #{Tenant.count} tenants created\n\n"
+puts "-------------------------"
+puts "-------------------------"
+
+
+##### CONTACT #####
+
+puts "4 - Creating contacts..."
+puts "-------------------------"
 
 contacts_data = [
   {
@@ -74,10 +138,20 @@ contacts_data.each do |contact_data|
   end
 end
 
+puts "➔ #{Contact.count} contacts created\n\n"
+puts "-------------------------"
+puts "-------------------------"
+
+
+##### CLAIM #####
+
+puts "5 - Creating claims..."
+puts "-------------------------"
+
 claims_data = [
   {
     category: "Mold in bathroom",
-    status: "escalated",
+    status: "active",
     entries: [
       {
         date: Date.new(2025, 1, 10),
@@ -111,7 +185,7 @@ claims_data = [
   },
   {
     category: "Broken pipe under kitchen sink",
-    status: "open",
+    status: "archived",
     entries: [
       {
         date: Date.new(2025, 2, 20),
@@ -145,7 +219,7 @@ claims_data = [
   },
   {
     category: "Heating failure in winter",
-    status: "resolved",
+    status: "archived",
     entries: [
       {
         date: Date.new(2024, 12, 5),
@@ -179,7 +253,7 @@ claims_data = [
   },
   {
     category: "Cockroach infestation in kitchen",
-    status: "open",
+    status: "archived",
     entries: [
       {
         date: Date.new(2025, 4, 2),
@@ -213,7 +287,7 @@ claims_data = [
   },
   {
     category: "Water damage on living room ceiling",
-    status: "escalated",
+    status: "active",
     entries: [
       {
         date: Date.new(2025, 5, 15),
@@ -247,6 +321,7 @@ claims_data = [
   }
 ]
 
+
 claims_data.each do |claim_data|
   claim = Claim.find_or_create_by!(property: property, category: claim_data[:category]) do |c|
     c.status = claim_data[:status]
@@ -262,8 +337,256 @@ claims_data.each do |claim_data|
   end
 end
 
-Admistration.find_or_create_by!(name: "Gesundheitsamt Friedrichshain-Kreuzberg") do |admistration|
-  admistration.role = "Gesundheitsamt"
-  admistration.address = "Curt Bejach Gesundheitshaus, Urbanstraße 24, 10967 Berlin-Bezirk Friedrichshain-Kreuzberg"
-  admistration.phone_number = "030 115"
+puts "➔ #{Claim.count} claims created\n\n"
+puts "-------------------------"
+puts "-------------------------"
+
+
+
+##### ADMINISTRATION #####
+
+puts "6 - Creating administrations..."
+puts "-------------------------"
+
+Administration.find_or_create_by!(name: "Gesundheitsamt Friedrichshain-Kreuzberg") do |administration|
+  administration.role = "Gesundheitsamt"
+  administration.address = "Curt Bejach Gesundheitshaus, Urbanstraße 24, 10967 Berlin-Bezirk Friedrichshain-Kreuzberg"
+  administration.phone_number = "030 115"
 end
+
+puts "➔ #{Administration.count} administrations created\n\n"
+puts "-------------------------"
+puts "-------------------------"
+
+
+##### LETTER TEMPLATES #####
+
+puts "7 - Creating letter templates..."
+puts "-------------------------"
+
+Template.find_or_create_by!(name: "Mängelanzeige an Vermieter oder Verwalter") do |template|
+  template.description_de = "Formelle Mängelanzeige an den Vermieter oder die Hausverwaltung zur Meldung von Wohnungsmängeln."
+  template.description_en = "Formal notice to the landlord or property manager reporting defects in the rented apartment."
+  template.instructions_de = "Beschreiben Sie Art, Umfang und Lage des Mangels möglichst genau und setzen Sie eine angemessene Frist zur Behebung. Versenden Sie das Schreiben nachweisbar (z. B. per Einschreiben)."
+  template.instructions_en = "Describe the type, extent, and location of the defect as precisely as possible and set a reasonable deadline for repair. Send the letter in a way that can be proven (e.g. registered mail)."
+  template.content = <<~LETTER
+    Berlin, den {{date}}
+
+    An {{recipient_name}}
+    {{recipient_address}}
+
+    Betr.: Mängelanzeige für die Wohnung {{property_address}}
+
+    Sehr geehrte Damen und Herren,
+
+    hiermit möchten wir Ihnen mitteilen, dass in unserer Wohnung seit dem {{defect_date}} folgende(r) Mangel/Mängel besteht/bestehen:
+
+    {{defect_description}}
+
+    Wir bitten Sie, die Beseitigung dieser Mängel möglichst umgehend zu veranlassen. Bitte teilen Sie uns bis zum {{response_deadline}} mit, wann mit der Behebung zu rechnen ist.
+
+    Mit freundlichen Grüßen
+    {{tenant_names}}
+  LETTER
+  template.metadata = {
+    type: "defect_notification",
+    tone: "formal",
+    language: "de",
+    source: "Berliner Mieterverein",
+    source_url: "https://www.berliner-mieterverein.de/musterschreiben/maengelanzeige-an-vermieter-oder-verwalter/",
+    estimated_length: "150-250 words",
+    legal_references: [ "§ 536c BGB" ],
+    required_fields: [
+      { variable: "recipient_name", description: "Name of the landlord or property manager", type: "text" },
+      { variable: "recipient_address", description: "Address of the landlord or property manager", type: "text" },
+      { variable: "property_address", description: "Address of the rented apartment", type: "text" },
+      { variable: "defect_date", description: "Date the defect first appeared", type: "date" },
+      { variable: "defect_description", description: "Precise description of type, extent, and location of the defect(s)", type: "long_text" },
+      { variable: "response_deadline", description: "Deadline by which the landlord should respond", type: "date" },
+      { variable: "tenant_names", description: "Name(s) of the tenant(s) signing the letter", type: "text" }
+    ]
+  }
+end
+
+Template.find_or_create_by!(name: "Mängelanzeige mit Fristsetzung") do |template|
+  template.description_de = "Mängelanzeige mit Fristsetzung zur Mängelbeseitigung und Erklärung der Mietzahlung unter Vorbehalt."
+  template.description_en = "Defect notice with a repair deadline and a declaration that rent will be paid under reservation of reclaim."
+  template.instructions_de = "Fügen Sie eine detaillierte Mängelliste bei und versenden Sie das Schreiben nachweisbar. Diese Vorlage eignet sich, wenn eine erste Mängelanzeige ohne Reaktion blieb."
+  template.instructions_en = "Attach a detailed list of defects and send the letter with proof of delivery. This template is suited for cases where an initial defect notice went unanswered."
+  template.content = <<~LETTER
+    Berlin, den {{date}}
+
+    An {{recipient_name}}
+    {{recipient_address}}
+
+    Betr.: Mängelanzeige mit Fristsetzung für die Wohnung {{property_address}}
+
+    Sehr geehrte Damen und Herren,
+
+    gemäß § 536 c BGB machen wir Ihnen hiermit Anzeige von den jüngst in unserer Wohnung aufgetretenen Mängeln:
+
+    {{defect_description}}
+
+    Wir fordern Sie auf, die Mängel bis zum {{repair_deadline}} zu beseitigen. Sollte dieser Termin nicht eingehalten werden können, bitten wir um umgehende Mitteilung der Gründe.
+
+    Für den Fall, dass die Mängel nicht fristgerecht behoben werden, behalten wir uns vor, einen Handwerker auf Ihre Kosten zu beauftragen (Ersatzvornahme) sowie ggf. ein Sachverständigengutachten einzuholen.
+
+    Gemäß § 536 BGB mindert sich die Miete kraft Gesetzes aufgrund der Gebrauchsbeeinträchtigung. Wir werden die Mietzahlungen ab sofort unter dem Vorbehalt der Rückforderung leisten.
+
+    Mit freundlichen Grüßen
+    {{tenant_names}}
+  LETTER
+  template.metadata = {
+    type: "defect_notification_with_deadline",
+    tone: "formal",
+    language: "de",
+    source: "Berliner Mieterverein",
+    source_url: "https://www.berliner-mieterverein.de/musterschreiben/maengelanzeige-mit-fristsetzung-erklaerung-der-vorbehaltszahlung/",
+    estimated_length: "200-300 words",
+    legal_references: [ "§ 536 BGB", "§ 536c BGB" ],
+    required_fields: [
+      { variable: "recipient_name", description: "Name of the landlord or property manager", type: "text" },
+      { variable: "recipient_address", description: "Address of the landlord or property manager", type: "text" },
+      { variable: "property_address", description: "Address of the rented apartment", type: "text" },
+      { variable: "defect_description", description: "Precise description of type, extent, and location of the defect(s)", type: "long_text" },
+      { variable: "repair_deadline", description: "Deadline by which the defects must be repaired", type: "date" },
+      { variable: "tenant_names", description: "Name(s) of the tenant(s) signing the letter", type: "text" }
+    ]
+  }
+end
+
+Template.find_or_create_by!(name: "Betriebskostenabrechnung ist fehlerhaft") do |template|
+  template.description_de = "Widerspruch gegen eine fehlerhafte Betriebskosten- oder Heizkostenabrechnung mit Aufforderung zur Belegeinsicht."
+  template.description_en = "Objection to an incorrect operating or heating cost statement, requesting access to supporting documents."
+  template.instructions_de = "Listen Sie die konkret beanstandeten Punkte der Abrechnung auf (z. B. fehlender Abrechnungszeitraum, nicht nachvollziehbarer Verteilerschlüssel). Die Antwortfrist sollte angemessen sein (ca. 14 Tage)."
+  template.instructions_en = "List the specific issues found in the statement (e.g. missing billing period, unclear distribution key). Allow a reasonable response deadline (around 14 days)."
+  template.content = <<~LETTER
+    Berlin, den {{date}}
+
+    An {{recipient_name}}
+    {{recipient_address}}
+
+    Betr.: Betriebskostenabrechnung/Heizkostenabrechnung vom {{statement_date}} für die Wohnung {{property_address}}
+
+    Sehr geehrte Damen und Herren,
+
+    die Abrechnung der Betriebskosten/Heizkosten habe ich erhalten. Bei der Prüfung sind mir folgende Mängel aufgefallen:
+
+    {{billing_issues}}
+
+    Bitte übersenden Sie mir Kopien der entsprechenden Belege (Erstattung der Kopierkosten in Höhe von 0,26 € pro Seite biete ich an) oder vereinbaren Sie mit mir einen Termin zur Einsichtnahme in die Originalunterlagen bis zum {{response_deadline}}.
+
+    Bis zur Vorlage einer ordnungsgemäß erstellten Abrechnung bin ich zur Nachzahlung nicht verpflichtet.
+
+    Mit freundlichen Grüßen
+    {{tenant_names}}
+  LETTER
+  template.metadata = {
+    type: "utility_bill_dispute",
+    tone: "formal",
+    language: "de",
+    source: "Berliner Mieterverein",
+    source_url: "https://www.berliner-mieterverein.de/musterschreiben/betriebskostenabrechnung-heizkostenabrechnung-ist-fehlerhaft/",
+    estimated_length: "150-250 words",
+    legal_references: [ "§ 556 BGB" ],
+    required_fields: [
+      { variable: "recipient_name", description: "Name of the landlord or property manager", type: "text" },
+      { variable: "recipient_address", description: "Address of the landlord or property manager", type: "text" },
+      { variable: "property_address", description: "Address of the rented apartment", type: "text" },
+      { variable: "statement_date", description: "Date of the operating/heating cost statement", type: "date" },
+      { variable: "billing_issues", description: "List of the specific errors or missing information found in the statement", type: "long_text" },
+      { variable: "response_deadline", description: "Deadline by which the landlord should respond", type: "date" },
+      { variable: "tenant_names", description: "Name(s) of the tenant(s) signing the letter", type: "text" }
+    ]
+  }
+end
+
+Template.find_or_create_by!(name: "Kündigung des Mietverhältnisses") do |template|
+  template.description_de = "Ordentliche Kündigung des Mietverhältnisses durch den Mieter/die Mieter unter Einhaltung der gesetzlichen Kündigungsfrist."
+  template.description_en = "Standard tenant-initiated termination of the lease, observing the statutory notice period."
+  template.instructions_de = "Alle im Mietvertrag genannten Mieter müssen eigenhändig unterschreiben. Die gesetzliche Kündigungsfrist beträgt in der Regel drei Monate. Versenden Sie das Schreiben nachweisbar."
+  template.instructions_en = "All tenants named in the lease must sign by hand. The statutory notice period is generally three months. Send the letter with proof of delivery."
+  template.content = <<~LETTER
+    Berlin, den {{date}}
+
+    An {{recipient_name}}
+    {{recipient_address}}
+
+    Betr.: Kündigung – Mieternummer {{tenant_number}}
+
+    Sehr geehrte Damen und Herren,
+
+    hiermit kündigen wir unseren Mietvertrag über die Wohnung {{property_address}} fristgerecht zum {{termination_date}}.
+
+    Wir bitten Sie, mit uns rechtzeitig Besichtigungstermine für Nachmieter zu vereinbaren, und bitten um schriftliche Bestätigung des Erhalts dieser Kündigung.
+
+    Mit freundlichen Grüßen
+    {{tenant_names}}
+    [eigenhändige Unterschrift aller Mieter]
+  LETTER
+  template.metadata = {
+    type: "lease_termination",
+    tone: "formal",
+    language: "de",
+    source: "Berliner Mieterverein",
+    source_url: "https://www.berliner-mieterverein.de/musterschreiben/kuendigungsschreiben-des-mietverhaeltnisses/",
+    estimated_length: "100-150 words",
+    legal_references: [ "§ 573c BGB" ],
+    required_fields: [
+      { variable: "recipient_name", description: "Name of the landlord or property manager", type: "text" },
+      { variable: "recipient_address", description: "Address of the landlord or property manager", type: "text" },
+      { variable: "tenant_number", description: "Tenant/contract number, if available", type: "text" },
+      { variable: "property_address", description: "Address of the rented apartment", type: "text" },
+      { variable: "termination_date", description: "Date the lease should end, respecting the statutory notice period", type: "date" },
+      { variable: "tenant_names", description: "Name(s) of all tenants named in the lease", type: "text" }
+    ]
+  }
+end
+
+Template.find_or_create_by!(name: "Mahnung – Zurückweisung") do |template|
+  template.description_de = "Zurückweisung einer unberechtigten Mahnung des Vermieters oder der Hausverwaltung."
+  template.description_en = "Rejection of an unjustified payment reminder sent by the landlord or property manager."
+  template.instructions_de = "Verweisen Sie auf Ihr vorheriges Schreiben, das den Sachverhalt bereits klärt (z. B. eine bereits erfolgte Zahlung oder eine bestrittene Forderung)."
+  template.instructions_en = "Reference your previous letter that already clarifies the matter (e.g. a payment already made or a disputed claim)."
+  template.content = <<~LETTER
+    Berlin, den {{date}}
+
+    An {{recipient_name}}
+    {{recipient_address}}
+
+    Betr.: Ihre Mahnung vom {{reminder_date}}
+
+    Sehr geehrte Damen und Herren,
+
+    wir weisen Ihre o. g. Mahnung zurück und beziehen uns dabei auf unser Schreiben vom {{previous_letter_date}}.
+
+    Bitte sehen Sie Ihre Unterlagen durch, und veranlassen Sie die notwendigen Korrekturen, so dass wir künftig nicht mit weiteren Mahnungen behelligt werden.
+
+    Mit freundlichen Grüßen
+    {{tenant_names}}
+  LETTER
+  template.metadata = {
+    type: "payment_reminder_rejection",
+    tone: "formal",
+    language: "de",
+    source: "Berliner Mieterverein",
+    source_url: "https://www.berliner-mieterverein.de/musterschreiben/mahnung-zurueckweisung/",
+    estimated_length: "50-100 words",
+    legal_references: [],
+    required_fields: [
+      { variable: "recipient_name", description: "Name of the landlord or property manager", type: "text" },
+      { variable: "recipient_address", description: "Address of the landlord or property manager", type: "text" },
+      { variable: "reminder_date", description: "Date of the reminder/demand letter being rejected", type: "date" },
+      { variable: "previous_letter_date", description: "Date of the tenant's previous letter clarifying the matter", type: "date" },
+      { variable: "tenant_names", description: "Name(s) of the tenant(s) signing the letter", type: "text" }
+    ]
+  }
+end
+
+
+puts "➔ #{Template.count} letter templates created\n\n"
+puts "-------------------------"
+puts "-------------------------"
+puts "-------------------------"
+puts "-------------------------"
+puts "To see things in the seed, that is genius 🌱 — Lao Tzu"

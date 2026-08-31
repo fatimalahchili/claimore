@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   #         THEN do -> configure_permitted_parameters (defined below)
   before_action :configure_permitted_parameters, if: :devise_controller?
   helper_method :current_property
+  helper_method :guest_chat_session_id
   # mark methods below as "internal use only" — not callable from routes/views directly
 
   protected
@@ -25,6 +26,12 @@ class ApplicationController < ActionController::Base
 
   def current_property
     current_user&.properties&.first
+  end
+
+  # Stable per-browser-session identifier so a guest's chat can be found again
+  # across requests without an account.
+  def guest_chat_session_id
+    session[:guest_chat_id] ||= SecureRandom.uuid
   end
 
   def available_chat_models

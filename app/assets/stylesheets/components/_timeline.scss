@@ -1,0 +1,48 @@
+.timeline-entry {
+  border-left: 4px solid $brand-primary !important;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.timeline-entry:focus {
+  box-shadow: 0 0 0 0.25rem rgba($brand-primary, 0.2) !important;
+  outline: 0;
+}
+
+.timeline-entry--pending {
+  background-color: #fffaf0 !important;
+  border-left-color: #f59e0b !important;
+}
+
+.timeline-entry--resolved {
+  background-color: #f0fdf4 !important;
+  border-left-color: #22c55e !important;
+}
+
+.timeline-entry--escalated {
+  background-color: #fff1f2 !important;
+  border-left-color: #ef4444 !important;
+}
+
+.timeline-entry--reported,
+.timeline-entry--open {
+  background-color: $info-light !important;
+  border-left-color: $info !important;
+}
+
+.timeline-entry--default {
+  background-color: #fafafd !important;
+}
+
+.claim-sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  background: rgba($bg-page, 0.94);
+  backdrop-filter: blur(12px);
+}
+
+.claim-action-bar {
+  border: 1px solid $border-light;
+  background: $bg-surface;
+  margin-bottom: calc(var(--navbar-h) + var(--navbar-gap) + 1rem);
+}

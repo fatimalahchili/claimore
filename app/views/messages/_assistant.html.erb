@@ -1,9 +1,10 @@
 <% assistant ||= local_assigns[:message] %>
-<div id="message_<%= assistant.id %>" class="message"
-     style="margin-bottom: 20px; padding: 10px; border-left: 3px solid #28a745;">
-  <div style="font-weight: bold; margin-bottom: 5px;">Assistant</div>
-  <div id="message_<%= assistant.id %>_content" style="white-space: pre-wrap;"><%= assistant.content %></div>
-  <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
-    <%= assistant.created_at&.strftime("%I:%M %p") %>
+<div id="message_<%= assistant.id %>" class="chat-bubble-row chat-bubble-row--assistant" data-controller="typing-indicator">
+  <%= render "shared/claim_blob", size: "xs" %>
+  <div class="chat-bubble chat-bubble--assistant">
+    <div class="chat-bubble__typing" data-typing-indicator-target="dots">
+      <span></span><span></span><span></span>
+    </div>
+    <div id="message_<%= assistant.id %>_content" data-typing-indicator-target="content"><%= assistant.content %></div>
   </div>
 </div>

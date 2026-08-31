@@ -1,12 +1,80 @@
-.navbar-lewagon {
-  justify-content: space-between;
-  background: white;
+// --navbar-h / --navbar-gap exist so calc() can combine the two clamp()-valued
+// Sass variables below without libsass trying to evaluate them itself — see
+// the note in _chat_window.scss for why that combination crashes libsass.
+:root {
+  --navbar-h: #{$navbar-height};
+  --navbar-gap: #{$navbar-bottom-offset};
 }
 
-.navbar-lewagon .navbar-collapse {
-  flex-grow: 0;
+body {
+  padding-bottom: calc(var(--navbar-h) + var(--navbar-gap) + 12px + env(safe-area-inset-bottom));
 }
 
-.navbar-lewagon .navbar-brand img {
-  width: 40px;
+.navbar-air {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--navbar-gap) + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 1030;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: clamp(2px, 1vw, 10px);
+  width: clamp(300px, 92vw, 620px);
+  height: #{$navbar-height};
+  padding: #{$navbar-padding};
+  border-radius: 999px;
+  background: $bg-surface;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 8px 32px rgba(15, 23, 42, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    inset 0 -1px 8px rgba(255, 255, 255, 0.4);
+
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+  }
+}
+
+.navbar-air .nav-icon-link,
+.navbar-air .dropdown-toggle-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border-radius: 999px;
+  font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+  color: $text-secondary;
+  transition: color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+}
+
+.navbar-air .nav-icon-link:active,
+.navbar-air .dropdown-toggle-icon:active {
+  transform: scale(0.9);
+}
+
+.navbar-air .nav-icon-link.active,
+.navbar-air .dropdown-toggle-icon.show,
+.navbar-air .dropup.show .dropdown-toggle-icon {
+  color: $brand-primary;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), $brand-primary-light);
+  box-shadow:
+    0 2px 8px rgba(109, 74, 255, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.navbar-air .dropdown-toggle-icon::after {
+  display: none;
+}
+
+.navbar-air .dropdown-menu {
+  margin-bottom: 0.75rem;
+  border-radius: 16px;
+  border: 1px solid $border-light;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.15);
 }

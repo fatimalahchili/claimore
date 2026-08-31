@@ -1,0 +1,3 @@
+<%= turbo_stream.update "chat_widget_body" do %>
+  <%= render "shared/chat_widget_thread", claim: @chat.claim, chat: @chat %>
+<% end %>
