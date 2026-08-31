@@ -6,11 +6,12 @@
 // inside one calc(), since it tries to evaluate the calc() itself instead of
 // deferring to the browser. var() references are opaque to Sass, so it never
 // attempts that arithmetic.
-$chat-blob-a: #8f54ff;
-$chat-blob-b: #4e9fff;
-$chat-blob-gradient: linear-gradient(135deg, $chat-blob-a, $chat-blob-b);
+// Meeseeks-blue palette — Claim's mascot is styled after Mr. Meeseeks (Rick and Morty).
+$chat-blob-a: #7fe3f5;
+$chat-blob-b: #1e9fd1;
+$chat-blob-gradient: linear-gradient(160deg, $chat-blob-a, $chat-blob-b);
 $chat-widget-right: clamp(16px, 4vw, 28px);
-$chat-launcher-size: 60px;
+$chat-launcher-size: clamp(90px, 14vw, 140px);
 
 .chat-widget {
   position: relative;
@@ -21,9 +22,9 @@ $chat-launcher-size: 60px;
 }
 
 @keyframes chat-launcher-ring {
-  0% { box-shadow: 0 0 0 0 rgba(109, 74, 255, 0.35); }
-  70% { box-shadow: 0 0 0 14px rgba(109, 74, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(109, 74, 255, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(30, 159, 209, 0.35); }
+  70% { box-shadow: 0 0 0 14px rgba(30, 159, 209, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(30, 159, 209, 0); }
 }
 
 @keyframes chat-blob-breathe {
@@ -36,7 +37,18 @@ $chat-launcher-size: 60px;
   40% { transform: scale(1); opacity: 1; }
 }
 
-@keyframes chat-hat-smoke {
+@keyframes chat-callout-pop {
+  0% { opacity: 0; transform: translateY(-50%) scale(0.6) translateX(6px); }
+  70% { opacity: 1; transform: translateY(-50%) scale(1.05) translateX(0); }
+  100% { opacity: 1; transform: translateY(-50%) scale(1) translateX(0); }
+}
+
+@keyframes chat-callout-bob {
+  0%, 100% { transform: translateY(-50%) translateX(0); }
+  50% { transform: translateY(-50%) translateX(-5px); }
+}
+
+@keyframes chat-chimney-smoke {
   0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
   20% { opacity: 0.85; }
   100% { opacity: 0; transform: translate(7px, -20px) scale(1.3); }
@@ -47,27 +59,42 @@ $chat-launcher-size: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 14%;
   width: 34px;
   height: 34px;
-  border-radius: 50%;
+  // A tall, rounded capsule rather than a perfect circle — Mr. Meeseeks' head shape.
+  border-radius: 50% 50% 46% 46% / 58% 58% 42% 42%;
   background: $chat-blob-gradient;
-  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35), inset 0 -2px 6px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 14px rgba(30, 159, 209, 0.35), inset 0 -2px 6px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.35);
   flex-shrink: 0;
 
+  // Sized as percentages of the blob's own box, so eyes/mouth scale with every
+  // variant (including the launcher, whose size is a responsive clamp()).
   .chat-widget__eye {
-    width: 4px;
-    height: 9px;
-    border-radius: 3px;
-    background: #fff;
+    width: 22%;
+    height: 22%;
+    margin-top: -16%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, #14151c 0 30%, #fff 32% 100%);
+    box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.15);
+  }
+
+  .chat-widget__mouth {
+    position: absolute;
+    left: 50%;
+    bottom: 20%;
+    width: 52%;
+    height: 20%;
+    transform: translateX(-50%);
+    background: linear-gradient(to bottom, #fff 0 42%, #7a2222 42% 100%);
+    border-radius: 10% 10% 50% 50% / 20% 20% 80% 80%;
+    box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.25);
   }
 
   &--sm {
     width: 30px;
     height: 30px;
     --hat-scale: 0.85;
-
-    .chat-widget__eye { width: 3px; height: 7px; }
   }
 
   &--xs {
@@ -75,8 +102,6 @@ $chat-launcher-size: 60px;
     height: 24px;
     margin-bottom: 4px;
     --hat-scale: 0.65;
-
-    .chat-widget__eye { width: 3px; height: 6px; }
   }
 
   &--float {
@@ -85,47 +110,79 @@ $chat-launcher-size: 60px;
     margin-bottom: 6px;
     --hat-scale: 1.7;
     animation: chat-blob-breathe 3.4s ease-in-out infinite;
-
-    .chat-widget__eye { width: 6px; height: 13px; }
   }
 }
 
-// A little house-with-a-chimney hat, worn by every "Claim" blob avatar.
-// The chimney puffs smoke while chat-widget-controller flags the thread as
-// --thinking (an assistant reply is still streaming in).
-.chat-widget__hat {
+// A little house, worn by every "Claim" blob avatar like a hat. A wisp of
+// magic smoke rises from its chimney while chat-widget-controller flags the
+// thread as --thinking (an assistant reply is still streaming in).
+.chat-widget__house {
   position: absolute;
-  top: -9px;
+  top: -20px;
   left: 50%;
-  width: 22px;
-  height: 16px;
+  width: 30px;
+  height: 26px;
   transform: translateX(-50%) scale(var(--hat-scale, 1));
   transform-origin: bottom center;
   pointer-events: none;
 }
 
-.chat-widget__hat-roof {
+.chat-widget__house-body {
   position: absolute;
   bottom: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 15px;
+  background: #2f2a45;
+  border-radius: 1px 1px 3px 3px;
+  border-bottom: 2px solid $chat-blob-a;
+}
+
+.chat-widget__roof {
+  position: absolute;
+  bottom: 13px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 0;
   height: 0;
-  border-left: 11px solid transparent;
-  border-right: 11px solid transparent;
-  border-bottom: 9px solid #2f2a45;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 10px solid #2f2a45;
 }
 
-.chat-widget__hat-chimney {
+.chat-widget__door {
   position: absolute;
-  bottom: 5px;
-  right: 1px;
-  width: 5px;
-  height: 10px;
-  background: #2f2a45;
-  border-radius: 1px 1px 0 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 9px;
+  background: $chat-blob-a;
+  border-radius: 2px 2px 0 0;
 }
 
-.chat-widget__hat-smoke {
+.chat-widget__window {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 5px;
+  height: 5px;
+  background: #fff;
+  border-radius: 1px;
+}
+
+.chat-widget__chimney {
+  position: absolute;
+  bottom: 18px;
+  right: 4px;
+  width: 5px;
+  height: 12px;
+  background: #2f2a45;
+  border-radius: 1px;
+}
+
+.chat-widget__chimney-smoke {
   position: absolute;
   bottom: 100%;
   left: 50%;
@@ -141,8 +198,8 @@ $chat-launcher-size: 60px;
   &:nth-child(3) { animation-delay: 1s; }
 }
 
-.chat-widget--thinking .chat-widget__hat-smoke {
-  animation: chat-hat-smoke 1.8s ease-out infinite;
+.chat-widget--thinking .chat-widget__chimney-smoke {
+  animation: chat-chimney-smoke 1.8s ease-out infinite;
 }
 
 .chat-widget__launcher {
@@ -182,6 +239,44 @@ $chat-launcher-size: 60px;
   }
 }
 
+.chat-widget__callout {
+  position: absolute;
+  right: calc(100% + 18px);
+  top: 50%;
+  width: max-content;
+  max-width: 220px;
+  padding: 12px 16px;
+  background: #fff;
+  color: $text-main;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  border-radius: 20px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+  transform: translateY(-50%);
+  animation: chat-callout-pop 0.4s ease-out both, chat-callout-bob 2.6s ease-in-out 0.4s infinite;
+  pointer-events: none;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    transform: translateY(-50%);
+    border: 8px solid transparent;
+    border-left-color: #fff;
+    border-right: 0;
+    filter: drop-shadow(2px 0 2px rgba(15, 23, 42, 0.08));
+  }
+
+  @media (max-width: 480px) {
+    display: none;
+  }
+}
+
 .chat-widget__launcher-close {
   position: absolute;
   color: #fff;
@@ -209,8 +304,8 @@ $chat-launcher-size: 60px;
   z-index: 1039;
   // clamp() (unlike min()/max()) is left alone by libsass instead of being
   // evaluated as a Sass-level numeric function, so it won't choke on mixed units.
-  width: clamp(0px, 92vw, 380px);
-  height: clamp(0px, 70dvh, 600px);
+  width: clamp(0px, 92vw, 880px);
+  height: clamp(0px, 78dvh, 820px);
   display: flex;
   flex-direction: column;
   background: $bg-surface;
@@ -393,7 +488,7 @@ $chat-launcher-size: 60px;
   font-weight: 600;
   font-size: 0.85rem;
   text-decoration: none;
-  box-shadow: 0 6px 16px rgba(109, 74, 255, 0.3);
+  box-shadow: 0 6px 16px rgba(30, 159, 209, 0.3);
   transition: transform 0.15s ease;
 
   &:hover { color: #fff; transform: translateY(-1px); }

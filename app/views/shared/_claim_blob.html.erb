@@ -1,12 +1,17 @@
 <% size ||= local_assigns[:size] %>
 <span class="chat-widget__blob <%= "chat-widget__blob--#{size}" if size %>" aria-hidden="true">
   <span class="chat-widget__eye"></span><span class="chat-widget__eye"></span>
-  <span class="chat-widget__hat" aria-hidden="true">
-    <span class="chat-widget__hat-roof"></span>
-    <span class="chat-widget__hat-chimney">
-      <span class="chat-widget__hat-smoke"></span>
-      <span class="chat-widget__hat-smoke"></span>
-      <span class="chat-widget__hat-smoke"></span>
+  <span class="chat-widget__mouth"></span>
+  <span class="chat-widget__house" aria-hidden="true">
+    <span class="chat-widget__chimney">
+      <span class="chat-widget__chimney-smoke"></span>
+      <span class="chat-widget__chimney-smoke"></span>
+      <span class="chat-widget__chimney-smoke"></span>
+    </span>
+    <span class="chat-widget__roof"></span>
+    <span class="chat-widget__house-body">
+      <span class="chat-widget__window"></span>
+      <span class="chat-widget__door"></span>
     </span>
   </span>
 </span>
