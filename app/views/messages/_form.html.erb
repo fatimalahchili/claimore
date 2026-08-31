@@ -1,21 +1,7 @@
-<%= form_with(model: message, url: [@chat, message], id: "new_message") do |form| %>
-  <% if message.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(message.errors.count, "error") %> prohibited this message from being saved:</h2>
-
-      <ul>
-        <% message.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div>
-    <%= form.text_field :content, style: "width: 100%; max-width: 600px;", placeholder: "Message...", autofocus: true %>
-  </div>
-
-  <div>
-    <%= form.submit "Send message" %>
-  </div>
+<% chat ||= @chat %>
+<%= form_with(model: message, url: [chat, message], id: "new_message", class: "chat-widget__form") do |form| %>
+  <%= form.text_field :content, placeholder: "Ask me anything…", autocomplete: "off", autofocus: true, class: "chat-widget__input" %>
+  <button type="submit" class="chat-widget__send" aria-label="Send message">
+    <i class="fa-solid fa-paper-plane"></i>
+  </button>
 <% end %>
