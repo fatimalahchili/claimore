@@ -15,14 +15,18 @@ class TenantsController < ApplicationController
   end
 
   def create
-    @tenant = Tenant.new(tenant_params)
-    @tenant.property = @property
-    if @tenant.save
-      TenantMailer.added(@tenant).deliver_later
-      redirect_to @tenant.property
-    else
-      redirect_to new_property_tenant_path(@property), alert: @tenant.errors.full_messages.to_sentence
-    end
+    # TODO: revisit direct add + notification email once the QR invitation flow is finished.
+    # Tenants are now added via TenantInvitation (see TenantInvitationsController); this
+    # instant-add path is disabled for now.
+    #
+    # @tenant = Tenant.new(tenant_params)
+    # @tenant.property = @property
+    # if @tenant.save
+    #   TenantMailer.with(tenant: @tenant).added.deliver_later
+    #   redirect_to @tenant.property
+    # else
+    #   redirect_to new_property_tenant_path(@property), alert: @tenant.errors.full_messages.to_sentence
+    # end
   end
 
   def edit

@@ -2,7 +2,7 @@
   <% users.each do |user| %>
     <li>
       <%= user.email %>
-      <%= button_to "Add", property_tenants_path(@property), params: { tenant: { user_id: user.id } }, data: { turbo_frame: "_top" } %>
+      <%= button_to "Invite", property_tenant_invitations_path(@property), params: { user_id: user.id }, data: { turbo_frame: "_top" } %>
     </li>
   <% end %>
 </ul>
