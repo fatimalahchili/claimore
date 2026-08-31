@@ -1,9 +1,13 @@
 <% if chat.nil? %>
   <div class="chat-widget__greeting">
-    <span class="chat-widget__blob chat-widget__blob--float" aria-hidden="true">
-      <span class="chat-widget__eye"></span><span class="chat-widget__eye"></span>
-    </span>
-    <p class="chat-widget__greeting-title">Hello, <%= current_user.name.presence&.split&.first || "there" %>!</p>
+    <%= render "shared/claim_blob", size: "float" %>
+    <p class="chat-widget__greeting-title">
+      <% if user_signed_in? %>
+        Hello, <%= current_user.name.presence&.split&.first || "there" %>!
+      <% else %>
+        Hi, I'm Claim!
+      <% end %>
+    </p>
     <p class="chat-widget__greeting-text">
       <%= claim ? "How can I help with this claim?" : "How can I help you today?" %>
     </p>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_31_080547) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_31_090934) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -57,10 +57,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_080547) do
     t.bigint "claim_id"
     t.datetime "created_at", null: false
     t.bigint "model_id"
+    t.string "session_id"
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.index ["claim_id"], name: "index_chats_on_claim_id"
     t.index ["model_id"], name: "index_chats_on_model_id"
+    t.index ["session_id"], name: "index_chats_on_session_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
   end
 
@@ -68,7 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_080547) do
     t.string "category"
     t.datetime "created_at", null: false
     t.bigint "property_id", null: false
-    t.string "status", default: "active"
+    t.string "status"
     t.datetime "updated_at", null: false
     t.index ["property_id"], name: "index_claims_on_property_id"
   end

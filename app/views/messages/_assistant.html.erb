@@ -1,8 +1,6 @@
 <% assistant ||= local_assigns[:message] %>
 <div id="message_<%= assistant.id %>" class="chat-bubble-row chat-bubble-row--assistant" data-controller="typing-indicator">
-  <span class="chat-widget__blob chat-widget__blob--xs" aria-hidden="true">
-    <span class="chat-widget__eye"></span><span class="chat-widget__eye"></span>
-  </span>
+  <%= render "shared/claim_blob", size: "xs" %>
   <div class="chat-bubble chat-bubble--assistant">
     <div class="chat-bubble__typing" data-typing-indicator-target="dots">
       <span></span><span></span><span></span>

@@ -1,4 +1,4 @@
-// Floating assistant widget ("Ello"-style gradient blob launcher + chat panel).
+// Floating assistant widget ("Claim"-style gradient blob launcher + chat panel).
 //
 // Positioning math is done with CSS custom properties (var()) rather than
 // chaining Sass calc()/clamp() variables together: libsass chokes ("Incompatible
@@ -36,6 +36,12 @@ $chat-launcher-size: 60px;
   40% { transform: scale(1); opacity: 1; }
 }
 
+@keyframes chat-hat-smoke {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+  20% { opacity: 0.85; }
+  100% { opacity: 0; transform: translate(7px, -20px) scale(1.3); }
+}
+
 .chat-widget__blob {
   position: relative;
   display: flex;
@@ -59,6 +65,7 @@ $chat-launcher-size: 60px;
   &--sm {
     width: 30px;
     height: 30px;
+    --hat-scale: 0.85;
 
     .chat-widget__eye { width: 3px; height: 7px; }
   }
@@ -67,6 +74,7 @@ $chat-launcher-size: 60px;
     width: 24px;
     height: 24px;
     margin-bottom: 4px;
+    --hat-scale: 0.65;
 
     .chat-widget__eye { width: 3px; height: 6px; }
   }
@@ -75,10 +83,66 @@ $chat-launcher-size: 60px;
     width: 64px;
     height: 64px;
     margin-bottom: 6px;
+    --hat-scale: 1.7;
     animation: chat-blob-breathe 3.4s ease-in-out infinite;
 
     .chat-widget__eye { width: 6px; height: 13px; }
   }
+}
+
+// A little house-with-a-chimney hat, worn by every "Claim" blob avatar.
+// The chimney puffs smoke while chat-widget-controller flags the thread as
+// --thinking (an assistant reply is still streaming in).
+.chat-widget__hat {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 22px;
+  height: 16px;
+  transform: translateX(-50%) scale(var(--hat-scale, 1));
+  transform-origin: bottom center;
+  pointer-events: none;
+}
+
+.chat-widget__hat-roof {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-bottom: 9px solid #2f2a45;
+}
+
+.chat-widget__hat-chimney {
+  position: absolute;
+  bottom: 5px;
+  right: 1px;
+  width: 5px;
+  height: 10px;
+  background: #2f2a45;
+  border-radius: 1px 1px 0 0;
+}
+
+.chat-widget__hat-smoke {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 50%;
+  background: rgba(120, 113, 150, 0.7);
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
+  opacity: 0;
+
+  &:nth-child(2) { animation-delay: 0.5s; }
+  &:nth-child(3) { animation-delay: 1s; }
+}
+
+.chat-widget--thinking .chat-widget__hat-smoke {
+  animation: chat-hat-smoke 1.8s ease-out infinite;
 }
 
 .chat-widget__launcher {
@@ -113,6 +177,7 @@ $chat-launcher-size: 60px;
   .chat-widget__blob {
     width: $chat-launcher-size;
     height: $chat-launcher-size;
+    --hat-scale: 1.6;
     transition: opacity 0.25s ease, transform 0.25s ease;
   }
 }

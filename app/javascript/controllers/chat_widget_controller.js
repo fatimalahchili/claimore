@@ -11,8 +11,12 @@ export default class extends Controller {
     document.addEventListener("keydown", this.onKeydown)
     document.addEventListener("click", this.onClickOutside)
 
-    this.observer = new MutationObserver(() => this.scrollMessagesToBottom())
+    this.observer = new MutationObserver(() => {
+      this.scrollMessagesToBottom()
+      this.updateThinkingState()
+    })
     this.observer.observe(this.bodyTarget, { childList: true, subtree: true, characterData: true })
+    this.updateThinkingState()
 
     if (sessionStorage.getItem(STORAGE_KEY) === "1") this.open()
   }
@@ -59,5 +63,10 @@ export default class extends Controller {
     if (!this.hasMessagesTarget) return
 
     this.messagesTarget.scrollTop = this.messagesTarget.scrollHeight
+  }
+
+  updateThinkingState() {
+    const thinking = this.bodyTarget.querySelector(".chat-bubble__typing") !== null
+    this.element.classList.toggle("chat-widget--thinking", thinking)
   }
 }

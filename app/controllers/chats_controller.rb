@@ -1,4 +1,5 @@
 class ChatsController < ApplicationController
+  skip_before_action :authenticate_user!, only: %i[new create show]
   before_action :set_chat, only: %i[show destroy]
   before_action :set_claim, only: %i[new create]
   before_action :authorize_claim!, only: %i[new create]
@@ -14,8 +15,10 @@ class ChatsController < ApplicationController
 
   def create
     prompt = params.dig(:chat, :prompt)
+    @chat = build_chat
+
     if prompt.present?
-      @chat = current_user.chats.create!(claim: @claim)
+      @chat.save!
       ChatResponseJob.perform_later(@chat.id, prompt)
 
       respond_to do |format|
@@ -23,7 +26,6 @@ class ChatsController < ApplicationController
         format.html { redirect_to @chat, notice: "Chat was successfully created." }
       end
     else
-      @chat = current_user.chats.new(claim: @claim)
       render :new, status: :unprocessable_entity
     end
   end
@@ -39,11 +41,19 @@ class ChatsController < ApplicationController
 
   private
 
+  def build_chat
+    return current_user.chats.new(claim: @claim) if user_signed_in?
+
+    Chat.new(session_id: guest_chat_session_id)
+  end
+
   def set_chat
     @chat = Chat.find(params[:id])
   end
 
   def set_claim
+    return unless user_signed_in?
+
     claim_id = params[:claim_id] || params.dig(:chat, :claim_id)
     @claim = Claim.find(claim_id) if claim_id.present?
   end
@@ -55,7 +65,8 @@ class ChatsController < ApplicationController
   end
 
   def authorize_chat!
-    return if @chat.user == current_user || @chat.claim&.users&.include?(current_user)
+    return if @chat.user.nil? && @chat.session_id == guest_chat_session_id
+    return if @chat.user.present? && (@chat.user == current_user || @chat.claim&.users&.include?(current_user))
 
     redirect_to root_path, alert: "Not authorized."
   end
