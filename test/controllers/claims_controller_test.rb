@@ -2,44 +2,39 @@ require "test_helper"
 
 class ClaimsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @user = User.create!(email: "claim-owner-#{SecureRandom.hex(4)}@example.com", password: "password")
+    @user = User.create!(email: "blesson-#{SecureRandom.hex(4)}@example.com", password: "password")
     @other_user = User.create!(email: "other-#{SecureRandom.hex(4)}@example.com", password: "password")
     @property = Property.create!(address: "123 Main St", moved_on: Date.current)
+    @other_property = Property.create!(address: "456 Hidden St", moved_on: Date.current)
     Tenant.create!(user: @user, property: @property)
-    @claim = Claim.create!(property: @property, category: "damage", status: "active")
-    @old_entry = Entry.create!(claim: @claim, title: "Old entry", date: Date.current - 2.days, status: "resolved")
-    @next_entry = Entry.create!(claim: @claim, title: "Next entry", date: Date.current + 1.day, status: "pending")
-    @later_entry = Entry.create!(claim: @claim, title: "Later entry", date: Date.current + 3.days, status: "escalated")
+    Tenant.create!(user: @other_user, property: @other_property)
+    @active_claim = Claim.create!(property: @property, category: "Active leak", status: "active")
+    @archived_claim = Claim.create!(property: @property, category: "Old heating issue", status: "archived")
+    @hidden_claim = Claim.create!(property: @other_property, category: "Private claim", status: "active")
     sign_in @user
   end
 
-  test "show orders entries descending and marks the next entry for focus" do
-    get claim_url(@claim)
+  test "index shows active claims for the current user's property" do
+    get claims_url
 
     assert_response :success
-    titles = css_select(".timeline-entry h6").map { |element| element.text.strip }
-    assert_equal ["Later entry", "Next entry", "Old entry"], titles
-    assert_select "[data-timeline-focus-target='current']", count: 1, text: /Next entry/
-    assert_select ".timeline-entry--escalated", text: /Later entry/
-    assert_select ".timeline-entry--resolved", text: /Old entry/
+    assert_select "h3", text: @active_claim.category
+    assert_select "h3", { text: @archived_claim.category, count: 0 }
+    assert_select "h3", { text: @hidden_claim.category, count: 0 }
   end
 
-  test "show rejects users who do not belong to the claim" do
-    sign_out @user
-    sign_in @other_user
+  test "index can reveal archived claims" do
+    get claims_url(property_id: @property.id, show_archived: 1)
 
-    get claim_url(@claim)
-
-    assert_redirected_to root_url
-    assert_equal "Not authorized.", flash[:alert]
+    assert_response :success
+    assert_select "h3", text: @active_claim.category
+    assert_select "h3", text: @archived_claim.category
+    assert_select "a", text: "Hide archived claims"
   end
 
-  test "destroy archives the claim instead of deleting it" do
-    assert_no_difference("Claim.count") do
-      delete claim_url(@claim)
-    end
+  test "index rejects properties that do not belong to the current user" do
+    get claims_url(property_id: @other_property.id)
 
-    assert_predicate @claim.reload, :archived?
-    assert_redirected_to claims_url
+    assert_response :not_found
   end
 end

@@ -1,0 +1,9 @@
+<ul>
+  <% users.each do |user| %>
+    <li>
+      <%= user.email %>
+      <%= button_to "Invite by email", property_tenant_invitations_path(@property), params: { user_id: user.id, delivery_method: "email" }, data: { turbo_frame: "_top" } %>
+      <%= button_to "Invite by QR code", property_tenant_invitations_path(@property), params: { user_id: user.id, delivery_method: "qr" }, data: { turbo_frame: "_top" } %>
+    </li>
+  <% end %>
+</ul>

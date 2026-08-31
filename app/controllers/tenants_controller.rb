@@ -1,6 +1,7 @@
 class TenantsController < ApplicationController
-  before_action :set_property, only: %i[new create]
-  before_action :set_tenant, only: %i[update destroy]
+  before_action :set_property, only: %i[index new create]
+  before_action :set_tenant, only: %i[edit update destroy]
+  before_action :authorize_main_tenant!, only: %i[new create edit update destroy]
 
   def index
     @tenants = @property.tenants
@@ -9,16 +10,23 @@ class TenantsController < ApplicationController
   def new
     @tenant = Tenant.new
     @tenant.property = @property
+    @query = params[:query]
+    @users = @query.present? ? search_users(@query) : User.none
   end
 
   def create
-    @tenant = Tenant.new(tenant_params)
-    @tenant.property = @property
-    if @tenant.save
-      redirect_to @tenant.property
-    else
-      render "tenants/new"
-    end
+    # TODO: revisit direct add + notification email once the QR invitation flow is finished.
+    # Tenants are now added via TenantInvitation (see TenantInvitationsController); this
+    # instant-add path is disabled for now.
+    #
+    # @tenant = Tenant.new(tenant_params)
+    # @tenant.property = @property
+    # if @tenant.save
+    #   TenantMailer.with(tenant: @tenant).added.deliver_later
+    #   redirect_to @tenant.property
+    # else
+    #   redirect_to new_property_tenant_path(@property), alert: @tenant.errors.full_messages.to_sentence
+    # end
   end
 
   def edit
@@ -33,11 +41,24 @@ class TenantsController < ApplicationController
   end
 
   def destroy
+    property = @tenant.property
     @tenant.destroy
-    redirect_to @tenant.property
+    redirect_to property_tenants_path(property)
   end
 
   private
+
+  def search_users(query)
+    User.where.not(id: @property.tenants.select(:user_id))
+        .where("email ILIKE ?", "%#{query}%")
+  end
+
+  def authorize_main_tenant!
+    property = @property || @tenant.property
+    return if property.tenants.exists?(user: current_user, role: "main_tenant")
+
+    redirect_to root_path, alert: "Not authorized."
+  end
 
   def set_property
     @property = Property.find(params[:property_id])
@@ -48,6 +69,6 @@ class TenantsController < ApplicationController
   end
 
   def tenant_params
-    params.require(:tenant).permit(:user_id)
+    params.require(:tenant).permit(:user_id, :status)
   end
 end

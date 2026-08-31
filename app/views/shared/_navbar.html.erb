@@ -15,6 +15,11 @@
     <%= link_to administrations_path, class: "nav-icon-link #{'active' if request.path.start_with?(administrations_path)}", "aria-label": "Administrations", title: "Administrations" do %>
       <i class="fa-solid fa-building"></i>
     <% end %>
+    <% if current_property %>
+      <%= link_to property_path(current_property), class: "nav-icon-link #{'active' if request.path.start_with?(property_path(current_property))}", "aria-label": "My Property", title: "My Property" do %>
+        <i class="fa-solid fa-key"></i>
+      <% end %>
+    <% end %>
 
     <div class="dropup nav-icon-link">
       <a href="#" class="dropdown-toggle-icon" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Account" title="Account">

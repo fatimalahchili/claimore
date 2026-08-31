@@ -44,5 +44,5 @@
 .claim-action-bar {
   border: 1px solid $border-light;
   background: $bg-surface;
-  margin-bottom: calc(#{$navbar-height} + #{$navbar-bottom-offset} + 1rem);
+  margin-bottom: calc(var(--navbar-h) + var(--navbar-gap) + 1rem);
 }

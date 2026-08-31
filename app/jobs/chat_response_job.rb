@@ -1,8 +1,9 @@
 class ChatResponseJob < ApplicationJob
   def perform(chat_id, content)
     chat = Chat.find(chat_id)
+    chat.with_instructions(chat.system_instructions)
 
-    chat.ask(content) do |chunk|
+    ClaimTimelineAgent.new(chat).ask(content) do |chunk|
       if chunk.content && !chunk.content.empty?
         message = chat.messages.last
         message.broadcast_append_chunk(chunk.content)

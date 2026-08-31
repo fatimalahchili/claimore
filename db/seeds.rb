@@ -74,18 +74,22 @@ puts "-------------------------"
 
 Tenant.find_or_create_by!(user: main_tenant_user, property: property) do |tenant|
   tenant.role = "main_tenant"
+  tenant.status = "tenant"
 end
 
 Tenant.find_or_create_by!(user: sub_tenant_user, property: property) do |tenant|
   tenant.role = "sub_tenant"
+  tenant.status = "tenant"
 end
 
 Tenant.find_or_create_by!(user: co_tenant_user, property: property) do |tenant|
   tenant.role = "co_tenant"
+  tenant.status = "tenant"
 end
 
 Tenant.find_or_create_by!(user: life_partner_user, property: property) do |tenant|
   tenant.role = "life_partner"
+  tenant.status = "tenant"
 end
 
 puts "➔ #{Tenant.count} tenants created\n\n"
