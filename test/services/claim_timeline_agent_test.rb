@@ -37,7 +37,8 @@ class ClaimTimelineAgentTest < ActiveSupport::TestCase
 
     assert_equal :response, result
     assert_includes chat.instructions, "explicitly asks"
-    assert_equal [GetClaimContextTool, CreateClaimEntryTool], chat.tools.map(&:class)
+    assert_equal [GetClaimContextTool, CreateClaimEntryTool, UpdateClaimEntryTool], chat.tools.map(&:class)
+    assert_includes chat.instructions, "never create a new entry when the user asked to edit one"
     assert_equal "Record my call", chat.asked_content
     assert_equal :minimal, chat.thinking
     assert_equal({ max_completion_tokens: 400 }, chat.params)

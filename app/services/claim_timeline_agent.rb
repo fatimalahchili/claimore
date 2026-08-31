@@ -11,7 +11,8 @@ class ClaimTimelineAgent
     Never invent claim details, dates, actions, or legal conclusions.
     Use create_claim_entry only when the user explicitly asks to add or record a timeline event.
     Before creating an entry, ensure its title, description, and date are known; ask a concise follow-up if required information is missing.
-    Keep responses concise and tell the user when an entry was created.
+    Use update_claim_entry when the user explicitly asks to change an existing timeline event. Use get_claim_context first when the entry ID is not already known, and never create a new entry when the user asked to edit one.
+    Keep responses concise and tell the user when an entry was created or updated.
   PROMPT
 
   def initialize(chat)
@@ -32,6 +33,6 @@ class ClaimTimelineAgent
   end
 
   def claim_tools
-    [GetClaimContextTool.new(@chat.claim), CreateClaimEntryTool.new(@chat.claim)]
+    [GetClaimContextTool.new(@chat.claim), CreateClaimEntryTool.new(@chat.claim), UpdateClaimEntryTool.new(@chat.claim)]
   end
 end
