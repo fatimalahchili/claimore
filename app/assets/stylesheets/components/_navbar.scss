@@ -1,11 +1,19 @@
+// --navbar-h / --navbar-gap exist so calc() can combine the two clamp()-valued
+// Sass variables below without libsass trying to evaluate them itself — see
+// the note in _chat_window.scss for why that combination crashes libsass.
+:root {
+  --navbar-h: #{$navbar-height};
+  --navbar-gap: #{$navbar-bottom-offset};
+}
+
 body {
-  padding-bottom: calc(#{$navbar-height} + #{$navbar-bottom-offset} + 12px + env(safe-area-inset-bottom));
+  padding-bottom: calc(var(--navbar-h) + var(--navbar-gap) + 12px + env(safe-area-inset-bottom));
 }
 
 .navbar-air {
   position: fixed;
   left: 50%;
-  bottom: calc(#{$navbar-bottom-offset} + env(safe-area-inset-bottom));
+  bottom: calc(var(--navbar-gap) + env(safe-area-inset-bottom));
   transform: translateX(-50%);
   z-index: 1030;
   display: flex;

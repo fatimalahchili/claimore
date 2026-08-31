@@ -54,13 +54,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_120000) do
   end
 
   create_table "chats", force: :cascade do |t|
-    t.bigint "claim_id", null: false
+    t.bigint "claim_id"
     t.datetime "created_at", null: false
     t.bigint "model_id"
+    t.string "session_id"
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.index ["claim_id"], name: "index_chats_on_claim_id"
     t.index ["model_id"], name: "index_chats_on_model_id"
+    t.index ["session_id"], name: "index_chats_on_session_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
   end
 

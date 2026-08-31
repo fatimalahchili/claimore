@@ -3,7 +3,12 @@ class ClaimsController < ApplicationController
   before_action :authorize_claim!, only: %i[show edit update destroy timeline]
 
   def index
-    @claims = Claim.joins(property: :tenants).where(tenants: { user: current_user }).distinct
+    @properties = current_user.properties.order(:address)
+    @property = selected_property
+    @show_archived = params[:show_archived] == "1"
+    @claims = claims_for_property
+    @active_claims_count = @property ? @property.claims.where(status: "active").count : 0
+    @archived_claims_count = @property ? @property.claims.where(status: "archived").count : 0
   end
 
   def show
@@ -68,5 +73,20 @@ class ClaimsController < ApplicationController
 
   def claim_params
     params.require(:claim).permit(:category, :status, :property_id)
+  end
+
+  private
+
+  def selected_property
+    return @properties.first if params[:property_id].blank?
+
+    @properties.find(params[:property_id])
+  end
+
+  def claims_for_property
+    return Claim.none unless @property
+
+    statuses = @show_archived ? %w[active archived] : ["active"]
+    @property.claims.where(status: statuses).order(created_at: :desc)
   end
 end
