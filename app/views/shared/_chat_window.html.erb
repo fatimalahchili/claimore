@@ -1,0 +1,26 @@
+<% if user_signed_in? %>
+  <div id="chat-window">
+    <h1>Chats</h1>
+
+    <div id="chats">
+      <% chats = current_user.chats.order(created_at: :desc) %>
+      <% if chats.any? %>
+        <% chats.each do |chat| %>
+          <%= render chat %>
+          <p>
+            <%= link_to "Show this chat", chat %>
+          </p>
+          <p>
+            <%= link_to "Destroy this chat", chat, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+          </p>
+        <% end %>
+      <% else %>
+        <p>No chats found.</p>
+      <% end %>
+    </div>
+
+    <h2>New chat</h2>
+
+    <%= render "chats/form", chat: Chat.new %>
+  </div>
+<% end %>
