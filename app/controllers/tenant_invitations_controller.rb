@@ -6,7 +6,9 @@ class TenantInvitationsController < ApplicationController
 
   def create
     user = User.find(params[:user_id])
-    @invitation = @property.tenant_invitations.new(user: user, invited_by: current_user)
+    @invitation = @property.tenant_invitations.find_or_initialize_by(user: user)
+    @invitation.token = SecureRandom.base58(24) if @invitation.persisted?
+    @invitation.assign_attributes(invited_by: current_user, accepted_at: nil)
 
     if @invitation.save
       deliver_invitation(@invitation) if params[:delivery_method] == "email"

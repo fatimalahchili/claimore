@@ -1,7 +1,7 @@
 class TenantsController < ApplicationController
   before_action :set_property, only: %i[index new create]
-  before_action :set_tenant, only: %i[update destroy]
-  before_action :authorize_main_tenant!, only: %i[new create]
+  before_action :set_tenant, only: %i[edit update destroy]
+  before_action :authorize_main_tenant!, only: %i[new create edit update destroy]
 
   def index
     @tenants = @property.tenants
@@ -41,8 +41,9 @@ class TenantsController < ApplicationController
   end
 
   def destroy
+    property = @tenant.property
     @tenant.destroy
-    redirect_to @tenant.property
+    redirect_to property_tenants_path(property)
   end
 
   private
@@ -53,7 +54,8 @@ class TenantsController < ApplicationController
   end
 
   def authorize_main_tenant!
-    return if @property.tenants.exists?(user: current_user, role: "main_tenant")
+    property = @property || @tenant.property
+    return if property.tenants.exists?(user: current_user, role: "main_tenant")
 
     redirect_to root_path, alert: "Not authorized."
   end

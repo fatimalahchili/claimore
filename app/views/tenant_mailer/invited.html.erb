@@ -1,5 +1,25 @@
-<p>Hi <%= @invitation.user.name || @invitation.user.email %>,</p>
+<div style="font-family: -apple-system, Helvetica, Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px; color: #1a1a1a;">
+  <p style="font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; color: #6d4aff; font-weight: 600; margin: 0 0 24px;">Claimore</p>
 
-<p><%= @invitation.invited_by.name || @invitation.invited_by.email %> has invited you to join <%= @property.address %> as a <%= @invitation.role.humanize.downcase %>.</p>
+  <h1 style="font-size: 20px; margin: 0 0 16px;">You've been invited to <%= @property.address %></h1>
 
-<p><%= link_to "Accept invitation", @invite_url %></p>
+  <p style="font-size: 15px; line-height: 1.6; margin: 0 0 24px;">
+    Hi <%= @invitation.user.name || @invitation.user.email %>,<br><br>
+    <%= @invitation.invited_by.name || @invitation.invited_by.email %> has invited you to join <strong><%= @property.address %></strong> as a <%= @invitation.role.humanize.downcase %>.
+  </p>
+
+  <p style="margin: 0 0 24px;">
+    <%= link_to "Accept invitation", @invite_url, style: "display: inline-block; background-color: #6d4aff; color: #ffffff; text-decoration: none; font-size: 15px; font-weight: 600; padding: 12px 24px; border-radius: 8px;" %>
+  </p>
+
+  <p style="font-size: 13px; line-height: 1.5; color: #6b7280; margin: 0 0 8px;">
+    Or copy this link into your browser:
+  </p>
+  <p style="font-size: 13px; word-break: break-all; margin: 0 0 24px;">
+    <%= link_to @invite_url, @invite_url, style: "color: #6d4aff;" %>
+  </p>
+
+  <p style="font-size: 13px; color: #9ca3af; margin: 0;">
+    If you weren't expecting this invitation, you can safely ignore this email.
+  </p>
+</div>
