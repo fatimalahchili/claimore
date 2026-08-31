@@ -1,0 +1,5 @@
+<p>Hi <%= @tenant.user.name || @tenant.user.email %>,</p>
+
+<p>You've been added as a <%= @tenant.role.humanize.downcase %> for the property at <%= @property.address %>.</p>
+
+<p><%= link_to "View property", property_url(@property) %></p>

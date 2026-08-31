@@ -1,0 +1,7 @@
+<h1>Invite <%= @invitation.user.name || @invitation.user.email %></h1>
+
+<p>Scan this QR code (or share the link below) to invite them to <%= @property.address %>.</p>
+
+<%= raw @qr_code.as_svg(module_size: 6, standalone: true) %>
+
+<p><%= link_to @invite_url, @invite_url %></p>

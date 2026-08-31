@@ -33,7 +33,11 @@ Rails.application.routes.draw do
   resources :letters, only: %i[show destroy]
   resources :properties, only: %i[new show create update destroy] do
     resources :tenants, only: %i[index new create]
+    resources :tenant_invitations, only: %i[create show]
   end
+
+  get  "invitations/:token",        to: "tenant_invitations#join",   as: :join_invitation
+  post "invitations/:token/accept", to: "tenant_invitations#accept", as: :accept_invitation
 
   resources :entries
   resources :templates, only: %i[show index]

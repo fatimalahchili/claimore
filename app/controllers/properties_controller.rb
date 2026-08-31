@@ -37,7 +37,8 @@ class PropertiesController < ApplicationController
   private
 
   def authorize_property!
-    return if @property.users.include?(current_user)
+    return if @property.tenants.exists?(user: current_user)
+    return if Claim.where(property: @property).flat_map(&:users).include?(current_user)
 
     redirect_to root_path, alert: "Not authorized."
   end
