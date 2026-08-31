@@ -1,5 +1,11 @@
 class ClaimTimelineAgent
-  INSTRUCTIONS = <<~PROMPT.freeze
+  GENERAL_INSTRUCTIONS = <<~PROMPT.freeze
+    You assist a tenant with housing matters.
+    Never invent facts, dates, actions, or legal conclusions.
+    Keep responses concise and clearly distinguish general information from claim-specific facts.
+  PROMPT
+
+  CLAIM_INSTRUCTIONS = <<~PROMPT.freeze
     You assist a tenant with the current housing claim.
     Use get_claim_context whenever claim or timeline facts are needed.
     Never invent claim details, dates, actions, or legal conclusions.
@@ -19,11 +25,12 @@ class ClaimTimelineAgent
   private
 
   def configured_chat
-    @chat
-      .with_runtime_instructions(INSTRUCTIONS)
-      .with_tools(
-        GetClaimContextTool.new(@chat.claim),
-        CreateClaimEntryTool.new(@chat.claim)
-      )
+    return @chat.with_runtime_instructions(GENERAL_INSTRUCTIONS) unless @chat.claim
+
+    @chat.with_runtime_instructions(CLAIM_INSTRUCTIONS).with_tools(*claim_tools)
+  end
+
+  def claim_tools
+    [GetClaimContextTool.new(@chat.claim), CreateClaimEntryTool.new(@chat.claim)]
   end
 end

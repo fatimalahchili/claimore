@@ -30,4 +30,15 @@ class ClaimTimelineAgentTest < ActiveSupport::TestCase
     assert_equal [GetClaimContextTool, CreateClaimEntryTool], chat.tools.map(&:class)
     assert_equal "Record my call", chat.asked_content
   end
+
+  test "supports global chats without exposing claim tools" do
+    chat = FakeChat.new(nil)
+
+    result = ClaimTimelineAgent.new(chat).ask("How can you help me?")
+
+    assert_equal :response, result
+    assert_includes chat.instructions, "housing matters"
+    assert_nil chat.tools
+    assert_equal "How can you help me?", chat.asked_content
+  end
 end
