@@ -1,0 +1,402 @@
+// Floating assistant widget ("Ello"-style gradient blob launcher + chat panel).
+//
+// Positioning math is done with CSS custom properties (var()) rather than
+// chaining Sass calc()/clamp() variables together: libsass chokes ("Incompatible
+// units: 'vw' and 'px'") when two clamp()-valued Sass variables are combined
+// inside one calc(), since it tries to evaluate the calc() itself instead of
+// deferring to the browser. var() references are opaque to Sass, so it never
+// attempts that arithmetic.
+$chat-blob-a: #8f54ff;
+$chat-blob-b: #4e9fff;
+$chat-blob-gradient: linear-gradient(135deg, $chat-blob-a, $chat-blob-b);
+$chat-widget-right: clamp(16px, 4vw, 28px);
+$chat-launcher-size: 60px;
+
+.chat-widget {
+  position: relative;
+  z-index: 1040;
+  --chat-navbar-h: #{$navbar-height};
+  --chat-navbar-gap: #{$navbar-bottom-offset};
+  --chat-launcher-bottom: calc(var(--chat-navbar-h) + var(--chat-navbar-gap) + 16px + env(safe-area-inset-bottom));
+}
+
+@keyframes chat-launcher-ring {
+  0% { box-shadow: 0 0 0 0 rgba(109, 74, 255, 0.35); }
+  70% { box-shadow: 0 0 0 14px rgba(109, 74, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(109, 74, 255, 0); }
+}
+
+@keyframes chat-blob-breathe {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.05) translateY(-4px); }
+}
+
+@keyframes chat-typing-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.chat-widget__blob {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: $chat-blob-gradient;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35), inset 0 -2px 6px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.35);
+  flex-shrink: 0;
+
+  .chat-widget__eye {
+    width: 4px;
+    height: 9px;
+    border-radius: 3px;
+    background: #fff;
+  }
+
+  &--sm {
+    width: 30px;
+    height: 30px;
+
+    .chat-widget__eye { width: 3px; height: 7px; }
+  }
+
+  &--xs {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+
+    .chat-widget__eye { width: 3px; height: 6px; }
+  }
+
+  &--float {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 6px;
+    animation: chat-blob-breathe 3.4s ease-in-out infinite;
+
+    .chat-widget__eye { width: 6px; height: 13px; }
+  }
+}
+
+.chat-widget__launcher {
+  position: fixed;
+  right: $chat-widget-right;
+  bottom: var(--chat-launcher-bottom);
+  z-index: 1040;
+  width: $chat-launcher-size;
+  height: $chat-launcher-size;
+  border: none;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+
+  &:hover { transform: scale(1.06); }
+  &:active { transform: scale(0.92); }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    animation: chat-launcher-ring 2.6s ease-out infinite;
+    pointer-events: none;
+  }
+
+  .chat-widget__blob {
+    width: $chat-launcher-size;
+    height: $chat-launcher-size;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+}
+
+.chat-widget__launcher-close {
+  position: absolute;
+  color: #fff;
+  font-size: 1.3rem;
+  opacity: 0;
+  transform: scale(0.4) rotate(-45deg);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+
+.chat-widget--open .chat-widget__launcher .chat-widget__blob {
+  opacity: 0;
+  transform: scale(0.4) rotate(45deg);
+}
+
+.chat-widget--open .chat-widget__launcher-close {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.chat-widget__panel {
+  position: fixed;
+  right: $chat-widget-right;
+  bottom: calc(var(--chat-launcher-bottom) + #{$chat-launcher-size} + 14px);
+  z-index: 1039;
+  // clamp() (unlike min()/max()) is left alone by libsass instead of being
+  // evaluated as a Sass-level numeric function, so it won't choke on mixed units.
+  width: clamp(0px, 92vw, 380px);
+  height: clamp(0px, 70dvh, 600px);
+  display: flex;
+  flex-direction: column;
+  background: $bg-surface;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  overflow: hidden;
+  transform-origin: bottom right;
+  transform: scale(0.85) translateY(12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+  }
+}
+
+.chat-widget--open .chat-widget__panel {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.chat-widget__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid $border-light;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), $brand-primary-subtle);
+  flex-shrink: 0;
+}
+
+.chat-widget__heading {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  flex: 1;
+  min-width: 0;
+
+  strong { font-size: 0.95rem; color: $text-main; }
+  span {
+    font-size: 0.78rem;
+    color: $text-secondary;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.chat-widget__close {
+  border: none;
+  background: transparent;
+  color: $text-muted;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  &:hover { background: $bg-subtle; color: $text-main; }
+}
+
+.chat-widget__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-widget__messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+}
+
+.chat-bubble-row { display: flex; }
+.chat-bubble-row--user { justify-content: flex-end; }
+.chat-bubble-row--assistant { justify-content: flex-start; align-items: flex-end; gap: 8px; }
+.chat-bubble-row--system { justify-content: center; }
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.chat-bubble--user {
+  background: $chat-blob-gradient;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-bubble--assistant {
+  background: $bg-surface;
+  color: $text-main;
+  border: 1px solid $border-light;
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.chat-bubble--system {
+  background: $bg-subtle;
+  color: $text-secondary;
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+.chat-bubble--error {
+  background: $danger-light;
+  color: $danger;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.chat-bubble__typing {
+  display: flex;
+  gap: 4px;
+  padding: 2px 0 4px;
+
+  span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: $chat-blob-b;
+    animation: chat-typing-bounce 1.2s infinite ease-in-out;
+
+    &:nth-child(2) { animation-delay: 0.15s; }
+    &:nth-child(3) { animation-delay: 0.3s; }
+  }
+}
+
+.chat-widget__empty,
+.chat-widget__greeting {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px 24px;
+  gap: 4px;
+}
+
+.chat-widget__empty-title,
+.chat-widget__greeting-title {
+  font-weight: 700;
+  color: $text-main;
+  margin: 0;
+}
+
+.chat-widget__empty-text,
+.chat-widget__greeting-text {
+  color: $text-secondary;
+  font-size: 0.88rem;
+  margin: 0 0 8px;
+}
+
+.chat-widget__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: $chat-blob-gradient;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(109, 74, 255, 0.3);
+  transition: transform 0.15s ease;
+
+  &:hover { color: #fff; transform: translateY(-1px); }
+}
+
+.chat-widget__greeting { padding-bottom: 8px; }
+
+.chat-widget__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 20px 16px;
+
+  form { margin: 0; }
+}
+
+.chat-widget__chip {
+  border: 1px solid $border-light;
+  background: $brand-primary-light;
+  color: $brand-primary;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.15s ease;
+
+  &:hover { background: darken($brand-primary-light, 4%); transform: translateY(-1px); }
+}
+
+.chat-widget__form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-top: 1px solid $border-light;
+  flex-shrink: 0;
+}
+
+.chat-widget__input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid $border-light;
+  background: $bg-subtle;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: 0.88rem;
+  color: $text-main;
+
+  &:focus {
+    outline: none;
+    border-color: $border-focus;
+    background: $bg-surface;
+  }
+}
+
+.chat-widget__send {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: $chat-blob-gradient;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+
+  &:hover { transform: scale(1.06); }
+  &:active { transform: scale(0.92); }
+}

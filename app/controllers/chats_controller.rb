@@ -18,9 +18,12 @@ class ChatsController < ApplicationController
       @chat = current_user.chats.create!(claim: @claim)
       ChatResponseJob.perform_later(@chat.id, prompt)
 
-      redirect_to @chat, notice: "Chat was successfully created."
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @chat, notice: "Chat was successfully created." }
+      end
     else
-      @chat = @claim.chats.new
+      @chat = current_user.chats.new(claim: @claim)
       render :new, status: :unprocessable_entity
     end
   end
@@ -41,17 +44,18 @@ class ChatsController < ApplicationController
   end
 
   def set_claim
-    @claim = Claim.find(params[:claim_id] || params.dig(:chat, :claim_id))
+    claim_id = params[:claim_id] || params.dig(:chat, :claim_id)
+    @claim = Claim.find(claim_id) if claim_id.present?
   end
 
   def authorize_claim!
-    return if @claim.users.include?(current_user)
+    return if @claim.nil? || @claim.users.include?(current_user)
 
     redirect_to root_path, alert: "Not authorized."
   end
 
   def authorize_chat!
-    return if @chat.claim.users.include?(current_user)
+    return if @chat.user == current_user || @chat.claim&.users&.include?(current_user)
 
     redirect_to root_path, alert: "Not authorized."
   end

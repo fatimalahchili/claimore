@@ -21,7 +21,7 @@ class MessagesController < ApplicationController
   end
 
   def authorize_chat!
-    return if @chat.claim.users.include?(current_user)
+    return if @chat.user == current_user || @chat.claim&.users&.include?(current_user)
 
     redirect_to root_path, alert: "Not authorized."
   end
