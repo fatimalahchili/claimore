@@ -48,6 +48,6 @@ class TenantsController < ApplicationController
   end
 
   def tenant_params
-    params.require(:tenant).permit(:user_id)
+    params.require(:tenant).permit(:user_id, :status)
   end
 end
