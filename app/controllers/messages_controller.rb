@@ -6,15 +6,15 @@ class MessagesController < ApplicationController
 
   def create
     content = params.dig(:message, :content)
-    if content.present?
-      @chat.with_instructions(system_prompt(content), replace: true)
+    return unless content.present?
 
-      ChatResponseJob.perform_later(@chat.id, content)
+    @chat.with_instructions(system_prompt(content), replace: true)
 
-      respond_to do |format|
-        format.turbo_stream
-        format.html { redirect_to @chat }
-      end
+    ChatResponseJob.perform_later(@chat.id, content)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to @chat }
     end
   end
 
@@ -23,8 +23,8 @@ class MessagesController < ApplicationController
   def system_prompt(content)
     vector = RubyLLM.embed(translate_to_german(content)).vectors
     relevant_law_texts = LawText.nearest_neighbors(:embedding, vector, distance: "cosine")
-                                 .limit(RELEVANT_LAW_TEXTS_COUNT)
-bro
+                                .limit(RELEVANT_LAW_TEXTS_COUNT)
+    bro
     laws = relevant_law_texts.map do |law_text|
       "#{law_text.paragraph_title}\n#{law_text.content}"
     end.join("\n\n")
