@@ -1,26 +1,36 @@
-<% if user_signed_in? %>
-  <div id="chat-window">
-    <h1>Chats</h1>
+<% claim = current_context_claim %>
+<% chat = current_user.chats.where(claim: claim).order(created_at: :desc).first %>
 
-    <div id="chats">
-      <% chats = current_user.chats.order(created_at: :desc) %>
-      <% if chats.any? %>
-        <% chats.each do |chat| %>
-          <%= render chat %>
-          <p>
-            <%= link_to "Show this chat", chat %>
-          </p>
-          <p>
-            <%= link_to "Destroy this chat", chat, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-          </p>
-        <% end %>
-      <% else %>
-        <p>No chats found.</p>
-      <% end %>
+<div class="chat-widget" data-controller="chat-widget">
+  <div class="chat-widget__panel" id="chat_widget_panel" data-chat-widget-target="panel" role="dialog" aria-label="Assistant chat" aria-hidden="true">
+    <header class="chat-widget__header">
+      <span class="chat-widget__blob chat-widget__blob--sm" aria-hidden="true">
+        <span class="chat-widget__eye"></span><span class="chat-widget__eye"></span>
+      </span>
+      <div class="chat-widget__heading">
+        <strong>Ello</strong>
+        <span><%= claim ? (claim.category.presence || "Tenancy Claim") : "Your AI Assistant" %></span>
+      </div>
+      <button type="button" class="chat-widget__close" data-action="chat-widget#close" aria-label="Close chat">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </header>
+
+    <div class="chat-widget__body" id="chat_widget_body" data-chat-widget-target="body">
+      <%= render "shared/chat_widget_thread", claim: claim, chat: chat %>
     </div>
-
-    <h2>New chat</h2>
-
-    <%= render "chats/form", chat: Chat.new %>
   </div>
-<% end %>
+
+  <button type="button"
+          class="chat-widget__launcher"
+          data-chat-widget-target="launcher"
+          data-action="chat-widget#toggle"
+          aria-expanded="false"
+          aria-controls="chat_widget_panel"
+          aria-label="Open assistant chat">
+    <span class="chat-widget__blob" aria-hidden="true">
+      <span class="chat-widget__eye"></span><span class="chat-widget__eye"></span>
+    </span>
+    <i class="fa-solid fa-xmark chat-widget__launcher-close" aria-hidden="true"></i>
+  </button>
+</div>

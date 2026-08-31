@@ -28,6 +28,6 @@
 
     <%= render "shared/navbar" %>
     <%= render "shared/flashes" %>
-    <%= render "shared/chat_window" %>
+    <%= render "shared/chat_window" if user_signed_in? %>
   </body>
 </html>

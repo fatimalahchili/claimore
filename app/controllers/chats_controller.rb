@@ -18,7 +18,10 @@ class ChatsController < ApplicationController
       @chat = current_user.chats.create!(claim: @claim)
       ChatResponseJob.perform_later(@chat.id, prompt)
 
-      redirect_to @chat, notice: "Chat was successfully created."
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @chat, notice: "Chat was successfully created." }
+      end
     else
       @chat = current_user.chats.new(claim: @claim)
       render :new, status: :unprocessable_entity
