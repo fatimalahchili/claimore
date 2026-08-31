@@ -10,15 +10,18 @@
 $chat-blob-a: #7fe3f5;
 $chat-blob-b: #1e9fd1;
 $chat-blob-gradient: linear-gradient(160deg, $chat-blob-a, $chat-blob-b);
-$chat-widget-right: clamp(16px, 4vw, 28px);
-$chat-launcher-size: clamp(90px, 14vw, 140px);
+$chat-widget-right: clamp(12px, 3vw, 24px);
+$chat-launcher-size: clamp(64px, 7vw, 84px);
 
 .chat-widget {
   position: relative;
   z-index: 1040;
   --chat-navbar-h: #{$navbar-height};
   --chat-navbar-gap: #{$navbar-bottom-offset};
-  --chat-launcher-bottom: calc(var(--chat-navbar-h) + var(--chat-navbar-gap) + 16px + env(safe-area-inset-bottom));
+  --chat-widget-right: #{$chat-widget-right};
+  --chat-launcher-size: #{$chat-launcher-size};
+  --chat-launcher-bottom: calc(var(--chat-navbar-h) + var(--chat-navbar-gap) + 12px + env(safe-area-inset-bottom));
+  --chat-panel-bottom: calc(var(--chat-launcher-bottom) + var(--chat-launcher-size) + 12px);
 }
 
 @keyframes chat-launcher-ring {
@@ -300,12 +303,12 @@ $chat-launcher-size: clamp(90px, 14vw, 140px);
 .chat-widget__panel {
   position: fixed;
   right: $chat-widget-right;
-  bottom: calc(var(--chat-launcher-bottom) + #{$chat-launcher-size} + 14px);
+  bottom: var(--chat-panel-bottom);
   z-index: 1039;
-  // clamp() (unlike min()/max()) is left alone by libsass instead of being
-  // evaluated as a Sass-level numeric function, so it won't choke on mixed units.
-  width: clamp(0px, 92vw, 880px);
-  height: clamp(0px, 78dvh, 820px);
+  width: calc(100vw - (2 * var(--chat-widget-right)));
+  max-width: 420px;
+  height: clamp(320px, 68dvh, 620px);
+  max-height: calc(100dvh - var(--chat-panel-bottom) - 12px);
   display: flex;
   flex-direction: column;
   background: $bg-surface;
@@ -330,6 +333,58 @@ $chat-launcher-size: clamp(90px, 14vw, 140px);
   transform: scale(1) translateY(0);
   opacity: 1;
   pointer-events: auto;
+}
+
+@media (max-width: 767px) {
+  .chat-widget {
+    --chat-widget-right: 12px;
+    --chat-launcher-size: 58px;
+    --chat-launcher-bottom: calc(var(--chat-navbar-h) + var(--chat-navbar-gap) + 8px + env(safe-area-inset-bottom));
+    --chat-panel-bottom: calc(var(--chat-navbar-h) + var(--chat-navbar-gap) + 8px + env(safe-area-inset-bottom));
+  }
+
+  .chat-widget__launcher {
+    right: var(--chat-widget-right);
+    width: var(--chat-launcher-size);
+    height: var(--chat-launcher-size);
+
+    .chat-widget__blob {
+      width: var(--chat-launcher-size);
+      height: var(--chat-launcher-size);
+      --hat-scale: 1.25;
+    }
+  }
+
+  .chat-widget__callout { display: none; }
+
+  .chat-widget__panel {
+    right: var(--chat-widget-right);
+    left: var(--chat-widget-right);
+    width: auto;
+    max-width: none;
+    height: calc(100dvh - var(--chat-panel-bottom) - 12px);
+    max-height: 680px;
+    border-radius: 20px;
+  }
+
+  .chat-widget--open .chat-widget__launcher {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chat-widget__messages { padding: 12px; }
+  .chat-widget__chips { padding-right: 12px; padding-left: 12px; }
+}
+
+@media (max-height: 560px) {
+  .chat-widget__panel {
+    height: calc(100dvh - var(--chat-panel-bottom) - 8px);
+    min-height: 0;
+  }
+
+  .chat-widget__greeting { padding-top: 16px; padding-bottom: 4px; }
+  .chat-widget__chips { padding-bottom: 8px; }
 }
 
 .chat-widget__header {
