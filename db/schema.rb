@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_28_114014) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_31_095630) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "vector"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
@@ -96,6 +97,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_28_114014) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.index ["claim_id"], name: "index_entries_on_claim_id"
+  end
+
+  create_table "law_texts", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.vector "embedding", limit: 1536
+    t.string "paragraph_title"
+    t.string "subtitle"
+    t.datetime "updated_at", null: false
+    t.index ["embedding"], name: "index_law_texts_on_embedding", opclass: :vector_cosine_ops, using: :hnsw
   end
 
   create_table "letters", force: :cascade do |t|
