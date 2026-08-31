@@ -25,9 +25,10 @@ class ClaimTimelineAgent
   private
 
   def configured_chat
-    return @chat.with_runtime_instructions(GENERAL_INSTRUCTIONS) unless @chat.claim
+    fast_chat = @chat.with_thinking(effort: :minimal).with_params(max_completion_tokens: 400)
+    return fast_chat.with_runtime_instructions(GENERAL_INSTRUCTIONS) unless @chat.claim
 
-    @chat.with_runtime_instructions(CLAIM_INSTRUCTIONS).with_tools(*claim_tools)
+    fast_chat.with_runtime_instructions(CLAIM_INSTRUCTIONS).with_tools(*claim_tools)
   end
 
   def claim_tools
