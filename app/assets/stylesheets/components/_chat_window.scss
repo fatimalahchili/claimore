@@ -182,6 +182,43 @@ $chat-launcher-size: 60px;
   }
 }
 
+.chat-widget--page-scrolled:not(.chat-widget--open) .chat-widget__launcher {
+  opacity: 0.42;
+  transform: translateY(12px) scale(0.88);
+
+  &:hover,
+  &:focus-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 767px) {
+  .chat-widget {
+    --chat-launcher-bottom: calc(var(--chat-navbar-h) + var(--chat-navbar-gap) + 10px + env(safe-area-inset-bottom));
+  }
+
+  .chat-widget__launcher {
+    right: 14px;
+    width: 50px;
+    height: 50px;
+
+    &::after { inset: -3px; }
+
+    .chat-widget__blob {
+      width: 50px;
+      height: 50px;
+      --hat-scale: 1.35;
+    }
+  }
+
+  .chat-widget__panel {
+    right: 0.75rem;
+    width: calc(100vw - 1.5rem);
+    border-radius: 1.25rem;
+  }
+}
+
 .chat-widget__launcher-close {
   position: absolute;
   color: #fff;

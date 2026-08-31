@@ -80,6 +80,18 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
+.navbar-air .nav-icon-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: clamp(5px, 1vw, 9px);
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: $brand-primary;
+  transform: translateX(-50%);
+}
+
 .navbar-air .dropdown-toggle-icon::after {
   display: none;
 }

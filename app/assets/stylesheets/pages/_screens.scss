@@ -67,9 +67,46 @@
   letter-spacing: -0.04em;
 }
 
+.dashboard-heading h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: -0.04em;
+}
+
+.dashboard-heading > p:last-child { max-width: 36rem; }
+
 .app-page--dashboard .card {
   overflow: hidden;
   transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.dashboard-card { border-radius: 1rem; }
+
+.dashboard-date {
+  width: 72px;
+  height: 72px;
+  border-radius: 1rem;
+  background: linear-gradient(145deg, lighten($brand-primary, 4%), $brand-primary-hover);
+  box-shadow: 0 9px 20px rgba($brand-primary, 0.22);
+}
+
+.dashboard-date__month {
+  opacity: 0.85;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+}
+
+.dashboard-event-badge {
+  background: $brand-primary-light;
+  color: $brand-primary;
+}
+
+.dashboard-card--metric .text-primary {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.9rem;
+  background: $brand-primary-light;
 }
 
 .app-page--dashboard a:hover .card {
@@ -147,6 +184,11 @@
 }
 
 @media (max-width: 575px) {
+
+  .dashboard-page { padding-top: 2rem !important; }
+  .dashboard-page > h1 { margin-bottom: 1.5rem !important; }
+  .dashboard-card .card-body { padding: 1.25rem !important; }
+
   .app-page--tenants .table-responsive {
     border-right: 0;
     border-left: 0;

@@ -35,6 +35,38 @@
   .lead { line-height: 1.7; }
 }
 
+.home-hero__eyebrow {
+  background: $brand-primary-light;
+  color: $brand-primary;
+  font-size: 0.875rem;
+  font-weight: $font-weight-semibold;
+}
+
+.home-hero__title {
+  max-width: 780px;
+  margin-right: auto;
+  margin-left: auto;
+
+  span { color: $brand-primary; }
+}
+
+.home-hero__copy { max-width: 600px; }
+.home-issues { background: $bg-page !important; }
+.home-step { width: 56px; height: 56px; line-height: 28px; }
+
+.home-issue-icon {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 1rem;
+  font-size: 1.25rem;
+}
+
+.home-issue-icon--blue { background: $info-light; color: $info; }
+.home-issue-icon--amber { background: $warning-light; color: $warning; }
+.home-issue-icon--green { background: $success-light; color: $success; }
+
 .app-page--pages-home > section:nth-of-type(2) {
   background: $bg-page !important;
 
