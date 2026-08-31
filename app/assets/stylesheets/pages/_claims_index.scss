@@ -4,8 +4,11 @@
 }
 
 .claims-index__hero {
-  background: linear-gradient(135deg, $brand-primary-subtle, $bg-surface);
+  background:
+    radial-gradient(circle at 90% 10%, rgba($brand-primary, 0.12), transparent 14rem),
+    linear-gradient(135deg, $brand-primary-subtle, $bg-surface);
   border: 1px solid $border-light;
+  box-shadow: 0 14px 40px rgba($text-main, 0.06);
 }
 
 .claim-index-card {
@@ -22,4 +25,16 @@
 .claim-index-card--archived {
   border-left-color: $text-muted;
   opacity: 0.82;
+}
+
+.claim-index-card a:focus-visible {
+  outline: 3px solid rgba($brand-primary, 0.2);
+  outline-offset: 3px;
+  border-radius: 0.5rem;
+}
+
+@media (max-width: 575px) {
+  .claims-index { padding-top: 2rem !important; }
+  .claims-index__hero { border-radius: 1.15rem !important; }
+  .claim-index-card:hover { transform: none; }
 }
