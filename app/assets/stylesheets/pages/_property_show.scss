@@ -81,9 +81,9 @@
 .property-stat__icon--green { background: #e3f7ec; color: #198754; }
 .property-stat__icon--blue { background: #e7f3ff; color: #2878c8; }
 
-.property-stat strong,
-.property-stat span { display: block; }
-.property-stat strong { color: #181622; font-size: 1.5rem; line-height: 1; }
+.property-stat div > strong,
+.property-stat div > span { display: block; }
+.property-stat div > strong { color: #181622; font-size: 1.5rem; line-height: 1; }
 .property-stat div > span { margin-top: 0.3rem; color: #777280; font-size: 0.8rem; }
 
 .property-show__grid {
