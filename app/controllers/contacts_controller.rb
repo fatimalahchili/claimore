@@ -2,7 +2,7 @@ class ContactsController < ApplicationController
   before_action :set_contact, only: %i[show edit update destroy]
 
   def index
-    @contacts = Contact.all
+    @contacts = contacts_scope.order(:name)
   end
 
   def show
@@ -13,7 +13,7 @@ class ContactsController < ApplicationController
   end
 
   def create
-    @contact = Contact.new(contact_params)
+    @contact = Contact.new(contact_attributes)
     if @contact.save
       redirect_to @contact, notice: "Contact was successfully created."
     else
@@ -25,7 +25,7 @@ class ContactsController < ApplicationController
   end
 
   def update
-    if @contact.update(contact_params)
+    if @contact.update(contact_attributes)
       redirect_to @contact, notice: "Contact was successfully updated."
     else
       render :edit, status: :unprocessable_entity
@@ -40,7 +40,17 @@ class ContactsController < ApplicationController
   private
 
   def set_contact
-    @contact = Contact.find(params[:id])
+    @contact = contacts_scope.find(params[:id])
+  end
+
+  def contacts_scope
+    Contact.where(property: current_user.properties)
+  end
+
+  def contact_attributes
+    contact_params.except(:property_id).merge(
+      property: current_user.properties.find(contact_params[:property_id])
+    )
   end
 
   def contact_params
