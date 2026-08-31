@@ -8,7 +8,7 @@ class PropertiesController < ApplicationController
 
   def create
     @property = Property.new(property_params)
-    if @property.save
+    if save_property_for_current_user
       redirect_to @property
     else
       render "properties/new"
@@ -41,6 +41,16 @@ class PropertiesController < ApplicationController
     return if Claim.where(property: @property).flat_map(&:users).include?(current_user)
 
     redirect_to root_path, alert: "Not authorized."
+  end
+
+  def save_property_for_current_user
+    Property.transaction do
+      @property.save!
+      @property.tenants.create!(user: current_user, role: :main_tenant, status: :tenant)
+    end
+    true
+  rescue ActiveRecord::RecordInvalid
+    false
   end
 
   def set_property

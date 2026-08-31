@@ -1,3 +1,82 @@
-<h1><%= @property.address %></h1>
+<% content_for :title, @property.address.presence || "Property" %>
 
-<%= link_to "Tenants", property_tenants_path(@property) %>
+<div class="property-show container py-5">
+  <%= render "shared/back_link", fallback_path: dashboard_path, label: "Dashboard" %>
+
+  <header class="property-show__hero">
+    <div>
+      <p class="property-show__eyebrow">Property overview</p>
+      <h1><%= @property.address.presence || "Your property" %></h1>
+      <p class="property-show__meta">
+        <% if @property.moved_on.present? %>
+          <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+          Resident since <%= @property.moved_on.strftime("%B %-d, %Y") %>
+        <% else %>
+          Add a move-in date to complete the property details.
+        <% end %>
+      </p>
+    </div>
+
+    <div class="property-show__icon" aria-hidden="true">
+      <i class="fa-solid fa-building"></i>
+    </div>
+  </header>
+
+  <section class="property-show__stats" aria-label="Property summary">
+    <article class="property-stat">
+      <span class="property-stat__icon property-stat__icon--purple"><i class="fa-solid fa-users"></i></span>
+      <div><strong><%= @property.tenants.count %></strong><span>Tenants</span></div>
+    </article>
+    <article class="property-stat">
+      <span class="property-stat__icon property-stat__icon--green"><i class="fa-solid fa-folder-open"></i></span>
+      <div><strong><%= @property.claims.active.count %></strong><span>Active claims</span></div>
+    </article>
+    <article class="property-stat">
+      <span class="property-stat__icon property-stat__icon--blue"><i class="fa-solid fa-address-book"></i></span>
+      <div><strong><%= @property.contacts.count %></strong><span>Contacts</span></div>
+    </article>
+  </section>
+
+  <div class="property-show__grid">
+    <section class="property-panel">
+      <div class="property-panel__heading">
+        <div>
+          <p class="property-show__eyebrow">Household</p>
+          <h2>People at this property</h2>
+        </div>
+        <span class="property-panel__badge"><%= pluralize(@property.tenants.count, "tenant") %></span>
+      </div>
+      <p>Review tenant roles, invitation status, and household membership for this address.</p>
+      <%= link_to property_tenants_path(@property), class: "property-panel__link" do %>
+        View all tenants <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      <% end %>
+    </section>
+
+    <section class="property-panel">
+      <div class="property-panel__heading">
+        <div>
+          <p class="property-show__eyebrow">Claims</p>
+          <h2>Housing issues</h2>
+        </div>
+        <span class="property-panel__badge"><%= pluralize(@property.claims.count, "claim") %></span>
+      </div>
+      <% if @property.claims.any? %>
+        <ul class="property-claims-list">
+          <% @property.claims.order(updated_at: :desc).limit(3).each do |claim| %>
+            <li>
+              <%= link_to claim_path(claim) do %>
+                <span><%= claim.category.presence || "Claim ##{claim.id}" %></span>
+                <small><%= claim.status.to_s.humanize %></small>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>No claims have been recorded for this property.</p>
+      <% end %>
+      <%= link_to claims_path(property_id: @property.id), class: "property-panel__link" do %>
+        View property claims <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      <% end %>
+    </section>
+  </div>
+</div>
