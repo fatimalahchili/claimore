@@ -1,0 +1,25 @@
+.claims-index {
+  max-width: 1040px;
+  padding-bottom: calc(#{$navbar-height} + #{$navbar-bottom-offset} + 2rem);
+}
+
+.claims-index__hero {
+  background: linear-gradient(135deg, $brand-primary-subtle, $bg-surface);
+  border: 1px solid $border-light;
+}
+
+.claim-index-card {
+  border: 1px solid $border-light;
+  border-left: 4px solid $brand-primary;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.claim-index-card:hover {
+  box-shadow: 0 0.75rem 1.5rem rgba($text-main, 0.08) !important;
+  transform: translateY(-2px);
+}
+
+.claim-index-card--archived {
+  border-left-color: $text-muted;
+  opacity: 0.82;
+}
