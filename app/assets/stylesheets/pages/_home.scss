@@ -1,1 +1,71 @@
-// Specific CSS for your home-page
+.app-page--pages-home > section:first-of-type {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 0%, rgba($brand-primary, 0.16), transparent 28rem),
+    linear-gradient(180deg, $brand-primary-subtle 0%, $bg-surface 100%) !important;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(2px);
+  }
+
+  &::before {
+    top: 12%;
+    left: -5rem;
+    width: 12rem;
+    height: 12rem;
+    background: rgba($info, 0.08);
+  }
+
+  &::after {
+    right: -4rem;
+    bottom: 8%;
+    width: 10rem;
+    height: 10rem;
+    background: rgba($brand-primary, 0.1);
+  }
+
+  .container { position: relative; z-index: 1; }
+  h1 { font-size: clamp(2.35rem, 7vw, 4.4rem); line-height: 1.03; }
+  .lead { line-height: 1.7; }
+}
+
+.app-page--pages-home > section:nth-of-type(2) {
+  background: $bg-page !important;
+
+  .card {
+    border: 1px solid transparent !important;
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      border-color: $brand-primary-light !important;
+      box-shadow: 0 18px 42px rgba($text-main, 0.1) !important;
+    }
+  }
+}
+
+.app-page--pages-home > section:nth-of-type(3) {
+  .badge {
+    display: inline-grid;
+    place-items: center;
+    padding: 0 !important;
+    box-shadow: 0 10px 24px rgba($brand-primary, 0.22);
+  }
+
+  .col-md-4 { position: relative; }
+}
+
+@media (max-width: 575px) {
+  .app-page--pages-home > section:first-of-type {
+    .d-flex.justify-content-center { flex-direction: column; }
+    .btn { width: 100%; justify-content: center; }
+  }
+
+  .app-page--pages-home > section:nth-of-type(2) .card:hover { transform: none; }
+}
