@@ -13,6 +13,7 @@
 ActiveRecord::Schema[8.1].define(version: 2026_08_31_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "vector"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
@@ -99,6 +100,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_120000) do
     t.datetime "updated_at", null: false
     t.index ["claim_id"], name: "index_entries_on_claim_id"
   end
+
+# Could not dump table "law_texts" because of following StandardError
+#   Unknown type 'vector(1536)' for column 'embedding'
+
 
   create_table "letters", force: :cascade do |t|
     t.bigint "claim_id", null: false
