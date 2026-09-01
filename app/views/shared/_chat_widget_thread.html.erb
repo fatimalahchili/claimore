@@ -41,7 +41,7 @@
   <%= turbo_stream_from "chat_#{chat.id}" %>
   <div class="chat-widget__messages" id="messages" data-chat-widget-target="messages">
     <% chat.messages.where.not(id: nil).each do |message| %>
-      <%= render message %>
+      <%= render partial: message.to_partial_path, locals: { message: message } %>
     <% end %>
   </div>
 
