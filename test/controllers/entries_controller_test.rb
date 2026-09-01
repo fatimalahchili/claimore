@@ -10,11 +10,6 @@ class EntriesControllerTest < ActionDispatch::IntegrationTest
     @entry = Entry.create!(claim: @claim, title: "Broken window", description: "Cracked pane", category: "damage")
   end
 
-  test "should get index" do
-    get entries_url
-    assert_response :success
-  end
-
   test "should get new" do
     get new_entry_url
     assert_response :success
@@ -37,17 +32,21 @@ class EntriesControllerTest < ActionDispatch::IntegrationTest
   test "should get edit" do
     get edit_entry_url(@entry)
     assert_response :success
+    assert_select "form[action=?]", entry_path(@entry)
+    assert_select "input[name='entry[title]'][value=?]", "Broken window"
   end
 
   test "should update entry" do
-    patch entry_url(@entry), params: { entry: { title: "Updated title" } }
+    patch entry_url(@entry), params: { entry: { title: "Updated title", description: "Updated details" } }
     assert_redirected_to entry_url(@entry)
+    assert_equal "Updated title", @entry.reload.title
+    assert_equal "Updated details", @entry.description
   end
 
   test "should destroy entry" do
     assert_difference("Entry.count", -1) do
       delete entry_url(@entry)
     end
-    assert_redirected_to entries_url
+    assert_redirected_to claim_url(@claim)
   end
 end

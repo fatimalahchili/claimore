@@ -1,6 +1,12 @@
 .alert {
   position: fixed;
-  bottom: 16px;
-  right: 16px;
-  z-index: 1000;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: calc(var(--navbar-h, 72px) + var(--navbar-gap, 16px) + 1rem);
+  z-index: 1055;
+  width: calc(100vw - 2rem);
+  max-width: 26rem;
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 1rem;
+  box-shadow: 0 16px 42px rgba($text-main, 0.16);
 }

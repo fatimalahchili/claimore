@@ -1,2 +1,12 @@
-<h1>Entries#new</h1>
-<p>Find me in app/views/entries/new.html.erb</p>
+<% content_for :title, "New timeline entry" %>
+
+<main class="container my-5" style="max-width: 760px;">
+  <%= render "shared/back_link", fallback_path: claim_path(@entry.claim), label: "Claim timeline" %>
+
+  <section class="card border-0 shadow-sm rounded-4 p-4 p-md-5 mt-4">
+    <p class="text-primary small text-uppercase fw-semibold mb-2">Claim #<%= @entry.claim_id %> · Timeline</p>
+    <h1 class="h2 fw-bold mb-2">Add an entry</h1>
+    <p class="text-muted mb-4">Record an event, communication, deadline, or change related to this claim.</p>
+    <%= render "form", entry: @entry %>
+  </section>
+</main>

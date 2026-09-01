@@ -8,8 +8,11 @@ export default class extends Controller {
   connect() {
     this.onKeydown = this.onKeydown.bind(this)
     this.onClickOutside = this.onClickOutside.bind(this)
+    this.onScroll = this.onScroll.bind(this)
+    this.lastScrollY = window.scrollY
     document.addEventListener("keydown", this.onKeydown)
     document.addEventListener("click", this.onClickOutside)
+    window.addEventListener("scroll", this.onScroll, { passive: true })
 
     this.observer = new MutationObserver(() => {
       this.scrollMessagesToBottom()
@@ -24,6 +27,7 @@ export default class extends Controller {
   disconnect() {
     document.removeEventListener("keydown", this.onKeydown)
     document.removeEventListener("click", this.onClickOutside)
+    window.removeEventListener("scroll", this.onScroll)
     this.observer?.disconnect()
   }
 
@@ -57,6 +61,15 @@ export default class extends Controller {
 
   onClickOutside(event) {
     if (this.isOpen && !this.element.contains(event.target)) this.close()
+  }
+
+  onScroll() {
+    if (this.isOpen) return
+
+    const currentScrollY = window.scrollY
+    const scrollingDown = currentScrollY > this.lastScrollY && currentScrollY > 80
+    this.element.classList.toggle("chat-widget--page-scrolled", scrollingDown)
+    this.lastScrollY = currentScrollY
   }
 
   scrollMessagesToBottom() {
