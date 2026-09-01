@@ -11,7 +11,7 @@
 <p>Using <strong><%= @chat.model&.label || default_model_display_name %></strong></p>
 
 <div id="messages">
-  <% @chat.messages.where.not(id: nil).each do |message| %>
+  <% @chat.messages.visible_to_user.where.not(id: nil).each do |message| %>
     <%= render message %>
   <% end %>
 </div>
