@@ -22,7 +22,7 @@ class MessagesController < ApplicationController
   private
 
   def system_prompt(content)
-    vector = embedding_for(translate_to_german(content)).vectors
+    vector = RubyLLM.embed(translate_to_german(content)).vectors
     relevant_law_texts = LawText.nearest_neighbors(:embedding, vector, distance: "cosine")
                                 .limit(RELEVANT_LAW_TEXTS_COUNT)
     laws = relevant_law_texts.map do |law_text|
@@ -43,13 +43,6 @@ class MessagesController < ApplicationController
            .with_instructions("Translate the user's message to German. Reply with only the translation, nothing else.")
            .ask(content)
            .content
-  end
-
-  def embedding_for(content)
-    RubyLLM.embed(content)
-  rescue RubyLLM::ModelNotFoundError
-    Model.refresh!
-    RubyLLM.embed(content)
   end
 
   def set_chat
