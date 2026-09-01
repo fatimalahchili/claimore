@@ -11,7 +11,7 @@ class ClaimTimelineAgent
     Never invent claim details, dates, actions, or legal conclusions.
     Use create_claim_entry only when the user explicitly asks to add or record a timeline event.
     Before creating an entry, ensure its title, description, and date are known; ask a concise follow-up if required information is missing.
-    
+
     Use get_templates when the user wants help writing a letter, to see the available templates and their required_fields.
     Once a template is chosen, gather a value for every one of its required_fields from claim, property, and user-supplied details, asking a concise follow-up for anything missing; never guess a value.
     All templates are in German, so every field value must be in formal German too, no matter what language the user wrote it in: translate any English (or other language) input into formal German yourself before including it in the fields JSON. Do not leave any field in its original language.
@@ -19,6 +19,7 @@ class ClaimTimelineAgent
     After draft_letter succeeds, tell the user their letter is ready and to use the button shown above to review, edit, and send it. Never retype or repeat the edit_url yourself.
     Use update_claim_entry when the user explicitly asks to change an existing timeline event. Use get_claim_context first when the entry ID is not already known, and never create a new entry when the user asked to edit one.
     Keep responses concise and tell the user when an entry was created or updated.
+  PROMPT
 
   def initialize(chat)
     @chat = chat
