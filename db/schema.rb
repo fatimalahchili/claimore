@@ -13,6 +13,7 @@
 ActiveRecord::Schema[8.1].define(version: 2026_08_31_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "vector"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
@@ -99,6 +100,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_120000) do
     t.datetime "updated_at", null: false
     t.index ["claim_id"], name: "index_entries_on_claim_id"
   end
+
+# Could not dump table "law_texts" because of following StandardError
+#   Unknown type 'vector(1536)' for column 'embedding'
+
 
   create_table "letters", force: :cascade do |t|
     t.bigint "claim_id", null: false
@@ -315,6 +320,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_120000) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tenant_invitations", force: :cascade do |t|
+    t.datetime "accepted_at"
+    t.datetime "created_at", null: false
+    t.bigint "invited_by_id", null: false
+    t.bigint "property_id", null: false
+    t.string "role", default: "guest", null: false
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["invited_by_id"], name: "index_tenant_invitations_on_invited_by_id"
+    t.index ["property_id"], name: "index_tenant_invitations_on_property_id"
+    t.index ["token"], name: "index_tenant_invitations_on_token", unique: true
+    t.index ["user_id"], name: "index_tenant_invitations_on_user_id"
+  end
+
   create_table "tenants", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "property_id", null: false
@@ -372,6 +392,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_120000) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "tenant_invitations", "properties"
+  add_foreign_key "tenant_invitations", "users"
+  add_foreign_key "tenant_invitations", "users", column: "invited_by_id"
   add_foreign_key "tenants", "properties"
   add_foreign_key "tenants", "users"
   add_foreign_key "tool_calls", "messages"

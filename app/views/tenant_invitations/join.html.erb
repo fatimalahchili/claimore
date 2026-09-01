@@ -1,0 +1,5 @@
+<h1>Join <%= @property.address %></h1>
+
+<p><%= @invitation.invited_by.name || @invitation.invited_by.email %> has invited you to join this property as a <%= @invitation.role.humanize.downcase %>.</p>
+
+<%= button_to "Accept invitation", accept_invitation_path(@invitation.token) %>

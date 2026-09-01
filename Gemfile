@@ -39,6 +39,9 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+# Active Storage service for uploading files to Cloudinary [https://github.com/cloudinary-labs/cloudinary_rails]
+gem "cloudinary"
+
 gem "sprockets-rails"
 gem "bootstrap", "~> 5.3"
 gem "devise"
@@ -46,6 +49,7 @@ gem "autoprefixer-rails"
 gem "font-awesome-sass", "~> 6.1"
 gem "simple_form", github: "heartcombo/simple_form"
 gem "sassc-rails"
+gem "rqrcode"
 
 group :development, :test do
   gem "dotenv-rails"

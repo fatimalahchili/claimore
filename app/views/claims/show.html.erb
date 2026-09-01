@@ -65,8 +65,6 @@
         <p class="text-muted small mb-0">Record the next step or get help with your case.</p>
       </div>
       <div class="d-flex flex-wrap gap-2">
-        <%= link_to "Add Entry", new_entry_path(claim_id: @claim.id), class: "btn btn-primary" %>
-        <%= link_to "Start Chat", new_chat_path(claim_id: @claim.id), class: "btn btn-outline-primary" %>
         <%= link_to "Draft Letter", new_claim_letter_path(@claim), class: "btn btn-outline-secondary" %>
       </div>
     </div>

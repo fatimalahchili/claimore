@@ -1,0 +1,30 @@
+<% content_for :title, @contact.name %>
+
+<main class="container my-5" style="max-width: 760px;">
+  <%= render "shared/back_link", fallback_path: contacts_path, label: "Contacts" %>
+  <article class="card border-0 shadow-sm rounded-4 p-4 p-md-5 mt-4">
+    <header class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+      <div>
+        <p class="text-primary small text-uppercase fw-semibold mb-2"><%= @contact.role %></p>
+        <h1 class="h2 fw-bold mb-1"><%= @contact.name %></h1>
+        <p class="text-muted mb-0"><%= @contact.property.address %></p>
+      </div>
+      <%= link_to "Edit", edit_contact_path(@contact), class: "btn btn-outline-primary" %>
+    </header>
+
+    <dl class="row g-3 border-top pt-4 mb-4">
+      <dt class="col-sm-4 text-muted">Email</dt>
+      <dd class="col-sm-8"><%= @contact.email.presence || "Not provided" %></dd>
+      <dt class="col-sm-4 text-muted">Phone</dt>
+      <dd class="col-sm-8"><%= @contact.phone_number.presence || "Not provided" %></dd>
+      <dt class="col-sm-4 text-muted">Address</dt>
+      <dd class="col-sm-8"><%= @contact.address.presence || "Not provided" %></dd>
+      <dt class="col-sm-4 text-muted">Website</dt>
+      <dd class="col-sm-8 mb-0"><%= @contact.website.presence || "Not provided" %></dd>
+    </dl>
+
+    <%= button_to "Delete contact", contact_path(@contact), method: :delete,
+                  class: "btn btn-outline-danger",
+                  form: { data: { turbo_confirm: "Delete this contact?" } } %>
+  </article>
+</main>
