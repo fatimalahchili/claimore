@@ -1,0 +1,22 @@
+<%= simple_form_for entry do |form| %>
+  <%= form.error_notification %>
+  <%= form.input :claim_id, as: :hidden %>
+
+  <div class="row g-3">
+    <div class="col-12"><%= form.input :title, placeholder: "e.g. Landlord contacted about the leak" %></div>
+    <div class="col-12"><%= form.input :description, as: :text, input_html: { rows: 5 }, placeholder: "Record what happened and any important details." %></div>
+    <div class="col-md-6"><%= form.input :date, as: :date, html5: true %></div>
+    <div class="col-md-6"><%= form.input :category, placeholder: "e.g. Communication" %></div>
+    <div class="col-md-6">
+      <%= form.input :status,
+                     collection: %w[reported open pending escalated resolved],
+                     include_blank: "No status",
+                     label_method: :humanize %>
+    </div>
+  </div>
+
+  <div class="d-flex flex-wrap gap-2 mt-4">
+    <%= form.button :submit, class: "btn btn-primary" %>
+    <%= link_to "Cancel", entry.persisted? ? entry_path(entry) : claim_path(entry.claim), class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>
