@@ -1,0 +1,12 @@
+<% error_message = tool.tool_error_message %>
+<% if error_message.present? %>
+  <%= render "messages/error",
+             message: tool,
+             title: "Action failed",
+             error_message: error_message %>
+<% else %>
+  <div id="message_<%= tool.id %>" class="chat-tool-status chat-tool-status--complete">
+    <i class="fa-solid <%= icon %>" aria-hidden="true"></i>
+    <span><%= label %></span>
+  </div>
+<% end %>
