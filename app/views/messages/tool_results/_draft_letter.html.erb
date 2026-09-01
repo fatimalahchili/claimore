@@ -1,0 +1,17 @@
+<% error_message = tool.tool_error_message %>
+<% if error_message.present? %>
+  <%= render "messages/error", message: tool, title: "Tool Result Error", error_message: error_message %>
+<% else %>
+  <% result = JSON.parse(tool.content.to_s) rescue {} %>
+  <div id="message_<%= tool.id %>" class="chat-bubble-row chat-bubble-row--assistant">
+    <div class="chat-bubble chat-bubble--assistant">
+      <% if result["success"] %>
+        <p class="fw-bold mb-1"><%= result["title"] %></p>
+        <p class="mb-2" style="white-space: pre-wrap;"><%= result["summary"] %></p>
+        <%= link_to "Review & edit this letter", result["edit_url"], class: "btn btn-primary btn-sm" if result["edit_url"].present? %>
+      <% else %>
+        <p class="text-danger mb-0"><%= result["error"] || "Could not draft the letter." %></p>
+      <% end %>
+    </div>
+  </div>
+<% end %>
