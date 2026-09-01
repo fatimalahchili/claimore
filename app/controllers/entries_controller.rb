@@ -2,10 +2,6 @@ class EntriesController < ApplicationController
   before_action :set_entry, only: %i[show destroy update edit]
   before_action :authorize_entry!, only: %i[show destroy update edit]
 
-  def index
-    @entries = Entry.where(claim: current_user.claims).order(date: :desc, created_at: :desc)
-  end
-
   def edit
   end
 

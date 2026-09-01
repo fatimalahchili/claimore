@@ -10,11 +10,6 @@ class EntriesControllerTest < ActionDispatch::IntegrationTest
     @entry = Entry.create!(claim: @claim, title: "Broken window", description: "Cracked pane", category: "damage")
   end
 
-  test "should get index" do
-    get entries_url
-    assert_response :success
-  end
-
   test "should get new" do
     get new_entry_url
     assert_response :success

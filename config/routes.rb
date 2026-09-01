@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   get  "invitations/:token",        to: "tenant_invitations#join",   as: :join_invitation
   post "invitations/:token/accept", to: "tenant_invitations#accept", as: :accept_invitation
 
-  resources :entries
+  resources :entries, except: :index
   resources :templates, only: %i[show index]
   resources :contacts
   resources :administrations, only: %i[show index]
