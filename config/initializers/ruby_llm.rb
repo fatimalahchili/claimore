@@ -1,7 +1,8 @@
 RubyLLM.configure do |config|
   config.openai_api_key = ENV.fetch("OPENAI_API_KEY", Rails.application.credentials.dig(:openai_api_key))
   config.default_model = "gpt-5-nano"
-
+  # Embedding model just to be explicite here
+  config.default_embedding_model = "text-embedding-3-small"
   # Use the association-based acts_as API (recommended)
   config.use_new_acts_as = true
 end
