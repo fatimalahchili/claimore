@@ -586,6 +586,38 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   border: 1px solid rgba(239, 68, 68, 0.25);
 }
 
+.chat-tool-status {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 100%;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: $bg-subtle;
+  color: $text-secondary;
+  font-size: 0.76rem;
+  line-height: 1.2;
+
+  i {
+    color: $chat-blob-b;
+    font-size: 0.7rem;
+  }
+}
+
+.chat-tool-status--working i {
+  animation: chat-tool-pulse 1.2s ease-in-out infinite;
+}
+
+.chat-tool-status--complete {
+  color: $text-muted;
+}
+
+@keyframes chat-tool-pulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+
 .chat-bubble__typing {
   display: flex;
   gap: 4px;
