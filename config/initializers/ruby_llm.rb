@@ -6,7 +6,3 @@ RubyLLM.configure do |config|
   # Use the association-based acts_as API (recommended)
   config.use_new_acts_as = true
 end
-
-Rails.application.config.after_initialize do
-  Model.refresh! unless Rails.env.test?
-end
