@@ -1,4 +1,1 @@
-<% system ||= local_assigns[:message] %>
-<div id="message_<%= system.id %>" class="chat-bubble-row chat-bubble-row--system">
-  <div class="chat-bubble chat-bubble--system"><%= system.content %></div>
-</div>
+<%# System messages are internal LLM instructions and must never be displayed to users. %>
