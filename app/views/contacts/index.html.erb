@@ -1,0 +1,47 @@
+<% content_for :title, "Contacts" %>
+
+<main class="container my-5" style="max-width: 960px;">
+  <header class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div>
+      <p class="text-primary small text-uppercase fw-semibold mb-2">Address book</p>
+      <h1 class="h2 fw-bold mb-1">Contacts</h1>
+      <p class="text-muted mb-0">Keep landlord, property manager, contractor, and support details together.</p>
+    </div>
+    <%= link_to new_contact_path, class: "btn btn-primary d-inline-flex align-items-center gap-2" do %>
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      <span>Add contact</span>
+    <% end %>
+  </header>
+
+  <% if @contacts.any? %>
+    <div class="row g-3">
+      <% @contacts.each do |contact| %>
+        <div class="col-12 col-md-6">
+          <article class="card h-100 border-0 shadow-sm rounded-4 p-4">
+            <div class="d-flex align-items-start gap-3 mb-3">
+              <span class="d-grid place-items-center flex-shrink-0 rounded-3 bg-primary-subtle text-primary" style="width: 44px; height: 44px;">
+                <i class="fa-solid fa-address-card" aria-hidden="true"></i>
+              </span>
+              <div class="min-width-0">
+                <h2 class="h5 fw-bold mb-1"><%= contact.name %></h2>
+                <p class="text-muted small mb-0"><%= contact.role %></p>
+              </div>
+            </div>
+            <p class="small text-muted mb-3"><i class="fa-solid fa-building me-2" aria-hidden="true"></i><%= contact.property.address %></p>
+            <%= link_to contact_path(contact), class: "d-flex justify-content-between align-items-center text-decoration-none fw-semibold mt-auto" do %>
+              <span>View contact</span>
+              <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            <% end %>
+          </article>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <section class="card border-0 shadow-sm rounded-4 text-center p-5">
+      <i class="fa-regular fa-address-book display-5 text-primary mb-3" aria-hidden="true"></i>
+      <h2 class="h5 fw-bold">No contacts yet</h2>
+      <p class="text-muted">Add the first person or organisation connected to your property.</p>
+      <%= link_to "Add contact", new_contact_path, class: "btn btn-primary align-self-center" %>
+    </section>
+  <% end %>
+</main>

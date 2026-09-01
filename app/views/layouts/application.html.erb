@@ -23,7 +23,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="app-page app-page--<%= controller_name.dasherize %> app-page--<%= controller_name.dasherize %>-<%= action_name.dasherize %>">
     <%= yield %>
 
     <%= render "shared/navbar" %>

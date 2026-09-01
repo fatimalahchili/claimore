@@ -1,0 +1,24 @@
+<%= simple_form_for contact do |form| %>
+  <%= form.error_notification %>
+
+  <div class="row g-3">
+    <div class="col-12">
+      <%= form.association :property,
+                           collection: current_user.properties,
+                           label_method: :address,
+                           value_method: :id,
+                           include_blank: false %>
+    </div>
+    <div class="col-md-6"><%= form.input :name %></div>
+    <div class="col-md-6"><%= form.input :role, label: "Role or organisation" %></div>
+    <div class="col-md-6"><%= form.input :email %></div>
+    <div class="col-md-6"><%= form.input :phone_number, label: "Phone number" %></div>
+    <div class="col-12"><%= form.input :address %></div>
+    <div class="col-12"><%= form.input :website %></div>
+  </div>
+
+  <div class="d-flex flex-wrap gap-2 mt-4">
+    <%= form.button :submit, class: "btn btn-primary" %>
+    <%= link_to "Cancel", contacts_path, class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>

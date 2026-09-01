@@ -1,6 +1,13 @@
 .alert {
   position: fixed;
-  bottom: 16px;
-  right: 16px;
-  z-index: 1000;
+  right: clamp(1rem, 3vw, 2rem);
+  top: calc(1rem + env(safe-area-inset-top));
+  bottom: auto;
+  z-index: 1055;
+  width: calc(100vw - 2rem);
+  max-width: 26rem;
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 1rem;
+  box-shadow: 0 16px 42px rgba($text-main, 0.16);
 }

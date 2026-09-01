@@ -6,12 +6,15 @@
         <h1 class="display-6 fw-bold mb-2">Your claims</h1>
         <p class="text-secondary mb-0">Track active housing issues and review archived cases when needed.</p>
       </div>
-      <%= link_to "New claim", new_claim_path(property_id: @property&.id), class: "btn btn-primary" %>
+      <%= link_to new_claim_path(property_id: @property&.id), class: "btn btn-primary d-inline-flex align-items-center gap-2" do %>
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        <span>New claim</span>
+      <% end %>
     </div>
   </section>
 
   <% if @properties.any? %>
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div class="claims-index__toolbar d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
       <%= form_with url: claims_path, method: :get, class: "flex-grow-1", data: { turbo_frame: "_top" } do |form| %>
         <%= form.label :property_id, "Property", class: "form-label small fw-semibold" %>
         <%= form.select :property_id,
@@ -21,13 +24,13 @@
                         onchange: "this.form.requestSubmit()" %>
       <% end %>
 
-      <div class="d-flex gap-2">
+      <div class="claims-index__counts d-flex gap-2">
         <span class="badge rounded-pill text-bg-primary px-3 py-2"><%= @active_claims_count %> active</span>
         <span class="badge rounded-pill text-bg-secondary px-3 py-2"><%= @archived_claims_count %> archived</span>
       </div>
     </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="claims-index__property-heading d-flex justify-content-between align-items-center mb-3">
       <h2 class="h4 fw-bold mb-0"><%= @property.address %></h2>
       <% if @archived_claims_count.positive? %>
         <% if @show_archived %>
@@ -46,16 +49,22 @@
           <div class="col-12 col-md-6">
             <article class="claim-index-card <%= 'claim-index-card--archived' if claim.status == 'archived' %> card h-100 rounded-4 shadow-sm p-4">
               <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-                <div>
-                  <p class="text-muted small mb-1">Claim #<%= claim.id %></p>
-                  <h3 class="h5 fw-bold mb-0"><%= claim.category.presence || "Housing claim" %></h3>
+                <div class="d-flex align-items-start gap-3 min-width-0">
+                  <span class="claim-index-card__icon" aria-hidden="true"><i class="fa-solid fa-house-circle-exclamation"></i></span>
+                  <div class="min-width-0">
+                    <p class="text-muted small mb-1">Claim #<%= claim.id %></p>
+                    <h3 class="h5 fw-bold mb-0"><%= claim.category.presence || "Housing claim" %></h3>
+                  </div>
                 </div>
                 <span class="badge rounded-pill <%= claim.status == 'archived' ? 'text-bg-secondary' : 'text-bg-success' %> text-uppercase">
                   <%= claim.status.presence || "active" %>
                 </span>
               </div>
               <p class="text-muted small mb-3">Updated <%= time_ago_in_words(claim.updated_at) %> ago</p>
-              <%= link_to "Open claim", claim_path(claim), class: "btn btn-sm btn-outline-primary align-self-start" %>
+              <%= link_to claim_path(claim), class: "claim-index-card__link d-flex align-items-center justify-content-between text-decoration-none mt-auto" do %>
+                <span>Open claim</span>
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+              <% end %>
             </article>
           </div>
         <% end %>

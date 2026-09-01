@@ -1,6 +1,12 @@
 .timeline-entry {
   border-left: 4px solid $brand-primary !important;
+  box-shadow: 0 6px 20px rgba($text-main, 0.05);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.timeline-entry:hover {
+  box-shadow: 0 12px 28px rgba($text-main, 0.1) !important;
+  transform: translateY(-2px);
 }
 
 .timeline-entry:focus {
@@ -39,10 +45,17 @@
   z-index: 1020;
   background: rgba($bg-page, 0.94);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .claim-action-bar {
   border: 1px solid $border-light;
   background: $bg-surface;
   margin-bottom: calc(var(--navbar-h) + var(--navbar-gap) + 1rem);
+}
+
+@media (max-width: 575px) {
+  .claim-sticky-header { position: static; }
+  .timeline-entry:hover { transform: none; }
+  .claim-action-bar .btn { flex: 1 1 100%; }
 }
