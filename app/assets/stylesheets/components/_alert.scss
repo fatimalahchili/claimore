@@ -1,7 +1,8 @@
 .alert {
   position: fixed;
   right: clamp(1rem, 3vw, 2rem);
-  bottom: calc(var(--navbar-h, 72px) + var(--navbar-gap, 16px) + 1rem);
+  top: calc(1rem + env(safe-area-inset-top));
+  bottom: auto;
   z-index: 1055;
   width: calc(100vw - 2rem);
   max-width: 26rem;
