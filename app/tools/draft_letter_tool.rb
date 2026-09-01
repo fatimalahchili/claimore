@@ -27,7 +27,7 @@ class DraftLetterTool < RubyLLM::Tool
   private
 
   def fill_in(content, fields)
-    values = JSON.parse(fields).merge("date" => I18n.l(Date.current, format: :long))
+    values = JSON.parse(fields).merge("date" => Date.current.strftime("%d.%m.%Y"))
     content.gsub(/\{\{(\w+)\}\}/) { values[Regexp.last_match(1)] || Regexp.last_match(0) }
   end
 
