@@ -25,7 +25,6 @@ class MessagesController < ApplicationController
     vector = RubyLLM.embed(translate_to_german(content)).vectors
     relevant_law_texts = LawText.nearest_neighbors(:embedding, vector, distance: "cosine")
                                 .limit(RELEVANT_LAW_TEXTS_COUNT)
-    bro
     laws = relevant_law_texts.map do |law_text|
       "#{law_text.paragraph_title}\n#{law_text.content}"
     end.join("\n\n")
