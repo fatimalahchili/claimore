@@ -9,7 +9,7 @@ class ChatResponseJob < ApplicationJob
       if chunk.content && !chunk.content.empty?
         response_content << chunk.content
         message = chat.messages.last
-        message.broadcast_update_markdown(response_content)
+        message.broadcast_update_markdown(response_content.dup)
       end
     end
   end

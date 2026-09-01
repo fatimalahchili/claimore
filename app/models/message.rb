@@ -11,6 +11,8 @@ class Message < ApplicationRecord
 
   broadcasts_to ->(message) { "chat_#{message.chat_id}" }, inserts_by: :append
 
+  # Assistant responses can contain markdown, but user-visible chat should never
+  # render arbitrary HTML or scripts returned from an LLM.
   def self.render_markdown(content)
     html = Commonmarker.to_html(content.to_s, options: { render: { unsafe: false } })
     Rails::HTML5::SafeListSanitizer.new.sanitize(html, tags: MARKDOWN_ALLOWED_TAGS, attributes: MARKDOWN_ALLOWED_ATTRIBUTES)
