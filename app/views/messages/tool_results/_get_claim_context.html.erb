@@ -1,0 +1,4 @@
+<% error_message = tool.tool_error_message %>
+<% if error_message.present? %>
+  <%= render "messages/error", message: tool, title: "Tool Result Error", error_message: error_message %>
+<% end %>
