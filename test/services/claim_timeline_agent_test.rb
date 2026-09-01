@@ -37,7 +37,9 @@ class ClaimTimelineAgentTest < ActiveSupport::TestCase
 
     assert_equal :response, result
     assert_includes chat.instructions, "explicitly asks"
-    assert_equal [GetClaimContextTool, CreateClaimEntryTool, GetTemplatesTool, DraftLetterTool], chat.tools.map(&:class)
+    expected_tools = [GetClaimContextTool, CreateClaimEntryTool, GetTemplatesTool, DraftLetterTool,
+                      GetRelevantLawTextsTool]
+    assert_equal expected_tools, chat.tools.map(&:class)
     assert_includes chat.instructions, "never create a new entry when the user asked to edit one"
     assert_equal "Record my call", chat.asked_content
     assert_equal :minimal, chat.thinking
@@ -51,7 +53,7 @@ class ClaimTimelineAgentTest < ActiveSupport::TestCase
 
     assert_equal :response, result
     assert_includes chat.instructions, "housing matters"
-    assert_nil chat.tools
+    assert_equal [GetRelevantLawTextsTool], chat.tools.map(&:class)
     assert_equal "How can you help me?", chat.asked_content
   end
 end
