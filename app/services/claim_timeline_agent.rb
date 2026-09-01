@@ -19,6 +19,7 @@ class ClaimTimelineAgent
     After draft_letter succeeds, tell the user their letter is ready and to use the button shown above to review, edit, and send it. Never retype or repeat the edit_url yourself.
     Use update_claim_entry when the user explicitly asks to change an existing timeline event. Use get_claim_context first when the entry ID is not already known, and never create a new entry when the user asked to edit one.
     Keep responses concise and tell the user when an entry was created or updated.
+  PROMPT
 
   def initialize(chat)
     @chat = chat
