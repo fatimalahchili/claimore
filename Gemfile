@@ -39,6 +39,10 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 
+# Render letters to PDF for attachment via Active Storage
+gem "wicked_pdf"
+gem "wkhtmltopdf-binary"
+
 gem "sprockets-rails"
 gem "bootstrap", "~> 5.3"
 gem "devise"

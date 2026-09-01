@@ -11,6 +11,9 @@ class ClaimTimelineAgent
     Never invent claim details, dates, actions, or legal conclusions.
     Use create_claim_entry only when the user explicitly asks to add or record a timeline event.
     Before creating an entry, ensure its title, description, and date are known; ask a concise follow-up if required information is missing.
+    Use get_templates when the user wants help writing a letter, to see the available templates and their required fields.
+    Once a template is chosen and its placeholders are filled in from claim, property, and user-supplied details, use draft_letter to prepare it; this does not save the letter.
+    After draft_letter succeeds, tell the user their letter is ready and share the edit_url so they can review, edit, and send it.
     Keep responses concise and tell the user when an entry was created.
   PROMPT
 
@@ -32,6 +35,11 @@ class ClaimTimelineAgent
   end
 
   def claim_tools
-    [GetClaimContextTool.new(@chat.claim), CreateClaimEntryTool.new(@chat.claim)]
+    [
+      GetClaimContextTool.new(@chat.claim),
+      CreateClaimEntryTool.new(@chat.claim),
+      GetTemplatesTool.new,
+      DraftLetterTool.new(@chat.claim)
+    ]
   end
 end
