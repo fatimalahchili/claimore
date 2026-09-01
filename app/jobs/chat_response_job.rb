@@ -3,13 +3,10 @@ class ChatResponseJob < ApplicationJob
     chat = Chat.find(chat_id)
     chat.with_instructions(chat.system_instructions)
 
-    response_content = +""
-
     ClaimTimelineAgent.new(chat).ask(content) do |chunk|
       if chunk.content && !chunk.content.empty?
-        response_content << chunk.content
         message = chat.messages.last
-        message.broadcast_update_markdown(response_content.dup)
+        message.broadcast_append_chunk(chunk.content)
       end
     end
   end
