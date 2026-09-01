@@ -1,26 +1,30 @@
 <% content_for :title, "Dashboard" %>
 
-<div class="container py-5">
-  <h1 class="fw-bold text-dark mb-4">Dashboard</h1>
+<div class="dashboard-page container py-5">
+  <header class="dashboard-heading mb-4">
+    <p class="text-primary small text-uppercase fw-bold mb-2">Your workspace</p>
+    <h1 class="fw-bold text-dark mb-2">Dashboard</h1>
+    <p class="text-muted mb-0">Keep track of your properties, claims, and upcoming deadlines.</p>
+  </header>
 
   <div class="row g-4">
     <div class="col-md-8">
-      <div class="card h-100 border-0 shadow-sm" style="border-radius: 1rem;">
+      <div class="dashboard-card card h-100 border-0 shadow-sm">
         <div class="card-body p-4">
           <div class="text-muted small text-uppercase fw-semibold mb-3">Next Event</div>
 
           <% if @next_entry %>
             <% claim = @next_entry.claim %>
             <div class="d-flex flex-column flex-sm-row gap-4">
-              <div class="d-flex flex-column align-items-center justify-content-center flex-shrink-0 text-white fw-bold" style="width: 72px; height: 72px; border-radius: 1rem; background-color: #6D4AFF;">
-                <div class="text-uppercase" style="opacity: 0.85; font-size: 0.7rem; letter-spacing: 0.03em;"><%= @next_entry.date.strftime("%b") %></div>
+              <div class="dashboard-date d-flex flex-column align-items-center justify-content-center flex-shrink-0 text-white fw-bold">
+                <div class="dashboard-date__month text-uppercase"><%= @next_entry.date.strftime("%b") %></div>
                 <div class="fs-4 lh-1"><%= @next_entry.date.strftime("%-d") %></div>
               </div>
 
               <div class="flex-grow-1 min-width-0">
                 <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
                   <h5 class="fw-bold text-dark mb-0"><%= @next_entry.title %></h5>
-                  <span class="badge rounded-pill" style="background-color: #F0ECFF; color: #6D4AFF;">
+                  <span class="dashboard-event-badge badge rounded-pill">
                     in <%= distance_of_time_in_words(Date.current, @next_entry.date) %>
                   </span>
                 </div>
@@ -44,7 +48,7 @@
 
     <div class="col-md-4">
       <%= link_to claims_path, class: "text-decoration-none" do %>
-        <div class="card h-100 p-4 border-0 shadow-sm" style="border-radius: 1rem;">
+        <div class="dashboard-card dashboard-card--metric card h-100 p-4 border-0 shadow-sm">
           <div class="d-flex align-items-center gap-3">
             <div class="fs-2 text-primary"><i class="fa-solid fa-folder-open"></i></div>
             <div>
