@@ -12,6 +12,10 @@ module MessagesHelper
     partial_for(prefix: "messages/tool_calls", name: tool_call.name.to_s)
   end
 
+  def markdown_message(content)
+    Message.render_markdown(content).html_safe
+  end
+
   private
 
   def partial_for(prefix:, name:)
