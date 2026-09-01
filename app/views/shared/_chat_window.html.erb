@@ -10,7 +10,7 @@ end %>
     <header class="chat-widget__header">
       <%= render "shared/claim_blob", size: "sm" %>
       <div class="chat-widget__heading">
-        <strong>Claim</strong>
+        <strong>Clem'</strong>
         <span><%= claim ? (claim.category.presence || "Tenancy Claim") : "Your AI Assistant" %></span>
       </div>
       <button type="button" class="chat-widget__close" data-action="chat-widget#close" aria-label="Close chat">
@@ -31,7 +31,7 @@ end %>
           aria-controls="chat_widget_panel"
           aria-label="Open assistant chat">
     <div class="chat-widget__callout" aria-hidden="true">
-      Hi, I&rsquo;m Claim, ask me anything!
+      Hi, I&rsquo;m Clem&rsquo;, ask me anything!
     </div>
     <%= render "shared/claim_blob" %>
     <i class="fa-solid fa-xmark chat-widget__launcher-close" aria-hidden="true"></i>
