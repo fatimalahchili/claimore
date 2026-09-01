@@ -6,7 +6,7 @@ class Message < ApplicationRecord
 
   def broadcast_append_chunk(content)
     broadcast_append_to "chat_#{chat_id}",
-      target: "message_#{id}_content",
-      content: ERB::Util.html_escape(content.to_s)
+                        target: "message_#{id}_content",
+                        content: ERB::Util.html_escape(content.to_s)
   end
 end

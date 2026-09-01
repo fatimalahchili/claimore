@@ -101,9 +101,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_31_120000) do
     t.index ["claim_id"], name: "index_entries_on_claim_id"
   end
 
-# Could not dump table "law_texts" because of following StandardError
-#   Unknown type 'vector(1536)' for column 'embedding'
-
+  create_table "law_texts", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.vector "embedding", limit: 1536
+    t.string "paragraph_title"
+    t.string "subtitle"
+    t.datetime "updated_at", null: false
+    t.index ["embedding"], name: "index_law_texts_on_embedding", opclass: :vector_cosine_ops, using: :hnsw
+  end
 
   create_table "letters", force: :cascade do |t|
     t.bigint "claim_id", null: false
