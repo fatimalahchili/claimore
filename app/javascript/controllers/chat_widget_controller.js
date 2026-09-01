@@ -1,9 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
 const STORAGE_KEY = "chatWidgetOpen"
+const CALLOUT_STORAGE_KEY = "chatWidgetCalloutSeen"
 
 export default class extends Controller {
-  static targets = ["launcher", "panel", "body", "messages"]
+  static targets = ["launcher", "panel", "body", "messages", "callout"]
 
   connect() {
     this.onKeydown = this.onKeydown.bind(this)
@@ -21,6 +22,7 @@ export default class extends Controller {
     this.observer.observe(this.bodyTarget, { childList: true, subtree: true, characterData: true })
     this.updateThinkingState()
 
+    if (localStorage.getItem(CALLOUT_STORAGE_KEY) === "1") this.hideCallout()
     if (sessionStorage.getItem(STORAGE_KEY) === "1") this.open()
   }
 
@@ -41,6 +43,7 @@ export default class extends Controller {
     this.launcherTarget.setAttribute("aria-expanded", "true")
     this.isOpen = true
     sessionStorage.setItem(STORAGE_KEY, "1")
+    this.dismissCallout()
     this.scrollMessagesToBottom()
 
     const input = this.bodyTarget.querySelector(".chat-widget__input")
@@ -81,5 +84,16 @@ export default class extends Controller {
   updateThinkingState() {
     const thinking = this.bodyTarget.querySelector(".chat-bubble__typing") !== null
     this.element.classList.toggle("chat-widget--thinking", thinking)
+  }
+
+  dismissCallout() {
+    localStorage.setItem(CALLOUT_STORAGE_KEY, "1")
+    this.hideCallout()
+  }
+
+  hideCallout() {
+    if (!this.hasCalloutTarget) return
+
+    this.calloutTarget.classList.add("chat-widget__callout--hidden")
   }
 }

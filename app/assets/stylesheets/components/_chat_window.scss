@@ -339,6 +339,10 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 }
 
+.chat-widget__callout--hidden {
+  display: none;
+}
+
 .chat-widget--page-scrolled:not(.chat-widget--open) .chat-widget__launcher {
   opacity: 0.42;
   transform: translateY(12px) scale(0.88);
