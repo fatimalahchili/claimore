@@ -1,31 +1,37 @@
-// Brand Colors
-$brand-primary: #6D4AFF;        // Claimore Signature Purple
-$brand-primary-hover: #5835E5;
-$brand-primary-light: #F0ECFF;
-$brand-primary-subtle: #FAF8FF;
+// Brand Colors — "Terracotta & Teal"
+$brand-primary: #E2603F;        // Claimore Signature Terracotta
+$brand-primary-hover: #C94A2C;
+$brand-primary-light: #FBE3D8;
+$brand-primary-subtle: #FFF7F3;
+
+// Accent Colors — playful secondary pop, used for highlights/variety
+$brand-accent: #1E9C8B;         // Teal
+$brand-accent-hover: #167A6D;
+$brand-accent-light: #DBF3EE;
+$brand-accent-subtle: #F3FBFA;
 
 // Neutral & Text Colors
-$text-main: #0F172A;            // Deep Slate
-$text-secondary: #475569;       // Medium Slate
-$text-muted: #94A3B8;           // Light Slate
+$text-main: #221A16;            // Warm near-black
+$text-secondary: #6B5D54;       // Warm slate
+$text-muted: #A79A8F;           // Warm light slate
 $text-white: #FFFFFF;
 
 // Backgrounds & Surface
-$bg-page: #F8FAFC;              // Off-white canvas
+$bg-page: #FBF7F2;              // Warm ivory canvas
 $bg-surface: #FFFFFF;           // Clean card white
-$bg-subtle: #F1F5F9;
+$bg-subtle: #F4EDE5;
 
 // Borders
-$border-light: #E2E8F0;
-$border-medium: #CBD5E1;
-$border-focus: #6D4AFF;
+$border-light: #EBE1D6;
+$border-medium: #D8C9B8;
+$border-focus: #E2603F;
 
 // Status & Alert Colors
-$success: #10B981;              // Green
-$success-light: #ECFDF5;
-$warning: #F59E0B;              // Amber / Urgency
-$warning-light: #FFFBEB;
-$danger: #EF4444;               // Red / Error
-$danger-light: #FEF2F2;
-$info: #3B82F6;                 // Blue / AI Notice
-$info-light: #EFF6FF;
+$success: #1FA25C;              // Green
+$success-light: #E1F5EA;
+$warning: #E0932A;              // Amber / Urgency
+$warning-light: #FDF1DF;
+$danger: #D6444F;               // Red / Error (kept distinct from the terracotta brand hue)
+$danger-light: #FBE7E8;
+$info: #2F7FD1;                 // Blue / AI Notice
+$info-light: #E6F0FB;

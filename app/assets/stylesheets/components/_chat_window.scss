@@ -6,12 +6,14 @@
 // inside one calc(), since it tries to evaluate the calc() itself instead of
 // deferring to the browser. var() references are opaque to Sass, so it never
 // attempts that arithmetic.
-// Meeseeks-blue palette — Claim's mascot is styled after Mr. Meeseeks (Rick and Morty).
-$chat-blob-a: #7fe3f5;
-$chat-blob-b: #1e9fd1;
+// Claim's mascot is styled after Mr. Meeseeks (Rick and Morty), recolored to the
+// app's terracotta & teal palette so it reads as part of the same brand.
+$chat-blob-a: #8FE6D6;
+$chat-blob-b: $brand-accent;
 $chat-blob-gradient: linear-gradient(160deg, $chat-blob-a, $chat-blob-b);
+$chat-blob-house: #3B2A22;
 $chat-widget-right: clamp(12px, 3vw, 24px);
-$chat-launcher-size: clamp(64px, 7vw, 84px);
+$chat-launcher-size: clamp(48px, 5.5vw, 60px);
 
 .chat-widget {
   position: relative;
@@ -26,15 +28,15 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
 @keyframes chat-launcher-ring {
   0% {
-    box-shadow: 0 0 0 0 rgba(30, 159, 209, 0.35);
+    box-shadow: 0 0 0 0 rgba($chat-blob-b, 0.35);
   }
 
   70% {
-    box-shadow: 0 0 0 14px rgba(30, 159, 209, 0);
+    box-shadow: 0 0 0 12px rgba($chat-blob-b, 0);
   }
 
   100% {
-    box-shadow: 0 0 0 0 rgba(30, 159, 209, 0);
+    box-shadow: 0 0 0 0 rgba($chat-blob-b, 0);
   }
 }
 
@@ -121,50 +123,63 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   // A tall, rounded capsule rather than a perfect circle — Mr. Meeseeks' head shape.
   border-radius: 50% 50% 46% 46% / 58% 58% 42% 42%;
   background: $chat-blob-gradient;
-  box-shadow: 0 4px 14px rgba(30, 159, 209, 0.35), inset 0 -2px 6px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 14px rgba($chat-blob-b, 0.35), inset 0 -2px 6px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.35);
   flex-shrink: 0;
 
   // Sized as percentages of the blob's own box, so eyes/mouth scale with every
   // variant (including the launcher, whose size is a responsive clamp()).
   .chat-widget__eye {
-    width: 22%;
-    height: 22%;
-    margin-top: -16%;
+    width: 24%;
+    height: 24%;
+    margin-top: -14%;
     border-radius: 50%;
-    background: radial-gradient(circle at 50% 50%, #14151c 0 30%, #fff 32% 100%);
+    background: radial-gradient(circle at 50% 50%, #221a16 0 26%, #fff 28% 100%);
     box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.15);
+  }
+
+  .chat-widget__cheek {
+    position: absolute;
+    bottom: 26%;
+    width: 16%;
+    height: 10%;
+    border-radius: 50%;
+    background: rgba($brand-primary, 0.38);
+    pointer-events: none;
+
+    &--left { left: 6%; }
+    &--right { right: 6%; }
   }
 
   .chat-widget__mouth {
     position: absolute;
     left: 50%;
-    bottom: 20%;
-    width: 52%;
-    height: 20%;
+    bottom: 22%;
+    width: 40%;
+    height: 14%;
     transform: translateX(-50%);
-    background: linear-gradient(to bottom, #fff 0 42%, #7a2222 42% 100%);
-    border-radius: 10% 10% 50% 50% / 20% 20% 80% 80%;
-    box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.25);
+    background: $brand-primary-hover;
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+    box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.15);
   }
 
   &--sm {
-    width: 30px;
-    height: 30px;
-    --hat-scale: 0.85;
+    width: 26px;
+    height: 26px;
+    --hat-scale: 0.7;
   }
 
   &--xs {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     margin-bottom: 4px;
-    --hat-scale: 0.65;
+    --hat-scale: 0.55;
   }
 
   &--float {
-    width: 64px;
-    height: 64px;
+    width: 52px;
+    height: 52px;
     margin-bottom: 6px;
-    --hat-scale: 1.7;
+    --hat-scale: 1.35;
     animation: chat-blob-breathe 3.4s ease-in-out infinite;
   }
 }
@@ -190,9 +205,9 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   transform: translateX(-50%);
   width: 22px;
   height: 15px;
-  background: #2f2a45;
+  background: $chat-blob-house;
   border-radius: 1px 1px 3px 3px;
-  border-bottom: 2px solid $chat-blob-a;
+  border-bottom: 2px solid $brand-primary;
 }
 
 .chat-widget__roof {
@@ -204,7 +219,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   height: 0;
   border-left: 15px solid transparent;
   border-right: 15px solid transparent;
-  border-bottom: 10px solid #2f2a45;
+  border-bottom: 10px solid $chat-blob-house;
 }
 
 .chat-widget__door {
@@ -214,7 +229,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   transform: translateX(-50%);
   width: 6px;
   height: 9px;
-  background: $chat-blob-a;
+  background: $brand-primary;
   border-radius: 2px 2px 0 0;
 }
 
@@ -234,7 +249,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   right: 4px;
   width: 5px;
   height: 12px;
-  background: #2f2a45;
+  background: $chat-blob-house;
   border-radius: 1px;
 }
 
@@ -246,7 +261,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   height: 4px;
   margin-left: -2px;
   border-radius: 50%;
-  background: rgba(120, 113, 150, 0.7);
+  background: rgba($text-secondary, 0.55);
   box-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
   opacity: 0;
 
@@ -291,7 +306,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   &::after {
     content: "";
     position: absolute;
-    inset: -6px;
+    inset: -4px;
     border-radius: 50%;
     animation: chat-launcher-ring 2.6s ease-out infinite;
     pointer-events: none;
@@ -300,7 +315,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   .chat-widget__blob {
     width: $chat-launcher-size;
     height: $chat-launcher-size;
-    --hat-scale: 1.6;
+    --hat-scale: 1.15;
     transition: opacity 0.25s ease, transform 0.25s ease;
   }
 }
@@ -323,17 +338,17 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
   .chat-widget__launcher {
     right: 14px;
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
 
     &::after {
       inset: -3px;
     }
 
     .chat-widget__blob {
-      width: 50px;
-      height: 50px;
-      --hat-scale: 1.35;
+      width: 44px;
+      height: 44px;
+      --hat-scale: 1;
     }
   }
 
@@ -402,7 +417,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 @media (max-width: 767px) {
   .chat-widget {
     --chat-widget-right: 12px;
-    --chat-launcher-size: 58px;
+    --chat-launcher-size: 44px;
     --chat-launcher-bottom: calc(var(--chat-navbar-h) + var(--chat-navbar-gap) + 8px + env(safe-area-inset-bottom));
     --chat-panel-bottom: calc(var(--chat-navbar-h) + var(--chat-navbar-gap) + 8px + env(safe-area-inset-bottom));
   }
@@ -415,7 +430,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
     .chat-widget__blob {
       width: var(--chat-launcher-size);
       height: var(--chat-launcher-size);
-      --hat-scale: 1.25;
+      --hat-scale: 1;
     }
   }
 
@@ -678,7 +693,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   font-weight: 600;
   font-size: 0.85rem;
   text-decoration: none;
-  box-shadow: 0 6px 16px rgba(30, 159, 209, 0.3);
+  box-shadow: 0 6px 16px rgba($chat-blob-b, 0.3);
   transition: transform 0.15s ease;
 
   &:hover {
