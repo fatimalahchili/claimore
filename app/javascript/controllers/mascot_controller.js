@@ -27,7 +27,7 @@ const GESTURE_DURATION_MS = {
 // also sustained (she stays hidden until toggled back) — see hide()/reappear().
 const IDLE_GESTURES = ["scratching", "filing-nails", "yawning", "eating", "whistling", "six-seven"]
 
-const VANISH_MS = 600
+const VANISH_MS = 3200
 const APPEAR_MS = 900
 
 // A different exit every time — one is picked at random whenever she's
@@ -114,6 +114,9 @@ export default class extends Controller {
     this.gestureTimeout = setTimeout(() => {
       this.element.classList.remove("chat-widget--appearing")
       this.isAnimating = false
+      // She reappeared via her nav-bar icon, not the launcher itself — open
+      // the chat panel for her rather than making them click a second time.
+      document.dispatchEvent(new CustomEvent("clem:open-panel"))
     }, APPEAR_MS)
   }
 
@@ -133,6 +136,12 @@ export default class extends Controller {
     const dy = (navRect.top + navRect.height / 2) - (blobRect.top + blobRect.height / 2)
     blob.style.setProperty("--portal-dx", `${dx.toFixed(1)}px`)
     blob.style.setProperty("--portal-dy", `${dy.toFixed(1)}px`)
+
+    // Viewport size, so the more acrobatic variants (bat, pinball, ...) can
+    // swoop/bounce across a real fraction of the actual screen instead of a
+    // few dozen pixels near the corner.
+    blob.style.setProperty("--vp-w", `${window.innerWidth}px`)
+    blob.style.setProperty("--vp-h", `${window.innerHeight}px`)
   }
 
   onInteraction() {
