@@ -5,7 +5,7 @@ class PropertiesControllerTest < ActionDispatch::IntegrationTest
     @user = User.create!(email: "user-#{SecureRandom.hex(4)}@example.com", password: "password")
     sign_in @user
     @property = Property.create!(address: "123 Main St", moved_on: Date.current)
-    Tenant.create!(user: @user, property: @property, role: :main_tenant, status: :tenant)
+    Tenant.create!(user: @user, property: @property, role: :main_tenant, status: :added)
   end
 
   test "should get new" do
@@ -19,6 +19,7 @@ class PropertiesControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to property_url(Property.last)
     assert_equal @user, Property.last.tenants.main_tenant.first.user
+    assert_equal "added", Property.last.tenants.main_tenant.first.status
   end
 
   test "should get show" do

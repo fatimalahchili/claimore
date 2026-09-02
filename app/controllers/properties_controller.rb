@@ -46,7 +46,7 @@ class PropertiesController < ApplicationController
   def save_property_for_current_user
     Property.transaction do
       @property.save!
-      @property.tenants.create!(user: current_user, role: :main_tenant, status: :tenant)
+      @property.tenants.create!(user: current_user, role: :main_tenant, status: :added)
     end
     true
   rescue ActiveRecord::RecordInvalid

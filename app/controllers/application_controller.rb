@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     # on the SIGN UP form specifically, ALSO allow the :name field through
     #         (by default Devise only allows email/password — this whitelists :name too)
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :property_address, :property_moved_on])
 
     #  on the EDIT PROFILE / account update form, ALSO allow :name through
     devise_parameter_sanitizer.permit(:account_update, keys:
