@@ -467,6 +467,29 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 }
 
+// The reverse trip — she pops out of the icon, overshoots a little, settles.
+@keyframes chat-mascot-appear {
+  0% {
+    transform: translateX(0) scale(0.05);
+    opacity: 0;
+  }
+
+  45% {
+    transform: translateX(-8px) scale(0.85);
+    opacity: 0.9;
+  }
+
+  65% {
+    transform: translateX(6px) scale(1.18);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
 @keyframes chat-mascot-ninja-dress {
   0% {
     opacity: 0;
@@ -1180,30 +1203,15 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 // She vanishes into her nav-bar lookalike, ninja-style — see
 // nav_clem_portal_controller.js (fires "clem:vanish", caught by
 // mascot-controller) and app/views/shared/_navbar.html.erb.
-.chat-widget--vanishing .chat-widget__launcher {
+// Shared between vanishing and reappearing: both play the same smoke burst,
+// both kill the ambient "come chat with me" pulse (unrelated, just muddies
+// the poof), both block clicks mid-transition.
+.chat-widget--vanishing .chat-widget__launcher,
+.chat-widget--appearing .chat-widget__launcher {
   pointer-events: none;
 
-  // The ambient "come chat with me" pulse has nothing to do with vanishing
-  // and just muddies the poof visually — kill it here.
   &::after {
     display: none;
-  }
-
-  // Costume swap — the house hat comes off, the headband and mask go on,
-  // right as she vanishes.
-  .chat-widget__house {
-    opacity: 0;
-    transition: opacity 0.1s ease;
-  }
-
-  .chat-widget__ninja-band,
-  .chat-widget__ninja-mask {
-    opacity: 1;
-    animation: chat-mascot-ninja-dress 0.12s ease-out both;
-  }
-
-  .chat-widget__blob {
-    animation: chat-mascot-vanish 0.6s cubic-bezier(0.55, 0, 0.85, 0.35) forwards;
   }
 
   .chat-widget__poof {
@@ -1254,6 +1262,44 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
       --poof-y: 30px;
       animation-delay: 0.24s;
     }
+  }
+}
+
+// Costume on, house hat off, shrink away.
+.chat-widget--vanishing .chat-widget__launcher {
+  .chat-widget__house {
+    opacity: 0;
+    transition: opacity 0.1s ease;
+  }
+
+  .chat-widget__ninja-band,
+  .chat-widget__ninja-mask {
+    opacity: 1;
+    animation: chat-mascot-ninja-dress 0.12s ease-out both;
+  }
+
+  .chat-widget__blob {
+    animation: chat-mascot-vanish 0.6s cubic-bezier(0.55, 0, 0.85, 0.35) forwards;
+  }
+}
+
+// Mirror image of vanishing: she pops back to full size still in costume,
+// then a beat later peels the mask and headband off as the house hat
+// fades back in.
+.chat-widget--appearing .chat-widget__launcher {
+  .chat-widget__house {
+    opacity: 1;
+    transition: opacity 0.25s ease 0.35s;
+  }
+
+  .chat-widget__ninja-band,
+  .chat-widget__ninja-mask {
+    opacity: 1;
+    animation: chat-mascot-ninja-dress 0.3s ease-in 0.15s reverse both;
+  }
+
+  .chat-widget__blob {
+    animation: chat-mascot-appear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
 }
 

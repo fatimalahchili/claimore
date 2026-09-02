@@ -96,6 +96,26 @@ body {
   display: none;
 }
 
+// The floating Clem' mascot doubles as this one nav icon. Drop her house
+// hat so she sits at the same visual size/baseline as a plain glyph, and
+// mute her from full color down to the other icons' grey until she's
+// hovered or active (active = she's currently hidden — see
+// nav_clem_portal_controller.js) — same treatment every other icon gets.
+.nav-icon-link--clem .chat-widget__house {
+  display: none;
+}
+
+.nav-icon-link--clem .chat-widget__blob {
+  margin-bottom: 0;
+  filter: grayscale(1) brightness(1.7) contrast(0.9);
+  transition: filter 0.25s ease;
+}
+
+.nav-icon-link--clem:hover .chat-widget__blob,
+.nav-icon-link--clem.active .chat-widget__blob {
+  filter: none;
+}
+
 .navbar-air .dropdown-menu {
   margin-bottom: 0.75rem;
   border-radius: 16px;

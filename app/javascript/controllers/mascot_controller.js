@@ -23,8 +23,12 @@ const GESTURE_DURATION_MS = {
   juggling: 6000,
 }
 
-// "sleeping" is sustained rather than timed — see wakeUp().
+// "sleeping" is sustained rather than timed — see wakeUp(). "vanishing" is
+// also sustained (she stays hidden until toggled back) — see hide()/reappear().
 const IDLE_GESTURES = ["scratching", "filing-nails", "yawning", "eating", "whistling", "six-seven"]
+
+const VANISH_MS = 600
+const APPEAR_MS = 650
 
 export default class extends Controller {
   static targets = ["blob", "face", "pupil"]
@@ -32,16 +36,18 @@ export default class extends Controller {
   connect() {
     this.onMouseMove = this.onMouseMove.bind(this)
     this.onInteraction = this.onInteraction.bind(this)
-    this.onVanish = this.onVanish.bind(this)
+    this.onToggleHidden = this.onToggleHidden.bind(this)
 
     document.addEventListener("mousemove", this.onMouseMove, { passive: true })
     this.element.addEventListener("pointerdown", this.onInteraction)
     this.element.addEventListener("keydown", this.onInteraction)
     this.element.addEventListener("input", this.onInteraction)
-    document.addEventListener("clem:vanish", this.onVanish)
+    document.addEventListener("clem:toggle-hidden", this.onToggleHidden)
 
     this.currentGesture = null
     this.gestureTimeout = null
+    this.isHidden = false
+    this.isAnimating = false
     this.registerInteraction()
     this.scheduleNextIdleGesture()
     this.tickTimer = setInterval(() => this.evaluateIdleState(), TICK_MS)
@@ -52,21 +58,52 @@ export default class extends Controller {
     this.element.removeEventListener("pointerdown", this.onInteraction)
     this.element.removeEventListener("keydown", this.onInteraction)
     this.element.removeEventListener("input", this.onInteraction)
-    document.removeEventListener("clem:vanish", this.onVanish)
+    document.removeEventListener("clem:toggle-hidden", this.onToggleHidden)
     clearInterval(this.tickTimer)
     clearTimeout(this.gestureTimeout)
   }
 
-  // She's about to navigate to her nav-bar lookalike (nav_clem_portal_controller
-  // dispatches this right before it visits administrations_path) — stop
-  // whatever she's doing and let her vanish instead.
-  onVanish() {
+  // Her nav-bar lookalike (nav_clem_portal_controller) dispatches this on
+  // every click — she ninja-vanishes into it, or pops back out, in turn.
+  // isAnimating guards mid-transition double-clicks; it's deliberately
+  // separate from currentGesture, which is only ever an idle gesture name —
+  // evaluateIdleState() checks isHidden directly so gestures can't sneak in
+  // (or get frozen mid-pose) while she's tucked away.
+  onToggleHidden() {
+    if (this.isAnimating) return
+
+    this.isHidden ? this.reappear() : this.hide()
+  }
+
+  hide() {
+    this.isAnimating = true
+    this.isHidden = true
     clearTimeout(this.gestureTimeout)
     Object.keys(GESTURE_DURATION_MS).concat("sleeping").forEach((name) => {
       this.element.classList.remove(`chat-widget--${name}`)
     })
-    this.currentGesture = "vanishing"
+    this.currentGesture = null
+    this.element.classList.remove("chat-widget--appearing")
     this.element.classList.add("chat-widget--vanishing")
+    document.dispatchEvent(new CustomEvent("clem:hidden-state", { detail: { hidden: true } }))
+
+    this.gestureTimeout = setTimeout(() => {
+      this.isAnimating = false
+    }, VANISH_MS)
+  }
+
+  reappear() {
+    this.isAnimating = true
+    this.isHidden = false
+    this.element.classList.remove("chat-widget--vanishing")
+    this.element.classList.add("chat-widget--appearing")
+    document.dispatchEvent(new CustomEvent("clem:hidden-state", { detail: { hidden: false } }))
+    this.registerInteraction()
+
+    this.gestureTimeout = setTimeout(() => {
+      this.element.classList.remove("chat-widget--appearing")
+      this.isAnimating = false
+    }, APPEAR_MS)
   }
 
   onInteraction() {
@@ -91,6 +128,7 @@ export default class extends Controller {
   }
 
   evaluateIdleState() {
+    if (this.isHidden || this.isAnimating) return
     if (this.currentGesture) return
     if (this.element.classList.contains("chat-widget--thinking")) return
 

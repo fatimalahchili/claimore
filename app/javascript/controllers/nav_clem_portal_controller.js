@@ -1,23 +1,26 @@
 import { Controller } from "@hotwired/stimulus"
 
-// The Administrations nav-bar icon doubles as a little portal: click it and
-// the floating Clem' (mascot-controller, elsewhere on the page) vanishes in
-// a puff of smoke before we navigate there, as if she ducked into it.
-const VANISH_MS = 720
-
+// This nav-bar icon is Clem's hiding spot: click it and she ninja-vanishes
+// into it; click again and she pops back out. Purely a show/hide toggle —
+// mascot-controller (elsewhere on the page) does the actual animating and
+// reports back via "clem:hidden-state" so this icon can light up (like any
+// other active nav item) while she's tucked away in here.
 export default class extends Controller {
-  static values = { url: String }
+  connect() {
+    this.onHiddenState = this.onHiddenState.bind(this)
+    document.addEventListener("clem:hidden-state", this.onHiddenState)
+  }
 
-  vanish(event) {
+  disconnect() {
+    document.removeEventListener("clem:hidden-state", this.onHiddenState)
+  }
+
+  toggle(event) {
     event.preventDefault()
-    document.dispatchEvent(new CustomEvent("clem:vanish"))
+    document.dispatchEvent(new CustomEvent("clem:toggle-hidden"))
+  }
 
-    window.setTimeout(() => {
-      if (window.Turbo) {
-        window.Turbo.visit(this.urlValue)
-      } else {
-        window.location.href = this.urlValue
-      }
-    }, VANISH_MS)
+  onHiddenState(event) {
+    this.element.classList.toggle("active", event.detail.hidden)
   }
 }
