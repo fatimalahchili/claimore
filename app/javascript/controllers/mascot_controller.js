@@ -83,6 +83,7 @@ export default class extends Controller {
       this.element.classList.remove(`chat-widget--${name}`)
     })
     this.currentGesture = null
+    this.updatePortalOffset()
     this.element.classList.remove("chat-widget--appearing")
     this.element.classList.add("chat-widget--vanishing")
     document.dispatchEvent(new CustomEvent("clem:hidden-state", { detail: { hidden: true } }))
@@ -95,6 +96,7 @@ export default class extends Controller {
   reappear() {
     this.isAnimating = true
     this.isHidden = false
+    this.updatePortalOffset()
     this.element.classList.remove("chat-widget--vanishing")
     this.element.classList.add("chat-widget--appearing")
     document.dispatchEvent(new CustomEvent("clem:hidden-state", { detail: { hidden: false } }))
@@ -104,6 +106,24 @@ export default class extends Controller {
       this.element.classList.remove("chat-widget--appearing")
       this.isAnimating = false
     }, APPEAR_MS)
+  }
+
+  // Measures the real on-screen distance between the launcher and her
+  // nav-bar lookalike so the vanish/appear keyframes (chat-mascot-vanish/
+  // -appear) can travel there and back rather than just shrinking in place.
+  updatePortalOffset() {
+    const navIcon = document.querySelector(".nav-icon-link--clem")
+    const blob = this.blobTargets.find((b) => b.closest(".chat-widget__launcher"))
+    if (!navIcon || !blob) return
+
+    const navRect = navIcon.getBoundingClientRect()
+    const blobRect = blob.getBoundingClientRect()
+    if (!navRect.width || !blobRect.width) return
+
+    const dx = (navRect.left + navRect.width / 2) - (blobRect.left + blobRect.width / 2)
+    const dy = (navRect.top + navRect.height / 2) - (blobRect.top + blobRect.height / 2)
+    blob.style.setProperty("--portal-dx", `${dx.toFixed(1)}px`)
+    blob.style.setProperty("--portal-dy", `${dy.toFixed(1)}px`)
   }
 
   onInteraction() {

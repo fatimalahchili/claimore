@@ -438,31 +438,28 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 // Ninja-style disappear, played once when nav-clem-portal-controller fires
 // "clem:vanish" (clicking her lookalike in the bottom nav) — a quick anticipatory
 // puff-up, then she shrinks away into nothing while the smoke burst covers the exit.
+// --portal-dx/--portal-dy (set by mascot-controller#updatePortalOffset,
+// measured against her real nav-bar icon) is the on-screen distance from
+// the launcher to that icon — she travels the whole way there rather than
+// just shrinking in place.
 @keyframes chat-mascot-vanish {
   0% {
-    transform: translateX(0) scale(1);
+    transform: translate(0, 0) scale(1);
     opacity: 1;
   }
 
-  22% {
-    transform: translateX(0) scale(1.15);
+  18% {
+    transform: translate(0, 0) scale(1.15);
     opacity: 1;
   }
 
-  // A quick side-to-side dash right as the smoke pops — sells "she darted
-  // off" rather than just deflating in place.
-  38% {
-    transform: translateX(-10px) scale(0.9);
-    opacity: 1;
-  }
-
-  50% {
-    transform: translateX(9px) scale(0.75);
+  55% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.55), calc(var(--portal-dy, 0px) * 0.55)) scale(0.7);
     opacity: 0.9;
   }
 
   100% {
-    transform: translateX(0) scale(0.05);
+    transform: translate(var(--portal-dx, 0px), var(--portal-dy, 0px)) scale(0.05);
     opacity: 0;
   }
 }
@@ -472,21 +469,25 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 // wide stance — a nod to a certain football celebration. A full 360°
 // (rather than the "real" 180°) so a flat, front-only face doesn't end up
 // upside-down when she lands.
+// Starts exactly at the nav icon (--portal-dx/-dy) and flies back to the
+// launcher's own spot over the first ~40%, then plays out the jump-spin-land
+// celebration once she's home — the portal offset tapers to 0 well before
+// the jump's own vertical bob takes over, so the two motions don't fight.
 @keyframes chat-mascot-appear {
   0% {
-    transform: translateY(0) rotate(0deg) scale(0.05);
+    transform: translate(var(--portal-dx, 0px), var(--portal-dy, 0px)) rotate(0deg) scale(0.05);
     opacity: 0;
   }
 
   16% {
-    // bursts out of the icon
-    transform: translateY(-2px) rotate(20deg) scale(0.5);
+    // bursts out of the icon, most of the way through the return trip
+    transform: translate(calc(var(--portal-dx, 0px) * 0.5), calc(var(--portal-dy, 0px) * 0.5 - 2px)) rotate(20deg) scale(0.5);
     opacity: 1;
   }
 
-  // The Jump — leaping up while the spin picks up speed.
+  // The Jump — home from the trip, now leaping up while the spin picks up speed.
   42% {
-    transform: translateY(-30px) rotate(230deg) scale(1.04);
+    transform: translate(calc(var(--portal-dx, 0px) * 0.08), calc(var(--portal-dy, 0px) * 0.08 - 30px)) rotate(230deg) scale(1.04);
   }
 
   // The Turn — completes at the peak of the jump.
@@ -565,22 +566,6 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   100% {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-// A distinct animation (rather than playing chat-mascot-ninja-dress in
-// reverse) — swapping direction on the same animation-name across a class
-// toggle in the same tick doesn't reliably reset/honor the new delay in
-// every browser; a fresh name always does.
-@keyframes chat-mascot-ninja-undress {
-  0% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateY(-3px);
   }
 }
 
@@ -911,46 +896,49 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 
   // Her ninja disguise, invisible until .chat-widget--vanishing (see below).
+  // A proper ninja wrap rather than two flat bars: band and mask now meet
+  // almost edge to edge, leaving just a narrow eye-slit instead of most of
+  // the face showing, with a stitched-fabric highlight along each edge.
   .chat-widget__ninja-band {
     position: absolute;
-    left: -8%;
-    right: -8%;
-    top: 8%;
-    height: 15%;
-    background: linear-gradient(180deg, #2a2d3a, #0f1117);
-    box-shadow: inset 0 -2px 3px rgba(255, 255, 255, 0.1);
+    left: -10%;
+    right: -10%;
+    top: 4%;
+    height: 20%;
+    background: linear-gradient(180deg, #363b4d 0%, #1c1f2b 55%, #0a0b10 100%);
+    box-shadow: inset 0 -2px 2px rgba(255, 255, 255, 0.14), inset 0 2px 2px rgba(0, 0, 0, 0.3);
     opacity: 0;
     z-index: 4;
   }
 
   .chat-widget__ninja-band-tail {
     position: absolute;
-    top: 90%;
-    width: 11%;
-    height: 42%;
-    background: linear-gradient(180deg, #2a2d3a, #0f1117);
-    clip-path: polygon(0 0, 100% 0, 65% 100%, 30% 88%);
+    top: 88%;
+    width: 10%;
+    height: 48%;
+    background: linear-gradient(180deg, #1c1f2b, #0a0b10);
+    clip-path: polygon(0 0, 100% 0, 62% 100%, 26% 84%);
   }
 
   .chat-widget__ninja-band-tail:nth-child(1) {
-    right: 6%;
-    transform: rotate(10deg);
+    right: 8%;
+    transform: rotate(14deg);
   }
 
   .chat-widget__ninja-band-tail:nth-child(2) {
-    right: -3%;
-    transform: rotate(24deg);
+    right: -2%;
+    transform: rotate(30deg);
   }
 
   .chat-widget__ninja-mask {
     position: absolute;
-    left: 10%;
-    right: 10%;
-    bottom: 8%;
-    height: 40%;
-    background: linear-gradient(180deg, #2a2d3a, #0f1117);
-    border-radius: 0 0 50% 50% / 0 0 65% 65%;
-    box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.08);
+    left: 8%;
+    right: 8%;
+    bottom: 4%;
+    height: 48%;
+    background: linear-gradient(180deg, #1c1f2b 0%, #0a0b10 100%);
+    border-radius: 0 0 50% 50% / 0 0 62% 62%;
+    box-shadow: inset 0 3px 3px rgba(255, 255, 255, 0.1), inset 0 -2px 2px rgba(0, 0, 0, 0.35);
     opacity: 0;
     z-index: 4;
   }
@@ -1365,21 +1353,12 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 }
 
-// Mirror image of vanishing: she pops back to full size still in costume,
-// then a beat later peels the mask and headband off as the house hat
-// fades back in.
+// The ninja disguise is vanish-only — she reappears as plain Clem', no
+// mask/headband at all, straight into the jump-spin-land celebration.
 .chat-widget--appearing .chat-widget__launcher {
-  // She lands still in her ninja gear, then sheds it a beat later, once the
-  // celebration itself (see chat-mascot-appear/-siuu-* below) has settled.
   .chat-widget__house {
     opacity: 1;
-    transition: opacity 0.25s ease 0.62s;
-  }
-
-  .chat-widget__ninja-band,
-  .chat-widget__ninja-mask {
-    opacity: 1;
-    animation: chat-mascot-ninja-undress 0.25s ease-in 0.62s both;
+    transition: opacity 0.2s ease 0.1s;
   }
 
   .chat-widget__blob {
