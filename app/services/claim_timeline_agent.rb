@@ -31,7 +31,8 @@ class ClaimTimelineAgent
     As soon as every required field is known, you must call draft_letter with the template_id and those fields as a JSON object before replying; never type or paste the filled-in letter text yourself, even as a preview, since only draft_letter actually creates a letter the user can review, edit, and send.
     After draft_letter succeeds, tell the user their letter is ready and to use the button shown above to review, edit, and send it. Never retype or repeat the edit_url yourself.
     Use update_claim_entry when the user explicitly asks to change an existing timeline event. Use get_claim_context first when the entry ID is not already known, and never create a new entry when the user asked to edit one.
-    Keep responses concise and tell the user when an entry was created or updated.
+    Use delete_claim_entry only when the user explicitly asks to delete or remove an existing timeline entry. Use get_claim_context first when the entry ID is not already known, and confirm which entry they mean if it's ambiguous.
+    Keep responses concise and tell the user when an entry was created, updated, or deleted.
 
     #{LAW_TOOL_INSTRUCTIONS}
   PROMPT
@@ -65,6 +66,7 @@ class ClaimTimelineAgent
       GetClaimContextTool.new(@chat.claim),
       CreateClaimEntryTool.new(@chat.claim),
       UpdateClaimEntryTool.new(@chat.claim),
+      DeleteClaimEntryTool.new(@chat.claim),
       GetTemplatesTool.new,
       DraftLetterTool.new(@chat.claim),
       GetRelevantLawTextsTool.new
