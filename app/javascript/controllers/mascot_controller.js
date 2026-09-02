@@ -28,7 +28,7 @@ const GESTURE_DURATION_MS = {
 const IDLE_GESTURES = ["scratching", "filing-nails", "yawning", "eating", "whistling", "six-seven"]
 
 const VANISH_MS = 600
-const APPEAR_MS = 650
+const APPEAR_MS = 900
 
 export default class extends Controller {
   static targets = ["blob", "face", "pupil"]

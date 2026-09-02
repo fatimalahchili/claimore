@@ -12,7 +12,7 @@ $chat-blob-b: #1e9fd1;
 $chat-blob-gradient: linear-gradient(160deg, $chat-blob-a, $chat-blob-b);
 // Extra margin from the viewport edge (beyond what the blob itself needs) so
 // her arms have room to swing during gestures without going off-screen.
-$chat-widget-right: clamp(28px, 5vw, 44px);
+$chat-widget-right: clamp(34px, 5.5vw, 54px);
 $chat-launcher-size: clamp(64px, 7vw, 84px);
 
 .chat-widget {
@@ -468,25 +468,91 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 }
 
 // The reverse trip — she pops out of the icon, overshoots a little, settles.
+// Her signature reappear: a leap, a mid-air spin, and a hard landing in a
+// wide stance — a nod to a certain football celebration. A full 360°
+// (rather than the "real" 180°) so a flat, front-only face doesn't end up
+// upside-down when she lands.
 @keyframes chat-mascot-appear {
   0% {
-    transform: translateX(0) scale(0.05);
+    transform: translateY(0) rotate(0deg) scale(0.05);
     opacity: 0;
   }
 
-  45% {
-    transform: translateX(-8px) scale(0.85);
-    opacity: 0.9;
+  16% {
+    // bursts out of the icon
+    transform: translateY(-2px) rotate(20deg) scale(0.5);
+    opacity: 1;
   }
 
-  65% {
-    transform: translateX(6px) scale(1.18);
+  // The Jump — leaping up while the spin picks up speed.
+  42% {
+    transform: translateY(-30px) rotate(230deg) scale(1.04);
+  }
+
+  // The Turn — completes at the peak of the jump.
+  58% {
+    transform: translateY(-33px) rotate(360deg) scale(1.04);
+  }
+
+  78% {
+    transform: translateY(-6px) rotate(360deg) scale(0.95);
+  }
+
+  // The Landing — a hard, wide-stance squash on touchdown.
+  88% {
+    transform: translateY(3px) rotate(360deg) scale(1.16, 0.8);
+  }
+
+  100% {
+    transform: translateY(0) rotate(360deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes chat-mascot-siuu-arm-left {
+  0%, 70% {
+    transform: rotate(14deg);
+    opacity: 0;
+  }
+
+  88% {
+    transform: rotate(-44deg);
     opacity: 1;
   }
 
   100% {
-    transform: translateX(0) scale(1);
+    transform: rotate(-36deg);
     opacity: 1;
+  }
+}
+
+@keyframes chat-mascot-siuu-arm-right {
+  0%, 70% {
+    transform: rotate(-14deg);
+    opacity: 0;
+  }
+
+  88% {
+    transform: rotate(44deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: rotate(36deg);
+    opacity: 1;
+  }
+}
+
+// The Shout — mouth snaps wide open right as she lands.
+@keyframes chat-mascot-siuu-mouth {
+  0%, 70% {
+    transform: translateX(-50%) scaleY(1);
+    border-radius: 10% 10% 50% 50% / 20% 20% 80% 80%;
+  }
+
+  88%, 100% {
+    transform: translateX(-50%) scaleY(1.9) scaleX(1.15);
+    border-radius: 50%;
   }
 }
 
@@ -1287,19 +1353,33 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 // then a beat later peels the mask and headband off as the house hat
 // fades back in.
 .chat-widget--appearing .chat-widget__launcher {
+  // She lands still in her ninja gear, then sheds it a beat later, once the
+  // celebration itself (see chat-mascot-appear/-siuu-* below) has settled.
   .chat-widget__house {
     opacity: 1;
-    transition: opacity 0.25s ease 0.35s;
+    transition: opacity 0.25s ease 0.62s;
   }
 
   .chat-widget__ninja-band,
   .chat-widget__ninja-mask {
     opacity: 1;
-    animation: chat-mascot-ninja-dress 0.3s ease-in 0.15s reverse both;
+    animation: chat-mascot-ninja-dress 0.25s ease-in 0.62s reverse both;
   }
 
   .chat-widget__blob {
-    animation: chat-mascot-appear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: chat-mascot-appear 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .chat-widget__arm--left {
+    animation: chat-mascot-siuu-arm-left 0.75s ease-out forwards;
+  }
+
+  .chat-widget__arm--right {
+    animation: chat-mascot-siuu-arm-right 0.75s ease-out forwards;
+  }
+
+  .chat-widget__mouth {
+    animation: chat-mascot-siuu-mouth 0.75s ease-out forwards;
   }
 }
 
