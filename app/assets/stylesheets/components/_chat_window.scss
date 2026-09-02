@@ -440,33 +440,73 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 // puff-up, then she shrinks away into nothing while the smoke burst covers the exit.
 @keyframes chat-mascot-vanish {
   0% {
-    transform: scale(1);
+    transform: translateX(0) scale(1);
     opacity: 1;
   }
 
-  30% {
-    transform: scale(1.12);
+  22% {
+    transform: translateX(0) scale(1.15);
+    opacity: 1;
+  }
+
+  // A quick side-to-side dash right as the smoke pops — sells "she darted
+  // off" rather than just deflating in place.
+  38% {
+    transform: translateX(-10px) scale(0.9);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateX(9px) scale(0.75);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: translateX(0) scale(0.05);
+    opacity: 0;
+  }
+}
+
+@keyframes chat-mascot-ninja-dress {
+  0% {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes chat-mascot-poof-flash {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+
+  25% {
     opacity: 1;
   }
 
   100% {
-    transform: scale(0.05);
+    transform: scale(3.2);
     opacity: 0;
   }
 }
 
 @keyframes chat-mascot-poof-puff {
   0% {
-    transform: translate(0, 0) scale(0.4);
+    transform: translate(0, 0) scale(0.35);
     opacity: 0;
   }
 
-  25% {
-    opacity: 0.9;
+  20% {
+    opacity: 0.95;
   }
 
   100% {
-    transform: translate(var(--poof-x), var(--poof-y)) scale(1.5);
+    transform: translate(var(--poof-x), var(--poof-y)) scale(1.6);
     opacity: 0;
   }
 }
@@ -734,21 +774,80 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   // so the burst reads clearly rather than looking clipped.
   .chat-widget__poof {
     position: absolute;
-    inset: -30%;
+    inset: -50%;
     opacity: 0;
     pointer-events: none;
 
-    span {
+    // Charcoal-grey smoke, not the mascot's own sky blue — reads as an
+    // actual smoke bomb rather than a pale halo.
+    .chat-widget__poof-puff {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 40%;
-      height: 40%;
-      margin: -20% 0 0 -20%;
+      width: 38%;
+      height: 38%;
+      margin: -19% 0 0 -19%;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(148, 163, 184, 0.6) 55%, rgba(148, 163, 184, 0) 75%);
+      background: radial-gradient(circle at 35% 30%, rgba(226, 229, 235, 0.95), rgba(90, 97, 115, 0.9) 45%, rgba(35, 38, 48, 0.85) 72%, rgba(35, 38, 48, 0) 88%);
       opacity: 0;
     }
+
+    .chat-widget__poof-flash {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 26%;
+      height: 26%;
+      margin: -13% 0 0 -13%;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff, rgba(255, 255, 255, 0) 70%);
+      opacity: 0;
+    }
+  }
+
+  // Her ninja disguise, invisible until .chat-widget--vanishing (see below).
+  .chat-widget__ninja-band {
+    position: absolute;
+    left: -8%;
+    right: -8%;
+    top: 8%;
+    height: 15%;
+    background: linear-gradient(180deg, #2a2d3a, #0f1117);
+    box-shadow: inset 0 -2px 3px rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    z-index: 4;
+  }
+
+  .chat-widget__ninja-band-tail {
+    position: absolute;
+    top: 90%;
+    width: 11%;
+    height: 42%;
+    background: linear-gradient(180deg, #2a2d3a, #0f1117);
+    clip-path: polygon(0 0, 100% 0, 65% 100%, 30% 88%);
+  }
+
+  .chat-widget__ninja-band-tail:nth-child(1) {
+    right: 6%;
+    transform: rotate(10deg);
+  }
+
+  .chat-widget__ninja-band-tail:nth-child(2) {
+    right: -3%;
+    transform: rotate(24deg);
+  }
+
+  .chat-widget__ninja-mask {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    bottom: 8%;
+    height: 40%;
+    background: linear-gradient(180deg, #2a2d3a, #0f1117);
+    border-radius: 0 0 50% 50% / 0 0 65% 65%;
+    box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.08);
+    opacity: 0;
+    z-index: 4;
   }
 
   &--xs {
@@ -1084,38 +1183,76 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 .chat-widget--vanishing .chat-widget__launcher {
   pointer-events: none;
 
+  // The ambient "come chat with me" pulse has nothing to do with vanishing
+  // and just muddies the poof visually — kill it here.
+  &::after {
+    display: none;
+  }
+
+  // Costume swap — the house hat comes off, the headband and mask go on,
+  // right as she vanishes.
+  .chat-widget__house {
+    opacity: 0;
+    transition: opacity 0.1s ease;
+  }
+
+  .chat-widget__ninja-band,
+  .chat-widget__ninja-mask {
+    opacity: 1;
+    animation: chat-mascot-ninja-dress 0.12s ease-out both;
+  }
+
   .chat-widget__blob {
-    animation: chat-mascot-vanish 0.5s cubic-bezier(0.55, 0, 0.85, 0.35) forwards;
+    animation: chat-mascot-vanish 0.6s cubic-bezier(0.55, 0, 0.85, 0.35) forwards;
   }
 
   .chat-widget__poof {
     opacity: 1;
 
-    span {
-      animation: chat-mascot-poof-puff 0.55s ease-out forwards;
+    .chat-widget__poof-flash {
+      animation: chat-mascot-poof-flash 0.45s ease-out 0.16s both;
     }
 
-    span:nth-child(1) {
-      --poof-x: -26px;
-      --poof-y: -16px;
+    // Six puffs in a full ring around her, each a slightly different size
+    // and delay so the burst feels tumbling rather than a uniform pop.
+    .chat-widget__poof-puff {
+      animation: chat-mascot-poof-puff 0.55s ease-out both;
     }
 
-    span:nth-child(2) {
-      --poof-x: 24px;
-      --poof-y: -20px;
-      animation-delay: 0.04s;
+    .chat-widget__poof-puff:nth-child(2) {
+      --poof-x: 34px;
+      --poof-y: 0px;
+      animation-delay: 0.15s;
     }
 
-    span:nth-child(3) {
-      --poof-x: -20px;
-      --poof-y: 18px;
-      animation-delay: 0.08s;
+    .chat-widget__poof-puff:nth-child(3) {
+      --poof-x: 17px;
+      --poof-y: -30px;
+      animation-delay: 0.2s;
     }
 
-    span:nth-child(4) {
-      --poof-x: 22px;
-      --poof-y: 16px;
-      animation-delay: 0.06s;
+    .chat-widget__poof-puff:nth-child(4) {
+      --poof-x: -17px;
+      --poof-y: -30px;
+      animation-delay: 0.17s;
+    }
+
+    .chat-widget__poof-puff:nth-child(5) {
+      --poof-x: -34px;
+      --poof-y: 0px;
+      animation-delay: 0.22s;
+    }
+
+    .chat-widget__poof-puff:nth-child(6) {
+      --poof-x: -17px;
+      --poof-y: 30px;
+      animation-delay: 0.18s;
+    }
+
+    .chat-widget__poof-puff:nth-child(7) {
+      --poof-x: 17px;
+      --poof-y: 30px;
+      animation-delay: 0.24s;
     }
   }
 }

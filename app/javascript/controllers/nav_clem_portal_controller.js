@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 // The Administrations nav-bar icon doubles as a little portal: click it and
 // the floating Clem' (mascot-controller, elsewhere on the page) vanishes in
 // a puff of smoke before we navigate there, as if she ducked into it.
-const VANISH_MS = 550
+const VANISH_MS = 720
 
 export default class extends Controller {
   static values = { url: String }
