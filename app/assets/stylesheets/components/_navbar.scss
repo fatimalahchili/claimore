@@ -96,24 +96,54 @@ body {
   display: none;
 }
 
-// The floating Clem' mascot doubles as this one nav icon. Drop her house
-// hat so she sits at the same visual size/baseline as a plain glyph, and
-// mute her from full color down to the other icons' grey until she's
-// hovered or active (active = she's currently hidden — see
-// nav_clem_portal_controller.js) — same treatment every other icon gets.
-.nav-icon-link--clem .chat-widget__house {
-  display: none;
+// The floating Clem' mascot doubles as this one nav icon — recolored as a
+// flat silhouette (body/house in the same grey/purple every other icon
+// uses, eyes and mouth left white) rather than her usual full-color
+// gradient, so she reads as "one of the icons" instead of standing out.
+// Same grey-until-hovered-or-active swap every sibling icon gets (active =
+// she's currently hidden — see nav_clem_portal_controller.js).
+.nav-icon-link--clem {
+  .chat-widget__blob {
+    margin-bottom: 0;
+  }
+
+  .chat-widget__blob,
+  .chat-widget__house-body,
+  .chat-widget__chimney {
+    background: $text-secondary;
+    transition: background 0.25s ease;
+  }
+
+  .chat-widget__roof {
+    border-bottom-color: $text-secondary;
+    transition: border-bottom-color 0.25s ease;
+  }
+
+  .chat-widget__eye,
+  .chat-widget__mouth,
+  .chat-widget__door,
+  .chat-widget__window {
+    background: #fff;
+  }
+
+  .chat-widget__pupil {
+    background: $text-secondary;
+    transition: background 0.25s ease;
+  }
 }
 
-.nav-icon-link--clem .chat-widget__blob {
-  margin-bottom: 0;
-  filter: grayscale(1) brightness(1.7) contrast(0.9);
-  transition: filter 0.25s ease;
-}
+.nav-icon-link--clem:hover,
+.nav-icon-link--clem.active {
+  .chat-widget__blob,
+  .chat-widget__house-body,
+  .chat-widget__chimney,
+  .chat-widget__pupil {
+    background: $brand-primary;
+  }
 
-.nav-icon-link--clem:hover .chat-widget__blob,
-.nav-icon-link--clem.active .chat-widget__blob {
-  filter: none;
+  .chat-widget__roof {
+    border-bottom-color: $brand-primary;
+  }
 }
 
 .navbar-air .dropdown-menu {
