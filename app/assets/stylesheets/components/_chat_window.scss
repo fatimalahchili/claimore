@@ -10,7 +10,9 @@
 $chat-blob-a: #7fe3f5;
 $chat-blob-b: #1e9fd1;
 $chat-blob-gradient: linear-gradient(160deg, $chat-blob-a, $chat-blob-b);
-$chat-widget-right: clamp(12px, 3vw, 24px);
+// Extra margin from the viewport edge (beyond what the blob itself needs) so
+// her arms have room to swing during gestures without going off-screen.
+$chat-widget-right: clamp(40px, 7vw, 100px);
 $chat-launcher-size: clamp(64px, 7vw, 84px);
 
 .chat-widget {
@@ -35,18 +37,6 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
   100% {
     box-shadow: 0 0 0 0 rgba(30, 159, 209, 0);
-  }
-}
-
-@keyframes chat-blob-breathe {
-
-  0%,
-  100% {
-    transform: scale(1) translateY(0);
-  }
-
-  50% {
-    transform: scale(1.05) translateY(-4px);
   }
 }
 
@@ -110,12 +100,1005 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 }
 
+// Idle-gesture keyframes for the launcher mascot (scratching her head, filing
+// her nails, juggling) — triggered by mascot-controller when nobody's asked
+// Clem' anything for a while. Scoped to .chat-widget__launcher only, see the
+// .chat-widget--scratching / --filing-nails / --juggling rules below.
+@keyframes chat-mascot-scratch {
+  0%, 100% {
+    transform: rotate(14deg);
+  }
+
+  15%, 85% {
+    transform: rotate(-95deg);
+  }
+
+  25% {
+    transform: rotate(-80deg);
+  }
+
+  35% {
+    transform: rotate(-95deg);
+  }
+
+  45% {
+    transform: rotate(-80deg);
+  }
+
+  55% {
+    transform: rotate(-95deg);
+  }
+
+  65% {
+    transform: rotate(-80deg);
+  }
+
+  75% {
+    transform: rotate(-95deg);
+  }
+}
+
+@keyframes chat-mascot-file-arm {
+  0%, 100% {
+    transform: rotate(-105deg);
+  }
+
+  50% {
+    transform: rotate(-85deg);
+  }
+}
+
+// Arms and balls share the same 0% / 50% / 100% phase points on purpose:
+// each ball's low point (a "catch") lands exactly when that side's arm is
+// raised to meet it, so the toss reads as connected rather than two
+// unrelated animations layered on top of each other.
+@keyframes chat-mascot-juggle-arm-left {
+  0% {
+    transform: rotate(95deg);
+    animation-timing-function: ease-out;
+  }
+
+  50% {
+    transform: rotate(14deg);
+    animation-timing-function: ease-in;
+  }
+
+  100% {
+    transform: rotate(95deg);
+  }
+}
+
+@keyframes chat-mascot-juggle-arm-right {
+  0% {
+    transform: rotate(-14deg);
+    animation-timing-function: ease-out;
+  }
+
+  50% {
+    transform: rotate(-95deg);
+    animation-timing-function: ease-in;
+  }
+
+  100% {
+    transform: rotate(-14deg);
+  }
+}
+
+// One ball's full flight path: caught by the left hand (0%/100%), arcs up
+// and over, caught by the right hand (50%), arcs back. Three balls share
+// this exact path, staggered a third of a cycle apart, so they read as a
+// continuous cascade rather than three balls each doing their own thing.
+// The low points (0/50/100%) are tuned to land right where the raised hand
+// actually is (measured, not guessed — see the arm keyframes above).
+//
+// Per-keyframe animation-timing-function gives each half of the arc its own
+// easing — ease-out leaving a hand (fast departure, slowing as gravity
+// takes over) and ease-in arriving at the other (accelerating back down) —
+// rather than one flat ease-in-out for the whole hop, which read as
+// mechanical/floaty rather than thrown.
+@keyframes chat-mascot-juggle-ball {
+  0%, 100% {
+    left: 0%;
+    bottom: 0%;
+    animation-timing-function: ease-out;
+  }
+
+  25% {
+    left: 42%;
+    bottom: 100%;
+    animation-timing-function: ease-in;
+  }
+
+  50% {
+    left: 90%;
+    bottom: 0%;
+    animation-timing-function: ease-out;
+  }
+
+  75% {
+    left: 42%;
+    bottom: 100%;
+    animation-timing-function: ease-in;
+  }
+}
+
+@keyframes chat-mascot-yawn-mouth {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scaleY(1);
+    border-radius: 10% 10% 50% 50% / 20% 20% 80% 80%;
+  }
+
+  40%,
+  75% {
+    transform: translateX(-50%) scaleY(1.8);
+    border-radius: 50%;
+  }
+}
+
+@keyframes chat-mascot-yawn-eye {
+
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  40%,
+  75% {
+    transform: scaleY(0.35);
+  }
+}
+
+@keyframes chat-mascot-eat-arm {
+
+  0%,
+  100% {
+    transform: rotate(-72deg);
+  }
+
+  50% {
+    transform: rotate(-58deg);
+  }
+}
+
+@keyframes chat-mascot-eat-mouth {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scaleY(1);
+  }
+
+  50% {
+    transform: translateX(-50%) scaleY(0.4);
+  }
+}
+
+@keyframes chat-mascot-eat-snack {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.8);
+  }
+}
+
+@keyframes chat-mascot-zzz-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.7);
+  }
+
+  30%,
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-16px) scale(1.15);
+  }
+}
+
+@keyframes chat-mascot-sleep-bob {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes chat-mascot-whistle-mouth {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    border-radius: 10% 10% 50% 50% / 20% 20% 80% 80%;
+  }
+
+  50% {
+    transform: translateX(-50%) scale(0.4);
+    border-radius: 50%;
+  }
+}
+
+@keyframes chat-mascot-whistle-bob {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+
+  50% {
+    transform: translateY(-2px) rotate(3deg);
+  }
+}
+
+@keyframes chat-mascot-notes-rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 4px) scale(0.7) rotate(-8deg);
+  }
+
+  30%,
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-8px, -20px) scale(1.1) rotate(8deg);
+  }
+}
+
+// "6 7" — hands alternate up/down like a scale, on the same shared phase
+// points (0/50/100%) as everything else so the arm and the digit it's
+// holding move together.
+@keyframes chat-mascot-six-seven-arm-left {
+  0%, 100% {
+    transform: rotate(58deg);
+  }
+
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes chat-mascot-six-seven-arm-right {
+  0%, 100% {
+    transform: rotate(-10deg);
+  }
+
+  50% {
+    transform: rotate(-58deg);
+  }
+}
+
+@keyframes chat-mascot-six-bob {
+  0%, 100% {
+    opacity: 1;
+    transform: translateY(-9px) scale(1.08);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(5px) scale(0.92);
+  }
+}
+
+@keyframes chat-mascot-seven-bob {
+  0%, 100% {
+    opacity: 1;
+    transform: translateY(5px) scale(0.92);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-9px) scale(1.08);
+  }
+}
+
+@keyframes chat-mascot-six-seven-mouth {
+  0%, 50%, 100% {
+    transform: translateX(-50%) scaleY(1.3);
+  }
+
+  25%, 75% {
+    transform: translateX(-50%) scaleY(0.9);
+  }
+}
+
+// Played once whenever the panel opens — Clem "pops" like a genie shaking
+// off the lamp before settling back to size.
+@keyframes chat-mascot-genie-pop {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  40% {
+    transform: scale(1.45) rotate(-8deg);
+  }
+
+  65% {
+    transform: scale(0.9) rotate(5deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+// Ninja-style disappear, played once when nav-clem-portal-controller fires
+// "clem:vanish" (clicking her lookalike in the bottom nav) — a quick anticipatory
+// puff-up, then she shrinks away into nothing while the smoke burst covers the exit.
+// --portal-dx/--portal-dy (set by mascot-controller#updatePortalOffset,
+// measured against her real nav-bar icon) is the on-screen distance from
+// the launcher to that icon — she travels the whole way there rather than
+// just shrinking in place.
+// A quick, direct dash rather than the other variants' whole-screen
+// journeys — she doesn't need 3+ seconds to duck straight into the icon.
+// More waypoints than before plus a distinct ease per leg (anticipation
+// eases out, the dash itself eases in, accelerating) so it reads as one
+// continuous move instead of a few poses snapping between each other.
+@keyframes chat-mascot-vanish {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+
+  20% {
+    transform: translate(0, 0) scale(1.15);
+    animation-timing-function: ease-in;
+  }
+
+  38% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.16), calc(var(--portal-dy, 0px) * 0.16)) scale(0.88);
+    animation-timing-function: ease-in;
+  }
+
+  58% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.42), calc(var(--portal-dy, 0px) * 0.42)) scale(0.62);
+    animation-timing-function: ease-in;
+  }
+
+  76% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.68), calc(var(--portal-dy, 0px) * 0.68)) scale(0.4);
+    opacity: 0.95;
+    animation-timing-function: ease-in;
+  }
+
+  90% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.9), calc(var(--portal-dy, 0px) * 0.9)) scale(0.2);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: translate(var(--portal-dx, 0px), var(--portal-dy, 0px)) scale(0.05);
+    opacity: 0;
+  }
+}
+
+// The reverse trip — she pops out of the icon, overshoots a little, settles.
+// Her signature reappear: a leap, a mid-air spin, and a hard landing in a
+// wide stance — a nod to a certain football celebration. A full 360°
+// (rather than the "real" 180°) so a flat, front-only face doesn't end up
+// upside-down when she lands.
+// Starts exactly at the nav icon (--portal-dx/-dy) and flies back to the
+// launcher's own spot over the first ~40%, then plays out the jump-spin-land
+// celebration once she's home — the portal offset tapers to 0 well before
+// the jump's own vertical bob takes over, so the two motions don't fight.
+@keyframes chat-mascot-appear {
+  0% {
+    transform: translate(var(--portal-dx, 0px), var(--portal-dy, 0px)) rotate(0deg) scale(0.05);
+    opacity: 0;
+  }
+
+  16% {
+    // bursts out of the icon, most of the way through the return trip
+    transform: translate(calc(var(--portal-dx, 0px) * 0.5), calc(var(--portal-dy, 0px) * 0.5 - 2px)) rotate(20deg) scale(0.5);
+    opacity: 1;
+  }
+
+  // The Jump — home from the trip, now leaping up while the spin picks up speed.
+  42% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.08), calc(var(--portal-dy, 0px) * 0.08 - 30px)) rotate(230deg) scale(1.04);
+  }
+
+  // The Turn — completes at the peak of the jump.
+  58% {
+    transform: translateY(-33px) rotate(360deg) scale(1.04);
+  }
+
+  78% {
+    transform: translateY(-6px) rotate(360deg) scale(0.95);
+  }
+
+  // The Landing — a hard, wide-stance squash on touchdown.
+  88% {
+    transform: translateY(3px) rotate(360deg) scale(1.16, 0.8);
+  }
+
+  100% {
+    transform: translateY(0) rotate(360deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes chat-mascot-siuu-arm-left {
+  0%, 70% {
+    transform: rotate(14deg);
+    opacity: 0;
+  }
+
+  88% {
+    transform: rotate(-44deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: rotate(-36deg);
+    opacity: 1;
+  }
+}
+
+@keyframes chat-mascot-siuu-arm-right {
+  0%, 70% {
+    transform: rotate(-14deg);
+    opacity: 0;
+  }
+
+  88% {
+    transform: rotate(44deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: rotate(36deg);
+    opacity: 1;
+  }
+}
+
+// The Shout — mouth snaps wide open right as she lands.
+@keyframes chat-mascot-siuu-mouth {
+  0%, 70% {
+    transform: translateX(-50%) scaleY(1);
+    border-radius: 10% 10% 50% 50% / 20% 20% 80% 80%;
+  }
+
+  88%, 100% {
+    transform: translateX(-50%) scaleY(1.9) scaleX(1.15);
+    border-radius: 50%;
+  }
+}
+
+@keyframes chat-mascot-ninja-dress {
+  0% {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ---- Pinball: she squashes into a rolling, spinning ball that bounces
+// (decaying arcs) toward the icon. ----
+// Three real, decaying bounces — each arc's height is a fraction of the
+// actual viewport height (--vp-h), not a fixed handful of pixels, so it
+// genuinely arcs across a good chunk of the screen. ease-out leaving the
+// "floor" of each bounce, ease-in falling back to it — real gravity, not a
+// snap between poses.
+// A real billiard-ball carom: off to the left wall, up to the top, back
+// across to the left again, down near the bottom — visiting all four sides
+// of the actual screen (--vp-w/--vp-h) like it's actually bouncing off the
+// table rails — before a final run into the icon (the pocket). Each leg
+// eases out leaving a "wall" and in arriving at the next, with a squash on
+// impact, so it reads as a real collision rather than a smooth glide.
+@keyframes chat-mascot-pinball-blob {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+
+  6% {
+    transform: translate(0, 0) scale(0.8) rotate(15deg);
+    animation-timing-function: ease-out;
+  }
+
+  // left wall
+  16% {
+    transform: translate(calc(var(--vp-w, 1200px) * -0.55), calc(var(--vp-h, 800px) * -0.35)) scale(0.74, 0.56) rotate(220deg);
+    animation-timing-function: ease-in;
+  }
+
+  // top wall
+  30% {
+    transform: translate(calc(var(--vp-w, 1200px) * -0.12), calc(var(--vp-h, 800px) * -0.66)) scale(0.62, 0.64) rotate(400deg);
+    animation-timing-function: ease-out;
+  }
+
+  // right wall — she's grazing the actual right edge of the screen here
+  44% {
+    transform: translate(calc(var(--vp-w, 1200px) * 0.06), calc(var(--vp-h, 800px) * -0.4)) scale(0.7, 0.5) rotate(560deg);
+    animation-timing-function: ease-in;
+  }
+
+  // left wall again
+  58% {
+    transform: translate(calc(var(--vp-w, 1200px) * -0.66), calc(var(--vp-h, 800px) * -0.12)) scale(0.58, 0.44) rotate(730deg);
+    animation-timing-function: ease-out;
+  }
+
+  // bottom wall, near her starting row
+  70% {
+    transform: translate(calc(var(--vp-w, 1200px) * -0.18), calc(var(--vp-h, 800px) * -0.04)) scale(0.5, 0.36) rotate(870deg);
+    animation-timing-function: ease-in;
+  }
+
+  82% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.6 - var(--vp-w, 1200px) * 0.05), calc(var(--portal-dy, 0px) * 0.6 - var(--vp-h, 800px) * 0.14)) scale(0.36, 0.26) rotate(980deg);
+    animation-timing-function: ease-in;
+  }
+
+  // the pocket
+  93% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.96), calc(var(--portal-dy, 0px) * 0.96 - 6px)) scale(0.18) rotate(1080deg);
+    animation-timing-function: ease-in;
+  }
+
+  100% {
+    transform: translate(var(--portal-dx, 0px), var(--portal-dy, 0px)) scale(0.05) rotate(1080deg);
+    opacity: 0;
+  }
+}
+
+// ---- Rocket: crouch, then a fast straight shot to the icon, flame trailing. ----
+// A real launch trajectory: ignition crouch, straight up (a real fraction
+// of the viewport height — this used to barely move), then an arc over and
+// down into the icon. Much more screen, much longer to actually watch.
+@keyframes chat-mascot-rocket-blob {
+  0%, 10% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+    animation-timing-function: ease-in;
+  }
+
+  22% {
+    transform: translate(0, 3%) scale(0.85) rotate(-4deg);
+    animation-timing-function: ease-in;
+  }
+
+  52% {
+    transform: translate(calc(var(--vp-w, 1200px) * -0.05), calc(var(--vp-h, 800px) * -0.62)) scale(0.68) rotate(-16deg);
+    animation-timing-function: ease-in;
+  }
+
+  78% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.58), calc(var(--portal-dy, 0px) * 0.58 - var(--vp-h, 800px) * 0.28)) scale(0.48) rotate(-32deg);
+    animation-timing-function: ease-in;
+  }
+
+  94% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.97), calc(var(--portal-dy, 0px) * 0.97)) scale(0.22) rotate(-42deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(var(--portal-dx, 0px), var(--portal-dy, 0px)) scale(0.05) rotate(-42deg);
+    opacity: 0;
+  }
+}
+
+@keyframes chat-mascot-rocket-flame-flicker {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+
+  16% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  30% {
+    transform: scale(0.88);
+  }
+
+  42% {
+    transform: scale(1.08);
+  }
+
+  55% {
+    transform: scale(0.92);
+  }
+
+  68% {
+    transform: scale(1.05);
+  }
+
+  92% {
+    opacity: 1;
+    transform: scale(0.95);
+  }
+}
+
+// ---- UFO: hovers in, beams her up (she shrinks away), then the saucer —
+// carrying her — flies itself to the icon. Blob keeps translating even
+// after it's invisible so the (still-visible) saucer, its child, keeps
+// moving with it. ----
+// She's clearly, slowly winched up (real time to register the beam) before
+// the saucer — now carrying her — arcs high across the screen (--vp-h) on
+// its way to the icon.
+// She flattens into the saucer herself (no separate craft "abducting" her),
+// hovers/activates, then sweeps in a long, wide arc across the actual
+// screen (--vp-w/--vp-h) before diving into the icon.
+// She doesn't dive into the icon like the other variants — a UFO leaves
+// the way it arrived: a single smooth, continuously-accelerating climb
+// straight up and off the top of the screen, shrinking away into the
+// distance ("into infinity"), never turning back down.
+@keyframes chat-mascot-ufo-blob {
+  0% {
+    transform: translate(0, 0) scale(1, 1) rotate(0deg);
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+
+  14% {
+    transform: translate(0, 0) scale(1.08, 0.62) rotate(0deg);
+    animation-timing-function: ease-out;
+  }
+
+  26% {
+    transform: translate(0, -5%) scale(1, 0.66) rotate(0deg);
+    animation-timing-function: ease-in;
+  }
+
+  100% {
+    transform: translate(calc(var(--vp-w, 1200px) * 0.05), calc(var(--vp-h, 800px) * -1.35)) scale(0.03, 0.025) rotate(1deg);
+    opacity: 0;
+  }
+}
+
+@keyframes chat-mascot-ufo-craft {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  16% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes chat-mascot-ufo-beam-pulse {
+  0%, 12% {
+    opacity: 0;
+  }
+
+  20%, 34% {
+    opacity: 1;
+  }
+
+  44%, 100% {
+    opacity: 0;
+  }
+}
+
+// ---- Bubble: encased, floats gently to the icon, pops with droplets. ----
+// A dreamy, wide drift — bulges out toward one side of the actual screen
+// (--vp-w) before settling back onto a direct line to the icon, each leg
+// eased like something actually floating rather than snapping between
+// fixed points.
+// She drifts almost all the way to the TOP of the actual screen (--vp-h)
+// before gently sinking back down into the icon — a real, slow, dreamy
+// float across most of the viewport rather than a small local bob.
+@keyframes chat-mascot-bubble-blob {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    animation-timing-function: ease-in-out;
+  }
+
+  8% {
+    transform: translate(0, 0) scale(0.8);
+  }
+
+  30% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.18 - var(--vp-w, 1200px) * 0.1), calc(var(--vp-h, 800px) * -0.55)) scale(0.74);
+    animation-timing-function: ease-in-out;
+  }
+
+  56% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.35 + var(--vp-w, 1200px) * 0.05), calc(var(--vp-h, 800px) * -0.7)) scale(0.7);
+    animation-timing-function: ease-in-out;
+  }
+
+  // Bubbles float up and pop — she doesn't sink back down to the icon,
+  // she just keeps drifting up and off the top of the screen.
+  80% {
+    transform: translate(calc(var(--vp-w, 1200px) * -0.06), calc(var(--vp-h, 800px) * -0.98)) scale(0.6);
+    animation-timing-function: ease-in-out;
+  }
+
+  95% {
+    transform: translate(calc(var(--vp-w, 1200px) * 0.02), calc(var(--vp-h, 800px) * -1.3)) scale(0.75);
+  }
+
+  100% {
+    transform: translate(calc(var(--vp-w, 1200px) * 0.02), calc(var(--vp-h, 800px) * -1.32)) scale(0.05);
+    opacity: 0;
+  }
+}
+
+@keyframes chat-mascot-bubble-shell {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  14% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  86% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  93% {
+    transform: scale(1.35);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+@keyframes chat-mascot-droplet-pop {
+  0%, 90% {
+    transform: translate(0, 0) scale(0.3);
+    opacity: 0;
+  }
+
+  94% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(var(--drop-x), var(--drop-y)) scale(1);
+    opacity: 0;
+  }
+}
+
+// ---- Magic hat: drops over her (she vanishes underneath in a sparkle
+// burst), then the hat itself hops off to the icon on its own. ----
+@keyframes chat-mascot-magic-blob {
+  0%, 20% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+
+  30% {
+    transform: translate(0, 0) scale(0.25);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(0, 0) scale(0.25);
+    opacity: 0;
+  }
+}
+
+// Drops from well off the top of the screen (real vh, not a fixed guess),
+// sits for a clearly readable beat, then hops — in two visible bounces —
+// across a real chunk of the screen on its way into the icon.
+// A clearer 3-beat trick: (1) the hat drops and covers her — see
+// chat-mascot-magic-blob, she vanishes right as it lands; (2) it sits and
+// wiggles for a moment, so it doesn't just look frozen/stuck; (3) three
+// clear, bouncy hops (not one long glide) across the actual screen on its
+// way into the icon, each with its own squash so it plainly reads as
+// hopping rather than drifting.
+@keyframes chat-mascot-tophat-journey {
+  0% {
+    transform: translateX(-50%) translateY(calc(var(--vp-h, 800px) * -0.6));
+    opacity: 0;
+    animation-timing-function: ease-in;
+  }
+
+  14% {
+    transform: translateX(-50%) translateY(0%) scale(1, 1);
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+
+  20% {
+    transform: translateX(-50%) translateY(0%) scale(1.08, 0.85) rotate(0deg);
+    animation-timing-function: ease-in-out;
+  }
+
+  28% {
+    transform: translateX(-50%) translateY(-2%) scale(0.95, 1.06) rotate(-4deg);
+    animation-timing-function: ease-in-out;
+  }
+
+  34% {
+    transform: translateX(-50%) translateY(0%) scale(1, 1) rotate(3deg);
+    animation-timing-function: ease-out;
+  }
+
+  // hop 1
+  47% {
+    transform: translate(calc(-50% + var(--portal-dx, 0px) * 0.18 - var(--vp-w, 1200px) * 0.08), calc(var(--vp-h, 800px) * -0.22)) rotate(-18deg) scale(0.86);
+    animation-timing-function: ease-in;
+  }
+
+  56% {
+    transform: translate(calc(-50% + var(--portal-dx, 0px) * 0.35 - var(--vp-w, 1200px) * 0.1), 0) rotate(-10deg) scale(0.78, 0.6);
+    animation-timing-function: ease-out;
+  }
+
+  // hop 2
+  69% {
+    transform: translate(calc(-50% + var(--portal-dx, 0px) * 0.6), calc(var(--vp-h, 800px) * -0.28)) rotate(10deg) scale(0.6);
+    animation-timing-function: ease-in;
+  }
+
+  78% {
+    transform: translate(calc(-50% + var(--portal-dx, 0px) * 0.78), calc(var(--portal-dy, 0px) * 0.3)) rotate(4deg) scale(0.52, 0.4);
+    animation-timing-function: ease-out;
+  }
+
+  // hop 3 — into the icon
+  90% {
+    transform: translate(calc(-50% + var(--portal-dx, 0px) * 0.95), calc(var(--portal-dy, 0px) * 0.95 - var(--vp-h, 800px) * 0.05)) rotate(-8deg) scale(0.3);
+    animation-timing-function: ease-in;
+  }
+
+  100% {
+    transform: translate(calc(-50% + var(--portal-dx, 0px)), var(--portal-dy, 0px)) rotate(340deg) scale(0.12);
+    opacity: 0;
+  }
+}
+
+@keyframes chat-mascot-sparkle-twinkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.4) rotate(0deg);
+  }
+
+  40% {
+    opacity: 1;
+    transform: scale(1.1) rotate(90deg);
+  }
+
+  70% {
+    opacity: 0.7;
+    transform: scale(0.8) rotate(140deg);
+  }
+}
+
+// ---- Bat: swoops through a couple of corners before diving into the icon. ----
+// A real screen-spanning swoop: up into the top-left, over toward the
+// top-right, then a long diving arc into the icon — using --vp-w/--vp-h
+// (the actual viewport size) rather than small fixed pixel offsets, and a
+// distinct ease per leg so each swoop accelerates/decelerates like a real
+// wingbeat glide instead of snapping between waypoints.
+@keyframes chat-mascot-bat-blob {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+    animation-timing-function: ease-in;
+  }
+
+  10% {
+    transform: translate(0, -3%) scale(0.8) rotate(-4deg);
+    animation-timing-function: ease-out;
+  }
+
+  32% {
+    transform: translate(calc(var(--vp-w, 1200px) * -0.24), calc(var(--vp-h, 800px) * -0.4)) scale(0.5) rotate(-16deg);
+    animation-timing-function: ease-in-out;
+  }
+
+  54% {
+    transform: translate(calc(var(--vp-w, 1200px) * 0.06), calc(var(--vp-h, 800px) * -0.58)) scale(0.46) rotate(14deg);
+    animation-timing-function: ease-in-out;
+  }
+
+  // She doesn't dive back down to the icon — like the UFO, a flying
+  // creature leaves by flying off, continuing up and away into the night
+  // sky instead of turning back toward the ground.
+  76% {
+    transform: translate(calc(var(--vp-w, 1200px) * -0.1), calc(var(--vp-h, 800px) * -0.95)) scale(0.28) rotate(-8deg);
+    animation-timing-function: ease-in;
+  }
+
+  100% {
+    transform: translate(calc(var(--vp-w, 1200px) * 0.02), calc(var(--vp-h, 800px) * -1.3)) scale(0.04) rotate(4deg);
+    opacity: 0;
+  }
+}
+
+@keyframes chat-mascot-bat-wing-flap-left {
+  0%, 100% {
+    transform: rotate(6deg) scaleX(1);
+  }
+
+  50% {
+    transform: rotate(78deg) scaleX(0.5);
+  }
+}
+
+@keyframes chat-mascot-bat-wing-flap-right {
+  0%, 100% {
+    transform: rotate(-6deg) scaleX(1);
+  }
+
+  50% {
+    transform: rotate(-78deg) scaleX(0.5);
+  }
+}
+
+@keyframes chat-mascot-poof-flash {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+
+@keyframes chat-mascot-poof-puff {
+  0% {
+    transform: translate(0, 0) scale(0.35);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.95;
+  }
+
+  100% {
+    transform: translate(var(--poof-x), var(--poof-y)) scale(1.6);
+    opacity: 0;
+  }
+}
+
 .chat-widget__blob {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14%;
   width: 34px;
   height: 34px;
   // A tall, rounded capsule rather than a perfect circle — Mr. Meeseeks' head shape.
@@ -126,13 +1109,46 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
   // Sized as percentages of the blob's own box, so eyes/mouth scale with every
   // variant (including the launcher, whose size is a responsive clamp()).
+  //
+  // The face is a separate absolutely-positioned layer so mascot-controller can
+  // rotate it toward the cursor (--head-turn) without touching the blob's own
+  // hover/breathe transforms.
+  .chat-widget__face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14%;
+    transform: rotate(var(--head-turn, 0deg));
+    transform-origin: 50% 65%;
+    transition: transform 0.15s ease-out;
+  }
+
   .chat-widget__eye {
+    position: relative;
     width: 22%;
     height: 22%;
     margin-top: -16%;
     border-radius: 50%;
-    background: radial-gradient(circle at 50% 50%, #14151c 0 30%, #fff 32% 100%);
+    background: #fff;
     box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+
+  // Pupil sits inside the eye socket and is nudged toward the cursor
+  // (--pupil-x/--pupil-y, set by mascot-controller) — the overflow: hidden
+  // above keeps it from sliding out of the socket at extreme angles.
+  .chat-widget__pupil {
+    position: absolute;
+    top: 27%;
+    left: 27%;
+    width: 46%;
+    height: 46%;
+    border-radius: 50%;
+    background: #14151c;
+    transform: translate(var(--pupil-x, 0px), var(--pupil-y, 0px));
+    transition: transform 0.08s linear;
   }
 
   .chat-widget__mouth {
@@ -147,10 +1163,558 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
     box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.25);
   }
 
-  &--sm {
+  // Skinny Meeseeks-style arms, hidden until mascot-controller triggers an
+  // idle gesture (scratching / filing-nails / juggling — scoped to the
+  // launcher blob only, see rules below).
+  .chat-widget__arm {
+    position: absolute;
+    top: 52%;
+    width: 12%;
+    height: 44%;
+    border-radius: 999px;
+    background: $chat-blob-b;
+    transform-origin: 50% 8%;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chat-widget__arm--left {
+    left: 4%;
+    transform: rotate(14deg);
+  }
+
+  .chat-widget__arm--right {
+    right: 4%;
+    transform: rotate(-14deg);
+  }
+
+  .chat-widget__hand {
+    position: absolute;
+    bottom: -10%;
+    left: 50%;
+    width: 170%;
+    height: 34%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: $chat-blob-b;
+  }
+
+  .chat-widget__nail-file {
+    position: absolute;
+    bottom: 55%;
+    left: 50%;
+    width: 16%;
+    height: 130%;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, #f6c453, #dfa22a);
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+    opacity: 0;
+  }
+
+  // Wider and taller than the blob itself — measured against where the
+  // raised hand (see .chat-widget__arm--left/right's juggle keyframes)
+  // actually ends up, not just eyeballed. The low points of the ball path
+  // (0/50/100%, see the keyframe) land right at each hand; the peaks
+  // (25/75%) clear the house hat above her head.
+  .chat-widget__juggle-balls {
+    position: absolute;
+    top: -90%;
+    left: -40%;
+    right: -36%;
+    height: 155%;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  // The two juggling "balls" are the 6 and 7 digits themselves.
+  .chat-widget__juggle-ball {
+    position: absolute;
+    width: 17%;
+    height: 18%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: $chat-blob-b;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.25), inset 0 -2px 3px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  }
+
+  .chat-widget__snack {
+    position: absolute;
+    bottom: 32%;
+    left: 74%;
+    width: 22%;
+    height: 22%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f4d9a0, #d9a441 65%, #b97f26);
+    box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+  }
+
+  .chat-widget__zzz {
+    position: absolute;
+    top: -6px;
+    right: -2px;
     width: 30px;
-    height: 30px;
-    --hat-scale: 0.85;
+    height: 40px;
+    opacity: 0;
+    pointer-events: none;
+
+    span {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      font-weight: 800;
+      color: $chat-blob-b;
+      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+      opacity: 0;
+    }
+
+    span:nth-child(1) {
+      font-size: 10px;
+    }
+
+    span:nth-child(2) {
+      right: 8px;
+      bottom: 10px;
+      font-size: 13px;
+    }
+
+    span:nth-child(3) {
+      right: 14px;
+      bottom: 20px;
+      font-size: 16px;
+    }
+  }
+
+  .chat-widget__notes {
+    position: absolute;
+    top: -8px;
+    left: -4px;
+    width: 34px;
+    height: 42px;
+    opacity: 0;
+    pointer-events: none;
+
+    span {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      font-size: 15px;
+      color: $chat-blob-b;
+      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+      opacity: 0;
+    }
+
+    span:nth-child(2) {
+      left: 10px;
+      bottom: 14px;
+      font-size: 18px;
+    }
+
+    span:nth-child(3) {
+      left: 20px;
+      bottom: 4px;
+      font-size: 13px;
+    }
+  }
+
+  // The "6 7" meme — held up in each hand and bounced alternately, not
+  // attached to the (rotating) arm itself so the digits stay upright.
+  .chat-widget__six,
+  .chat-widget__seven {
+    position: absolute;
+    top: 30%;
+    width: 22%;
+    height: 22%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: #fff;
+    background: $chat-blob-b;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.3);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chat-widget__six {
+    left: -10%;
+  }
+
+  .chat-widget__seven {
+    right: -10%;
+  }
+
+  // Ninja poof — a burst of smoke puffs radiating outward as she vanishes
+  // (see .chat-widget--vanishing below). Sized bigger than the blob itself
+  // so the burst reads clearly rather than looking clipped.
+  .chat-widget__poof {
+    position: absolute;
+    inset: -50%;
+    opacity: 0;
+    pointer-events: none;
+
+    // Charcoal-grey smoke, not the mascot's own sky blue — reads as an
+    // actual smoke bomb rather than a pale halo.
+    .chat-widget__poof-puff {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 38%;
+      height: 38%;
+      margin: -19% 0 0 -19%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, rgba(226, 229, 235, 0.95), rgba(90, 97, 115, 0.9) 45%, rgba(35, 38, 48, 0.85) 72%, rgba(35, 38, 48, 0) 88%);
+      opacity: 0;
+    }
+
+    .chat-widget__poof-flash {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 26%;
+      height: 26%;
+      margin: -13% 0 0 -13%;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff, rgba(255, 255, 255, 0) 70%);
+      opacity: 0;
+    }
+  }
+
+  // Her ninja disguise, invisible until .chat-widget--vanishing (see below).
+  // A proper ninja wrap rather than two flat bars: band and mask now meet
+  // almost edge to edge, leaving just a narrow eye-slit instead of most of
+  // the face showing, with a stitched-fabric highlight along each edge.
+  .chat-widget__ninja-band {
+    position: absolute;
+    left: -10%;
+    right: -10%;
+    top: 4%;
+    height: 20%;
+    background: linear-gradient(180deg, #363b4d 0%, #1c1f2b 55%, #0a0b10 100%);
+    box-shadow: inset 0 -2px 2px rgba(255, 255, 255, 0.14), inset 0 2px 2px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    z-index: 4;
+  }
+
+  .chat-widget__ninja-band-tail {
+    position: absolute;
+    top: 88%;
+    width: 10%;
+    height: 48%;
+    background: linear-gradient(180deg, #1c1f2b, #0a0b10);
+    clip-path: polygon(0 0, 100% 0, 62% 100%, 26% 84%);
+  }
+
+  .chat-widget__ninja-band-tail:nth-child(1) {
+    right: 8%;
+    transform: rotate(14deg);
+  }
+
+  .chat-widget__ninja-band-tail:nth-child(2) {
+    right: -2%;
+    transform: rotate(30deg);
+  }
+
+  .chat-widget__ninja-mask {
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    bottom: 4%;
+    height: 48%;
+    background: linear-gradient(180deg, #1c1f2b 0%, #0a0b10 100%);
+    border-radius: 0 0 50% 50% / 0 0 62% 62%;
+    box-shadow: inset 0 3px 3px rgba(255, 255, 255, 0.1), inset 0 -2px 2px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    z-index: 4;
+  }
+
+  // Pinball — a single glossy highlight sells "shiny metal ball" without
+  // needing to actually hide/redraw her face.
+  // A real 8-ball: solid black sphere, white numbered disc, glossy highlight.
+  .chat-widget__eightball-face {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 46%;
+    height: 46%;
+    margin: -23% 0 0 -23%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f4f4f4;
+    box-shadow: 0 0 0 2px #111417;
+    color: #14151c;
+    font-weight: 800;
+    font-size: 15px;
+    opacity: 0;
+    z-index: 5;
+  }
+
+  .chat-widget__pinball-shine {
+    position: absolute;
+    top: 8%;
+    left: 16%;
+    width: 30%;
+    height: 46%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    transform: rotate(-25deg);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 6;
+  }
+
+  // Rocket — a two-layer flame plume trailing behind her (she typically
+  // travels down-left toward the nav icon, so the flame sits up-right).
+  .chat-widget__rocket-flame {
+    position: absolute;
+    top: -22%;
+    right: -46%;
+    width: 92%;
+    height: 92%;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 3;
+
+    span {
+      position: absolute;
+      inset: 0;
+      border-radius: 50% 50% 55% 15% / 55% 55% 60% 40%;
+    }
+
+    span:nth-child(1) {
+      background: radial-gradient(circle at 70% 30%, #ffe066, #ff8c1a 55%, rgba(255, 90, 0, 0) 78%);
+    }
+
+    span:nth-child(2) {
+      inset: 16% 16% 34% 34%;
+      background: radial-gradient(circle at 70% 30%, #fff6d9, #ffcf4d 60%, rgba(255, 207, 77, 0) 78%);
+    }
+  }
+
+  // UFO — dome + hull hovering above her, with a light-cone beam shining
+  // down that switches on right as she gets lifted.
+  // She transforms INTO the saucer (not a separate craft that abducts
+  // her) — the dome/body overlay sits right on top of her own silhouette
+  // and travels with her single blob transform.
+  .chat-widget__ufo {
+    position: absolute;
+    inset: -4%;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 6;
+  }
+
+  .chat-widget__ufo-dome {
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    width: 48%;
+    height: 42%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle at 35% 28%, #eafcff, #7fc8e8 60%, #3f8db3);
+    border-radius: 50% 50% 0 0;
+  }
+
+  .chat-widget__ufo-body {
+    position: absolute;
+    bottom: 8%;
+    left: 0;
+    width: 100%;
+    height: 46%;
+    background: linear-gradient(180deg, #d7deea, #6b7590);
+    border-radius: 50%;
+    box-shadow: inset 0 -4px 4px rgba(0, 0, 0, 0.3), inset 0 3px 3px rgba(255, 255, 255, 0.55), 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .chat-widget__ufo-beam {
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    width: 60%;
+    height: 90%;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, rgba(255, 255, 150, 0.65), rgba(255, 255, 150, 0));
+    clip-path: polygon(38% 0, 62% 0, 100% 100%, 0% 100%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  // Bubble — a translucent soap-bubble sphere encasing her, plus a small
+  // burst of droplets for when it pops at the destination.
+  .chat-widget__bubble {
+    position: absolute;
+    inset: -26%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.7), rgba(180, 220, 255, 0.12) 50%, rgba(150, 200, 255, 0.35) 88%);
+    border: 3px solid rgba(255, 255, 255, 0.75);
+    box-shadow: inset 0 0 16px rgba(255, 255, 255, 0.6), inset -6px -6px 10px rgba(150, 200, 255, 0.35), 0 0 14px rgba(150, 200, 255, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 6;
+  }
+
+  .chat-widget__droplets {
+    position: absolute;
+    inset: -32%;
+    opacity: 0;
+    pointer-events: none;
+
+    span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 13%;
+      height: 17%;
+      margin: -8.5% 0 0 -6.5%;
+      border-radius: 50% 50% 50% 0;
+      background: radial-gradient(circle at 35% 30%, #fff, rgba(150, 200, 255, 0.75));
+      transform: rotate(-45deg);
+      opacity: 0;
+    }
+  }
+
+  // Magic hat — a top hat drops over her with a burst of sparkle stars.
+  .chat-widget__tophat {
+    position: absolute;
+    top: -88%;
+    left: 50%;
+    width: 80%;
+    height: 68%;
+    transform: translateX(-50%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 6;
+  }
+
+  .chat-widget__tophat-body {
+    position: absolute;
+    top: 0;
+    left: 18%;
+    width: 64%;
+    height: 78%;
+    background: linear-gradient(180deg, #2a2d3a, #0a0b10);
+    border-radius: 8% 8% 0 0;
+  }
+
+  .chat-widget__tophat-band {
+    position: absolute;
+    bottom: 22%;
+    left: 18%;
+    width: 64%;
+    height: 12%;
+    background: $chat-blob-b;
+  }
+
+  .chat-widget__tophat-brim {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 16%;
+    background: linear-gradient(180deg, #2a2d3a, #0a0b10);
+    border-radius: 50%;
+  }
+
+  .chat-widget__sparkles {
+    position: absolute;
+    inset: -32%;
+    opacity: 0;
+    pointer-events: none;
+
+    span {
+      position: absolute;
+      width: 11%;
+      height: 11%;
+      background: radial-gradient(circle, #fff, #ffd76b 55%, rgba(255, 215, 107, 0) 78%);
+      opacity: 0;
+    }
+
+    span:nth-child(1) {
+      top: 4%;
+      left: 12%;
+    }
+
+    span:nth-child(2) {
+      top: 14%;
+      right: 8%;
+    }
+
+    span:nth-child(3) {
+      top: 56%;
+      left: -4%;
+    }
+
+    span:nth-child(4) {
+      top: 60%;
+      right: -2%;
+    }
+
+    span:nth-child(5) {
+      top: 88%;
+      left: 40%;
+    }
+  }
+
+  // Bat — two scalloped wings that flap from her sides.
+  // A real wingspan (not a small patch stuck to her side) plus pointed ears
+  // and glowing eyes (the latter reuses .chat-widget__eye/__pupil — see the
+  // .chat-widget--vanish-bat overrides below) so she reads as an actual bat.
+  .chat-widget__bat-wing {
+    position: absolute;
+    top: 6%;
+    width: 76%;
+    height: 76%;
+    background: linear-gradient(135deg, #5c3a66, #1c1123);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .chat-widget__bat-wing--left {
+    left: -78%;
+    clip-path: polygon(100% 38%, 62% 2%, 40% 20%, 22% 10%, 18% 34%, 4% 26%, 8% 50%, 0% 58%, 14% 66%, 4% 78%, 22% 74%, 20% 92%, 38% 78%, 40% 100%, 55% 80%, 100% 92%);
+    transform-origin: 96% 34%;
+  }
+
+  .chat-widget__bat-wing--right {
+    right: -60%;
+    clip-path: polygon(0% 38%, 38% 2%, 60% 20%, 78% 10%, 82% 34%, 96% 26%, 92% 50%, 100% 58%, 86% 66%, 96% 78%, 78% 74%, 80% 92%, 62% 78%, 60% 100%, 45% 80%, 0% 92%);
+    transform-origin: 4% 34%;
+  }
+
+  .chat-widget__bat-ear {
+    position: absolute;
+    top: -22%;
+    width: 0;
+    height: 0;
+    border-left: 11% solid transparent;
+    border-right: 11% solid transparent;
+    opacity: 0;
+    z-index: 2;
+  }
+
+  .chat-widget__bat-ear--left {
+    left: 14%;
+    border-bottom: 26% solid #2a1a30;
+    transform: rotate(-12deg);
+  }
+
+  .chat-widget__bat-ear--right {
+    right: 14%;
+    border-bottom: 26% solid #2a1a30;
+    transform: rotate(12deg);
   }
 
   &--xs {
@@ -158,14 +1722,6 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
     height: 24px;
     margin-bottom: 4px;
     --hat-scale: 0.65;
-  }
-
-  &--float {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 6px;
-    --hat-scale: 1.7;
-    animation: chat-blob-breathe 3.4s ease-in-out infinite;
   }
 }
 
@@ -305,6 +1861,513 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 }
 
+// Idle gestures only ever play on the launcher's blob — the header and
+// greeting blobs stay still so they don't upstage an active conversation.
+.chat-widget--scratching .chat-widget__launcher .chat-widget__arm--right {
+  opacity: 1;
+  animation: chat-mascot-scratch 1.8s ease-in-out;
+}
+
+.chat-widget--filing-nails .chat-widget__launcher {
+  .chat-widget__arm--right {
+    opacity: 1;
+    animation: chat-mascot-file-arm 0.45s ease-in-out infinite;
+  }
+
+  .chat-widget__arm--left {
+    opacity: 1;
+    transform: rotate(60deg);
+  }
+
+  .chat-widget__nail-file {
+    opacity: 1;
+  }
+}
+
+.chat-widget--juggling .chat-widget__launcher {
+  .chat-widget__arm--left {
+    opacity: 1;
+    animation: chat-mascot-juggle-arm-left 1.5s ease-in-out infinite;
+  }
+
+  .chat-widget__arm--right {
+    opacity: 1;
+    animation: chat-mascot-juggle-arm-right 1.5s ease-in-out infinite;
+  }
+
+  .chat-widget__juggle-balls {
+    opacity: 1;
+  }
+
+  // The 6 and 7 share the exact same left-hand/right-hand arc, half a cycle
+  // (0.75s of 1.5s) apart — so whenever one is landing in the left hand,
+  // the other is landing in the right, like she's actually swapping them
+  // back and forth rather than each doing its own independent thing.
+  .chat-widget__juggle-ball {
+    animation: chat-mascot-juggle-ball 1.5s ease-in-out infinite;
+
+    &:nth-child(1) {
+      animation-delay: -0.75s;
+    }
+
+    &:nth-child(2) {
+      animation-delay: 0s;
+    }
+  }
+}
+
+.chat-widget--yawning .chat-widget__launcher {
+  .chat-widget__mouth {
+    animation: chat-mascot-yawn-mouth 1.6s ease-in-out;
+  }
+
+  .chat-widget__eye {
+    animation: chat-mascot-yawn-eye 1.6s ease-in-out;
+  }
+}
+
+.chat-widget--eating .chat-widget__launcher {
+  .chat-widget__arm--right {
+    opacity: 1;
+    animation: chat-mascot-eat-arm 0.5s ease-in-out infinite;
+  }
+
+  .chat-widget__snack {
+    opacity: 1;
+    animation: chat-mascot-eat-snack 0.5s ease-in-out infinite;
+  }
+
+  .chat-widget__mouth {
+    animation: chat-mascot-eat-mouth 0.5s ease-in-out infinite;
+  }
+}
+
+// Sustained (not auto-timed) — she stays asleep until mascot-controller sees
+// an interaction and wakes her back up.
+.chat-widget--sleeping .chat-widget__launcher {
+  .chat-widget__blob {
+    animation: chat-mascot-sleep-bob 2.6s ease-in-out infinite;
+  }
+
+  .chat-widget__face {
+    transform: rotate(6deg);
+  }
+
+  .chat-widget__eye {
+    transform: scaleY(0.12);
+  }
+
+  .chat-widget__mouth {
+    opacity: 0.7;
+  }
+
+  .chat-widget__zzz {
+    opacity: 1;
+  }
+
+  .chat-widget__zzz span {
+    animation: chat-mascot-zzz-rise 2.4s ease-in-out infinite;
+  }
+
+  .chat-widget__zzz span:nth-child(2) {
+    animation-delay: 0.6s;
+  }
+
+  .chat-widget__zzz span:nth-child(3) {
+    animation-delay: 1.2s;
+  }
+}
+
+.chat-widget--whistling .chat-widget__launcher {
+  .chat-widget__blob {
+    animation: chat-mascot-whistle-bob 1s ease-in-out infinite;
+  }
+
+  .chat-widget__mouth {
+    animation: chat-mascot-whistle-mouth 1s ease-in-out infinite;
+  }
+
+  .chat-widget__notes {
+    opacity: 1;
+  }
+
+  .chat-widget__notes span {
+    animation: chat-mascot-notes-rise 1.8s ease-in-out infinite;
+  }
+
+  .chat-widget__notes span:nth-child(2) {
+    animation-delay: 0.5s;
+  }
+
+  .chat-widget__notes span:nth-child(3) {
+    animation-delay: 1s;
+  }
+}
+
+.chat-widget--six-seven .chat-widget__launcher {
+  .chat-widget__arm--left {
+    opacity: 1;
+    animation: chat-mascot-six-seven-arm-left 0.8s ease-in-out infinite;
+  }
+
+  .chat-widget__arm--right {
+    opacity: 1;
+    animation: chat-mascot-six-seven-arm-right 0.8s ease-in-out infinite;
+  }
+
+  .chat-widget__six {
+    opacity: 1;
+    animation: chat-mascot-six-bob 0.8s ease-in-out infinite;
+  }
+
+  .chat-widget__seven {
+    opacity: 1;
+    animation: chat-mascot-seven-bob 0.8s ease-in-out infinite;
+  }
+
+  .chat-widget__mouth {
+    animation: chat-mascot-six-seven-mouth 0.8s ease-in-out infinite;
+  }
+}
+
+// A little pop-out-of-the-lamp flourish, played once each time the panel opens:
+// Clem pops bigger with a puff of magic smoke, right as the panel unfurls
+// from her corner (transform-origin: bottom right, above) — same genie, same
+// spot, no separate avatar appearing inside.
+.chat-widget--open .chat-widget__launcher {
+  .chat-widget__blob {
+    animation: chat-mascot-genie-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .chat-widget__chimney-smoke {
+    animation: chat-chimney-smoke 0.9s ease-out;
+  }
+}
+
+// She vanishes into her nav-bar lookalike, ninja-style — see
+// nav_clem_portal_controller.js (fires "clem:vanish", caught by
+// mascot-controller) and app/views/shared/_navbar.html.erb.
+// Shared between vanishing and reappearing: both play the same smoke burst,
+// both kill the ambient "come chat with me" pulse (unrelated, just muddies
+// the poof), both block clicks mid-transition.
+.chat-widget--vanishing .chat-widget__launcher,
+.chat-widget--appearing .chat-widget__launcher {
+  pointer-events: none;
+
+  &::after {
+    display: none;
+  }
+
+  .chat-widget__poof {
+    opacity: 1;
+
+    .chat-widget__poof-flash {
+      animation: chat-mascot-poof-flash 0.45s ease-out 0.16s both;
+    }
+
+    // Six puffs in a full ring around her, each a slightly different size
+    // and delay so the burst feels tumbling rather than a uniform pop.
+    .chat-widget__poof-puff {
+      animation: chat-mascot-poof-puff 0.55s ease-out both;
+    }
+
+    .chat-widget__poof-puff:nth-child(2) {
+      --poof-x: 34px;
+      --poof-y: 0px;
+      animation-delay: 0.15s;
+    }
+
+    .chat-widget__poof-puff:nth-child(3) {
+      --poof-x: 17px;
+      --poof-y: -30px;
+      animation-delay: 0.2s;
+    }
+
+    .chat-widget__poof-puff:nth-child(4) {
+      --poof-x: -17px;
+      --poof-y: -30px;
+      animation-delay: 0.17s;
+    }
+
+    .chat-widget__poof-puff:nth-child(5) {
+      --poof-x: -34px;
+      --poof-y: 0px;
+      animation-delay: 0.22s;
+    }
+
+    .chat-widget__poof-puff:nth-child(6) {
+      --poof-x: -17px;
+      --poof-y: 30px;
+      animation-delay: 0.18s;
+    }
+
+    .chat-widget__poof-puff:nth-child(7) {
+      --poof-x: 17px;
+      --poof-y: 30px;
+      animation-delay: 0.24s;
+    }
+  }
+}
+
+// House hat comes off for every vanish, whichever costume she's wearing.
+.chat-widget--vanishing .chat-widget__launcher .chat-widget__house {
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+// The grey smoke poof (from the shared block above) is the default for any
+// vanish variant that doesn't bring its own effect — rocket/ufo/bubble/magic
+// override it off below since they've each got their own particles.
+.chat-widget--vanish-rocket .chat-widget__launcher .chat-widget__poof,
+.chat-widget--vanish-ufo .chat-widget__launcher .chat-widget__poof,
+.chat-widget--vanish-bubble .chat-widget__launcher .chat-widget__poof,
+.chat-widget--vanish-magic .chat-widget__launcher .chat-widget__poof {
+  opacity: 0;
+}
+
+// ---- Ninja: smoke + mask/headband (see .chat-widget__poof above). ----
+.chat-widget--vanish-ninja .chat-widget__launcher {
+  // The smoke puffs (shared block above) burst first; the mask/headband
+  // only fade in once that cloud is already up — "poof, and now she's a
+  // ninja" rather than costume-then-smoke.
+  .chat-widget__ninja-band,
+  .chat-widget__ninja-mask {
+    opacity: 1;
+    animation: chat-mascot-ninja-dress 0.2s ease-out 0.4s both;
+  }
+
+  .chat-widget__blob {
+    animation: chat-mascot-vanish 2.2s forwards;
+  }
+}
+
+// ---- Pinball: face/arms hidden, just a shiny rolling, bouncing ball. ----
+.chat-widget--vanish-pinball .chat-widget__launcher {
+  .chat-widget__face,
+  .chat-widget__arm {
+    opacity: 0;
+    transition: opacity 0.1s ease;
+  }
+
+  .chat-widget__blob {
+    background: radial-gradient(circle at 32% 28%, #3c3c3c, #050505 72%);
+    animation: chat-mascot-pinball-blob 3.2s forwards;
+  }
+
+  .chat-widget__eightball-face,
+  .chat-widget__pinball-shine {
+    opacity: 1;
+    transition: opacity 0.15s ease;
+  }
+}
+
+// ---- Rocket: crouch, then a fast straight shot, flame trailing behind. ----
+.chat-widget--vanish-rocket .chat-widget__launcher {
+  // The bug: only the flame's child spans had their opacity animated —
+  // the flame container itself was left at its base opacity: 0, so the
+  // whole thing rendered invisible no matter what the spans were doing.
+  .chat-widget__rocket-flame {
+    opacity: 1;
+  }
+
+  .chat-widget__rocket-flame span {
+    animation: chat-mascot-rocket-flame-flicker 3.2s ease-out both;
+  }
+
+  .chat-widget__rocket-flame span:nth-child(2) {
+    animation-delay: 0.08s;
+  }
+
+  .chat-widget__blob {
+    animation: chat-mascot-rocket-blob 3.2s forwards;
+  }
+}
+
+// ---- UFO: beams her up, then flies the saucer itself to the icon. ----
+.chat-widget--vanish-ufo .chat-widget__launcher {
+  // She IS the saucer — face hidden, dome/body overlay takes over.
+  .chat-widget__mouth {
+    opacity: 0;
+    transition: opacity 0.1s ease;
+  }
+
+  .chat-widget__eye {
+    background: #14151c;
+    transition: background 0.1s ease;
+  }
+
+  .chat-widget__pupil {
+    background: radial-gradient(circle, #d9fff2, #4de3c1 70%);
+    box-shadow: 0 0 5px 1px rgba(77, 227, 193, 0.9);
+    transition: background 0.1s ease, box-shadow 0.1s ease;
+  }
+
+  .chat-widget__ufo {
+    opacity: 1;
+    animation: chat-mascot-ufo-craft 3.2s ease-out forwards;
+  }
+
+  .chat-widget__ufo-beam {
+    animation: chat-mascot-ufo-beam-pulse 3.2s ease-in-out both;
+  }
+
+  .chat-widget__blob {
+    animation: chat-mascot-ufo-blob 3.2s forwards;
+  }
+}
+
+// ---- Bubble: encased, floats to the icon, pops with droplets. ----
+.chat-widget--vanish-bubble .chat-widget__launcher {
+  .chat-widget__bubble {
+    opacity: 1;
+    animation: chat-mascot-bubble-shell 3.2s ease-in-out forwards;
+  }
+
+  .chat-widget__droplets {
+    opacity: 1;
+  }
+
+  .chat-widget__droplets span {
+    animation: chat-mascot-droplet-pop 3.2s ease-out both;
+  }
+
+  .chat-widget__droplets span:nth-child(1) {
+    --drop-x: -20px;
+    --drop-y: -14px;
+  }
+
+  .chat-widget__droplets span:nth-child(2) {
+    --drop-x: 18px;
+    --drop-y: -16px;
+    animation-delay: 0.02s;
+  }
+
+  .chat-widget__droplets span:nth-child(3) {
+    --drop-x: -16px;
+    --drop-y: 18px;
+    animation-delay: 0.04s;
+  }
+
+  .chat-widget__droplets span:nth-child(4) {
+    --drop-x: 20px;
+    --drop-y: 16px;
+    animation-delay: 0.01s;
+  }
+
+  .chat-widget__blob {
+    animation: chat-mascot-bubble-blob 3.2s ease-in-out forwards;
+  }
+}
+
+// ---- Magic hat: drops over her (sparkle burst), hat hops off on its own. ----
+.chat-widget--vanish-magic .chat-widget__launcher {
+  .chat-widget__tophat {
+    opacity: 1;
+    animation: chat-mascot-tophat-journey 3.2s ease-in-out forwards;
+  }
+
+  .chat-widget__sparkles {
+    opacity: 1;
+  }
+
+  .chat-widget__sparkles span {
+    animation: chat-mascot-sparkle-twinkle 0.5s ease-in-out both;
+  }
+
+  .chat-widget__sparkles span:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .chat-widget__sparkles span:nth-child(2) {
+    animation-delay: 0.16s;
+  }
+
+  .chat-widget__sparkles span:nth-child(3) {
+    animation-delay: 0.13s;
+  }
+
+  .chat-widget__sparkles span:nth-child(4) {
+    animation-delay: 0.19s;
+  }
+
+  .chat-widget__sparkles span:nth-child(5) {
+    animation-delay: 0.22s;
+  }
+
+  .chat-widget__blob {
+    animation: chat-mascot-magic-blob 3.2s ease-in forwards;
+  }
+}
+
+// ---- Bat: a darker, flapping swoop through a couple of "corners"
+// before diving into the icon. ----
+.chat-widget--vanish-bat .chat-widget__launcher {
+  // Face goes dark and her eyes/pupils glow instead of the usual look.
+  .chat-widget__mouth {
+    opacity: 0;
+    transition: opacity 0.1s ease;
+  }
+
+  .chat-widget__eye {
+    background: #14151c;
+    transition: background 0.1s ease;
+  }
+
+  .chat-widget__pupil {
+    background: radial-gradient(circle, #fff176, #ff9800 70%);
+    box-shadow: 0 0 5px 1px rgba(255, 193, 7, 0.9);
+    transition: background 0.1s ease, box-shadow 0.1s ease;
+  }
+
+  .chat-widget__bat-ear {
+    opacity: 1;
+    transition: opacity 0.1s ease;
+  }
+
+  .chat-widget__bat-wing {
+    opacity: 1;
+    transition: opacity 0.1s ease;
+  }
+
+  .chat-widget__bat-wing--left {
+    animation: chat-mascot-bat-wing-flap-left 0.34s ease-in-out infinite;
+  }
+
+  .chat-widget__bat-wing--right {
+    animation: chat-mascot-bat-wing-flap-right 0.34s ease-in-out infinite;
+  }
+
+  .chat-widget__blob {
+    filter: brightness(0.5) contrast(1.2) saturate(1.3);
+    animation: chat-mascot-bat-blob 3.2s forwards;
+  }
+}
+
+// The ninja disguise is vanish-only — she reappears as plain Clem', no
+// mask/headband at all, straight into the jump-spin-land celebration.
+.chat-widget--appearing .chat-widget__launcher {
+  .chat-widget__house {
+    opacity: 1;
+    transition: opacity 0.2s ease 0.1s;
+  }
+
+  .chat-widget__blob {
+    animation: chat-mascot-appear 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .chat-widget__arm--left {
+    animation: chat-mascot-siuu-arm-left 0.75s ease-out forwards;
+  }
+
+  .chat-widget__arm--right {
+    animation: chat-mascot-siuu-arm-right 0.75s ease-out forwards;
+  }
+
+  .chat-widget__mouth {
+    animation: chat-mascot-siuu-mouth 0.75s ease-out forwards;
+  }
+}
+
 .chat-widget__callout {
   position: absolute;
   right: calc(100% + 18px);
@@ -402,7 +2465,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   transform: scale(0.85) translateY(12px);
   opacity: 0;
   pointer-events: none;
-  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
 
   @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
     background: rgba(255, 255, 255, 0.75);
@@ -419,7 +2482,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
 @media (max-width: 767px) {
   .chat-widget {
-    --chat-widget-right: 12px;
+    --chat-widget-right: 20px;
     --chat-launcher-size: 58px;
     --chat-launcher-bottom: calc(var(--chat-navbar-h) + var(--chat-navbar-gap) + 8px + env(safe-area-inset-bottom));
     --chat-panel-bottom: calc(var(--chat-launcher-bottom) + var(--chat-launcher-size) + 12px);

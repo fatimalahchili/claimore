@@ -1,7 +1,90 @@
 <% size ||= local_assigns[:size] %>
-<span class="chat-widget__blob <%= "chat-widget__blob--#{size}" if size %>" aria-hidden="true">
-  <span class="chat-widget__eye"></span><span class="chat-widget__eye"></span>
-  <span class="chat-widget__mouth"></span>
+<span class="chat-widget__blob <%= "chat-widget__blob--#{size}" if size %>" data-mascot-target="blob" aria-hidden="true">
+  <span class="chat-widget__face" data-mascot-target="face">
+    <span class="chat-widget__eye"><span class="chat-widget__pupil" data-mascot-target="pupil"></span></span>
+    <span class="chat-widget__eye"><span class="chat-widget__pupil" data-mascot-target="pupil"></span></span>
+    <span class="chat-widget__mouth"></span>
+  </span>
+
+  <span class="chat-widget__arm chat-widget__arm--left">
+    <span class="chat-widget__hand"></span>
+  </span>
+  <span class="chat-widget__arm chat-widget__arm--right">
+    <span class="chat-widget__hand">
+      <span class="chat-widget__nail-file"></span>
+    </span>
+  </span>
+
+  <span class="chat-widget__snack"></span>
+
+  <span class="chat-widget__juggle-balls">
+    <span class="chat-widget__juggle-ball">6</span>
+    <span class="chat-widget__juggle-ball">7</span>
+  </span>
+
+  <span class="chat-widget__zzz">
+    <span>z</span><span>z</span><span>z</span>
+  </span>
+
+  <span class="chat-widget__notes">
+    <span>&#9834;</span><span>&#9835;</span><span>&#9834;</span>
+  </span>
+
+  <span class="chat-widget__six">6</span>
+  <span class="chat-widget__seven">7</span>
+
+  <%# The vanish-only costumes/props below (mascot-controller picks one at
+      random each time she's hidden) — none of these render normally; each
+      is only shown by its own chat-widget--vanish-* modifier. %>
+
+  <span class="chat-widget__ninja-band" aria-hidden="true">
+    <span class="chat-widget__ninja-band-tail"></span>
+    <span class="chat-widget__ninja-band-tail"></span>
+  </span>
+  <span class="chat-widget__ninja-mask" aria-hidden="true"></span>
+
+  <span class="chat-widget__eightball-face" aria-hidden="true">8</span>
+  <span class="chat-widget__pinball-shine" aria-hidden="true"></span>
+
+  <span class="chat-widget__rocket-flame" aria-hidden="true">
+    <span></span><span></span>
+  </span>
+
+  <span class="chat-widget__ufo" aria-hidden="true">
+    <span class="chat-widget__ufo-dome"></span>
+    <span class="chat-widget__ufo-body"></span>
+  </span>
+  <span class="chat-widget__ufo-beam" aria-hidden="true"></span>
+
+  <span class="chat-widget__bubble" aria-hidden="true"></span>
+  <span class="chat-widget__droplets" aria-hidden="true">
+    <span></span><span></span><span></span><span></span>
+  </span>
+
+  <span class="chat-widget__tophat" aria-hidden="true">
+    <span class="chat-widget__tophat-band"></span>
+    <span class="chat-widget__tophat-body"></span>
+    <span class="chat-widget__tophat-brim"></span>
+  </span>
+  <span class="chat-widget__sparkles" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span>
+  </span>
+
+  <span class="chat-widget__bat-ear chat-widget__bat-ear--left" aria-hidden="true"></span>
+  <span class="chat-widget__bat-ear chat-widget__bat-ear--right" aria-hidden="true"></span>
+  <span class="chat-widget__bat-wing chat-widget__bat-wing--left" aria-hidden="true"></span>
+  <span class="chat-widget__bat-wing chat-widget__bat-wing--right" aria-hidden="true"></span>
+
+  <span class="chat-widget__poof" aria-hidden="true">
+    <span class="chat-widget__poof-flash"></span>
+    <span class="chat-widget__poof-puff"></span>
+    <span class="chat-widget__poof-puff"></span>
+    <span class="chat-widget__poof-puff"></span>
+    <span class="chat-widget__poof-puff"></span>
+    <span class="chat-widget__poof-puff"></span>
+    <span class="chat-widget__poof-puff"></span>
+  </span>
+
   <span class="chat-widget__house" aria-hidden="true">
     <span class="chat-widget__chimney">
       <span class="chat-widget__chimney-smoke"></span>

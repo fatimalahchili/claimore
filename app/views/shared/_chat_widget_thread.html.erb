@@ -1,6 +1,5 @@
 <% if chat.nil? %>
   <div class="chat-widget__greeting">
-    <%= render "shared/claim_blob", size: "float" %>
     <p class="chat-widget__greeting-title">
       <% if user_signed_in? %>
         Hello, <%= current_user.name.presence&.split&.first || "there" %>!

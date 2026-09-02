@@ -10,10 +10,15 @@ export default class extends Controller {
     this.onKeydown = this.onKeydown.bind(this)
     this.onClickOutside = this.onClickOutside.bind(this)
     this.onScroll = this.onScroll.bind(this)
+    this.onClemOpenPanel = this.open.bind(this)
     this.lastScrollY = window.scrollY
     document.addEventListener("keydown", this.onKeydown)
     document.addEventListener("click", this.onClickOutside)
     window.addEventListener("scroll", this.onScroll, { passive: true })
+    // mascot-controller dispatches this once she's finished reappearing
+    // from her nav-bar icon — the panel should open on its own, no second
+    // click needed.
+    document.addEventListener("clem:open-panel", this.onClemOpenPanel)
 
     this.observer = new MutationObserver(() => {
       this.scrollMessagesToBottom()
@@ -30,6 +35,7 @@ export default class extends Controller {
     document.removeEventListener("keydown", this.onKeydown)
     document.removeEventListener("click", this.onClickOutside)
     window.removeEventListener("scroll", this.onScroll)
+    document.removeEventListener("clem:open-panel", this.onClemOpenPanel)
     this.observer?.disconnect()
   }
 
