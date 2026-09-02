@@ -148,55 +148,55 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 }
 
+// Arms and balls share the same 0% / 50% / 100% phase points on purpose:
+// each ball's low point (a "catch") lands exactly when that side's arm is
+// raised to meet it, so the toss reads as connected rather than two
+// unrelated animations layered on top of each other.
 @keyframes chat-mascot-juggle-arm-left {
   0%, 100% {
-    transform: rotate(22deg);
+    transform: rotate(95deg);
   }
 
   50% {
-    transform: rotate(-16deg);
+    transform: rotate(14deg);
   }
 }
 
 @keyframes chat-mascot-juggle-arm-right {
   0%, 100% {
-    transform: rotate(-16deg);
+    transform: rotate(-14deg);
   }
 
   50% {
-    transform: rotate(22deg);
+    transform: rotate(-95deg);
   }
 }
 
-// Each ball sweeps left-to-right in a tall arc (via left/bottom, which
-// resolve against .chat-widget__juggle-balls' own box — unlike transform's
-// percentages, which resolve against the ball's own tiny size and barely
-// moved it). Three balls staggered a third of a cycle apart read as a
-// classic cascade: one always rising while another falls.
+// One ball's full flight path: caught by the left hand (0%/100%), arcs up
+// and over, caught by the right hand (50%), arcs back. Three balls share
+// this exact path, staggered a third of a cycle apart, so they read as a
+// continuous cascade rather than three balls each doing their own thing.
+// The low points (0/50/100%) are tuned to land right where the raised hand
+// actually is (measured, not guessed — see the arm keyframes above).
 @keyframes chat-mascot-juggle-ball {
-  0% {
+  0%, 100% {
     left: 0%;
     bottom: 0%;
-    opacity: 0;
   }
 
-  12% {
-    opacity: 1;
-  }
-
-  50% {
-    left: 39%;
+  25% {
+    left: 42%;
     bottom: 100%;
   }
 
-  88% {
-    opacity: 1;
+  50% {
+    left: 90%;
+    bottom: 0%;
   }
 
-  100% {
-    left: 78%;
-    bottom: 0%;
-    opacity: 0;
+  75% {
+    left: 42%;
+    bottom: 100%;
   }
 }
 
@@ -290,6 +290,49 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
   50% {
     transform: translateY(2px);
+  }
+}
+
+@keyframes chat-mascot-whistle-mouth {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    border-radius: 10% 10% 50% 50% / 20% 20% 80% 80%;
+  }
+
+  50% {
+    transform: translateX(-50%) scale(0.4);
+    border-radius: 50%;
+  }
+}
+
+@keyframes chat-mascot-whistle-bob {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+
+  50% {
+    transform: translateY(-2px) rotate(3deg);
+  }
+}
+
+@keyframes chat-mascot-notes-rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 4px) scale(0.7) rotate(-8deg);
+  }
+
+  30%,
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-8px, -20px) scale(1.1) rotate(8deg);
   }
 }
 
@@ -431,20 +474,25 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
     opacity: 0;
   }
 
+  // Wider and taller than the blob itself — measured against where the
+  // raised hand (see .chat-widget__arm--left/right's juggle keyframes)
+  // actually ends up, not just eyeballed. The low points of the ball path
+  // (0/50/100%, see the keyframe) land right at each hand; the peaks
+  // (25/75%) clear the house hat above her head.
   .chat-widget__juggle-balls {
     position: absolute;
-    top: -92%;
-    left: 12%;
-    right: 12%;
-    height: 55%;
+    top: -90%;
+    left: -40%;
+    right: -36%;
+    height: 155%;
     opacity: 0;
     pointer-events: none;
   }
 
   .chat-widget__juggle-ball {
     position: absolute;
-    width: 24%;
-    height: 24%;
+    width: 10%;
+    height: 11%;
     border-radius: 50%;
     background: radial-gradient(circle at 35% 30%, #fff, $chat-blob-a 55%, $chat-blob-b);
     box-shadow: 0 2px 4px rgba(15, 23, 42, 0.25);
@@ -495,6 +543,38 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
       right: 14px;
       bottom: 20px;
       font-size: 16px;
+    }
+  }
+
+  .chat-widget__notes {
+    position: absolute;
+    top: -8px;
+    left: -4px;
+    width: 34px;
+    height: 42px;
+    opacity: 0;
+    pointer-events: none;
+
+    span {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      font-size: 15px;
+      color: $chat-blob-b;
+      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+      opacity: 0;
+    }
+
+    span:nth-child(2) {
+      left: 10px;
+      bottom: 14px;
+      font-size: 18px;
+    }
+
+    span:nth-child(3) {
+      left: 20px;
+      bottom: 4px;
+      font-size: 13px;
     }
   }
 
@@ -758,6 +838,32 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
   .chat-widget__zzz span:nth-child(3) {
     animation-delay: 1.2s;
+  }
+}
+
+.chat-widget--whistling .chat-widget__launcher {
+  .chat-widget__blob {
+    animation: chat-mascot-whistle-bob 1s ease-in-out infinite;
+  }
+
+  .chat-widget__mouth {
+    animation: chat-mascot-whistle-mouth 1s ease-in-out infinite;
+  }
+
+  .chat-widget__notes {
+    opacity: 1;
+  }
+
+  .chat-widget__notes span {
+    animation: chat-mascot-notes-rise 1.8s ease-in-out infinite;
+  }
+
+  .chat-widget__notes span:nth-child(2) {
+    animation-delay: 0.5s;
+  }
+
+  .chat-widget__notes span:nth-child(3) {
+    animation-delay: 1s;
   }
 }
 

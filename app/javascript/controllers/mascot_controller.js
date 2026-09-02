@@ -18,11 +18,12 @@ const GESTURE_DURATION_MS = {
   "filing-nails": 2250,
   yawning: 1600,
   eating: 2600,
-  juggling: 2400,
+  whistling: 3600,
+  juggling: 6300,
 }
 
 // "sleeping" is sustained rather than timed — see wakeUp().
-const IDLE_GESTURES = ["scratching", "filing-nails", "yawning", "eating"]
+const IDLE_GESTURES = ["scratching", "filing-nails", "yawning", "eating", "whistling"]
 
 export default class extends Controller {
   static targets = ["blob", "face", "pupil"]
