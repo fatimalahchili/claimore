@@ -42,6 +42,5 @@ Rails.application.routes.draw do
   resources :entries, except: :index
   resources :templates, only: %i[show index]
   resources :contacts
-  resources :administrations, only: %i[show index]
   resources :tenants, only: %i[edit update destroy]
 end
