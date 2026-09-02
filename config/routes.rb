@@ -31,7 +31,7 @@ Rails.application.routes.draw do
     resources :letters, only: %i[new create]
   end
   resources :letters, only: %i[show destroy]
-  resources :properties, only: %i[new show create update destroy] do
+  resources :properties, only: %i[new show edit create update destroy] do
     resources :tenants, only: %i[index new create]
     resources :tenant_invitations, only: %i[create show]
   end
