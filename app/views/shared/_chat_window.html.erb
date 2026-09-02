@@ -8,7 +8,6 @@ end %>
 <div class="chat-widget" data-controller="chat-widget mascot">
   <div class="chat-widget__panel" id="chat_widget_panel" data-chat-widget-target="panel" role="dialog" aria-label="Assistant chat" aria-hidden="true">
     <header class="chat-widget__header">
-      <%= render "shared/claim_blob", size: "sm" %>
       <div class="chat-widget__heading">
         <strong>Clem'</strong>
         <span><%= claim ? (claim.category.presence || "Tenancy Claim") : "Your AI Assistant" %></span>

@@ -38,18 +38,6 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 }
 
-@keyframes chat-blob-breathe {
-
-  0%,
-  100% {
-    transform: scale(1) translateY(0);
-  }
-
-  50% {
-    transform: scale(1.05) translateY(-4px);
-  }
-}
-
 @keyframes chat-typing-bounce {
 
   0%,
@@ -202,6 +190,119 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 }
 
+@keyframes chat-mascot-yawn-mouth {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scaleY(1);
+    border-radius: 10% 10% 50% 50% / 20% 20% 80% 80%;
+  }
+
+  40%,
+  75% {
+    transform: translateX(-50%) scaleY(1.8);
+    border-radius: 50%;
+  }
+}
+
+@keyframes chat-mascot-yawn-eye {
+
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  40%,
+  75% {
+    transform: scaleY(0.35);
+  }
+}
+
+@keyframes chat-mascot-eat-arm {
+
+  0%,
+  100% {
+    transform: rotate(-72deg);
+  }
+
+  50% {
+    transform: rotate(-58deg);
+  }
+}
+
+@keyframes chat-mascot-eat-mouth {
+
+  0%,
+  100% {
+    transform: translateX(-50%) scaleY(1);
+  }
+
+  50% {
+    transform: translateX(-50%) scaleY(0.4);
+  }
+}
+
+@keyframes chat-mascot-eat-snack {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(0.8);
+  }
+}
+
+@keyframes chat-mascot-zzz-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.7);
+  }
+
+  30%,
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-16px) scale(1.15);
+  }
+}
+
+@keyframes chat-mascot-sleep-bob {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+// Played once whenever the panel opens — Clem "pops" like a genie shaking
+// off the lamp before settling back to size.
+@keyframes chat-mascot-genie-pop {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+
+  40% {
+    transform: scale(1.45) rotate(-8deg);
+  }
+
+  65% {
+    transform: scale(0.9) rotate(5deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
 .chat-widget__blob {
   position: relative;
   display: flex;
@@ -339,10 +440,52 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
     background: radial-gradient(circle at 35% 30%, #fff, $chat-blob-a 55%, $chat-blob-b);
   }
 
-  &--sm {
+  .chat-widget__snack {
+    position: absolute;
+    bottom: 32%;
+    left: 74%;
+    width: 22%;
+    height: 22%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #f4d9a0, #d9a441 65%, #b97f26);
+    box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+  }
+
+  .chat-widget__zzz {
+    position: absolute;
+    top: -6px;
+    right: -2px;
     width: 30px;
-    height: 30px;
-    --hat-scale: 0.85;
+    height: 40px;
+    opacity: 0;
+    pointer-events: none;
+
+    span {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      font-weight: 800;
+      color: $chat-blob-b;
+      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+      opacity: 0;
+    }
+
+    span:nth-child(1) {
+      font-size: 10px;
+    }
+
+    span:nth-child(2) {
+      right: 8px;
+      bottom: 10px;
+      font-size: 13px;
+    }
+
+    span:nth-child(3) {
+      right: 14px;
+      bottom: 20px;
+      font-size: 16px;
+    }
   }
 
   &--xs {
@@ -350,14 +493,6 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
     height: 24px;
     margin-bottom: 4px;
     --hat-scale: 0.65;
-  }
-
-  &--float {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 6px;
-    --hat-scale: 1.7;
-    animation: chat-blob-breathe 3.4s ease-in-out infinite;
   }
 }
 
@@ -552,6 +687,82 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 }
 
+.chat-widget--yawning .chat-widget__launcher {
+  .chat-widget__mouth {
+    animation: chat-mascot-yawn-mouth 1.6s ease-in-out;
+  }
+
+  .chat-widget__eye {
+    animation: chat-mascot-yawn-eye 1.6s ease-in-out;
+  }
+}
+
+.chat-widget--eating .chat-widget__launcher {
+  .chat-widget__arm--right {
+    opacity: 1;
+    animation: chat-mascot-eat-arm 0.5s ease-in-out infinite;
+  }
+
+  .chat-widget__snack {
+    opacity: 1;
+    animation: chat-mascot-eat-snack 0.5s ease-in-out infinite;
+  }
+
+  .chat-widget__mouth {
+    animation: chat-mascot-eat-mouth 0.5s ease-in-out infinite;
+  }
+}
+
+// Sustained (not auto-timed) — she stays asleep until mascot-controller sees
+// an interaction and wakes her back up.
+.chat-widget--sleeping .chat-widget__launcher {
+  .chat-widget__blob {
+    animation: chat-mascot-sleep-bob 2.6s ease-in-out infinite;
+  }
+
+  .chat-widget__face {
+    transform: rotate(6deg);
+  }
+
+  .chat-widget__eye {
+    transform: scaleY(0.12);
+  }
+
+  .chat-widget__mouth {
+    opacity: 0.7;
+  }
+
+  .chat-widget__zzz {
+    opacity: 1;
+  }
+
+  .chat-widget__zzz span {
+    animation: chat-mascot-zzz-rise 2.4s ease-in-out infinite;
+  }
+
+  .chat-widget__zzz span:nth-child(2) {
+    animation-delay: 0.6s;
+  }
+
+  .chat-widget__zzz span:nth-child(3) {
+    animation-delay: 1.2s;
+  }
+}
+
+// A little pop-out-of-the-lamp flourish, played once each time the panel opens:
+// Clem pops bigger with a puff of magic smoke, right as the panel unfurls
+// from her corner (transform-origin: bottom right, above) — same genie, same
+// spot, no separate avatar appearing inside.
+.chat-widget--open .chat-widget__launcher {
+  .chat-widget__blob {
+    animation: chat-mascot-genie-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .chat-widget__chimney-smoke {
+    animation: chat-chimney-smoke 0.9s ease-out;
+  }
+}
+
 .chat-widget__callout {
   position: absolute;
   right: calc(100% + 18px);
@@ -649,7 +860,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   transform: scale(0.85) translateY(12px);
   opacity: 0;
   pointer-events: none;
-  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
 
   @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
     background: rgba(255, 255, 255, 0.75);

@@ -1,11 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 
 // Clem's body language: her eyes (and head) track the cursor anywhere on the
-// page, and — only on the launcher blob, so she doesn't upstage an active
-// chat — she plays little idle gestures when nobody's talked to her:
-// scratching her head every so often, and juggling once she's gone
-// IDLE_JUGGLE_MS without being opened or messaged.
+// page, and — only on the launcher blob, which now doubles as the deployed
+// panel's header (there's only ever one Clem on screen) — she goofs around
+// when nobody's talked to her in a while: a little shrug of a gesture every
+// so often, juggling once she's gone IDLE_JUGGLE_MS untouched, and if she's
+// really been ignored for IDLE_SLEEP_MS she dozes off until something wakes
+// her back up.
 const IDLE_JUGGLE_MS = 30000
+const IDLE_SLEEP_MS = 60000
 const IDLE_GESTURE_MIN_MS = 12000
 const IDLE_GESTURE_MAX_MS = 22000
 const TICK_MS = 1000
@@ -13,10 +16,13 @@ const TICK_MS = 1000
 const GESTURE_DURATION_MS = {
   scratching: 1800,
   "filing-nails": 2250,
+  yawning: 1600,
+  eating: 2600,
   juggling: 2400,
 }
 
-const IDLE_GESTURES = ["scratching", "filing-nails"]
+// "sleeping" is sustained rather than timed — see wakeUp().
+const IDLE_GESTURES = ["scratching", "filing-nails", "yawning", "eating"]
 
 export default class extends Controller {
   static targets = ["blob", "face", "pupil"]
@@ -27,6 +33,8 @@ export default class extends Controller {
 
     document.addEventListener("mousemove", this.onMouseMove, { passive: true })
     this.element.addEventListener("pointerdown", this.onInteraction)
+    this.element.addEventListener("keydown", this.onInteraction)
+    this.element.addEventListener("input", this.onInteraction)
 
     this.currentGesture = null
     this.gestureTimeout = null
@@ -38,6 +46,8 @@ export default class extends Controller {
   disconnect() {
     document.removeEventListener("mousemove", this.onMouseMove)
     this.element.removeEventListener("pointerdown", this.onInteraction)
+    this.element.removeEventListener("keydown", this.onInteraction)
+    this.element.removeEventListener("input", this.onInteraction)
     clearInterval(this.tickTimer)
     clearTimeout(this.gestureTimeout)
   }
@@ -49,6 +59,13 @@ export default class extends Controller {
   registerInteraction() {
     this.lastInteractionAt = Date.now()
     this.nextJuggleAt = this.lastInteractionAt + IDLE_JUGGLE_MS
+    if (this.currentGesture === "sleeping") this.wakeUp()
+  }
+
+  wakeUp() {
+    this.element.classList.remove("chat-widget--sleeping")
+    this.currentGesture = null
+    this.scheduleNextIdleGesture()
   }
 
   scheduleNextIdleGesture() {
@@ -58,9 +75,15 @@ export default class extends Controller {
 
   evaluateIdleState() {
     if (this.currentGesture) return
-    if (this.element.classList.contains("chat-widget--open")) return
+    if (this.element.classList.contains("chat-widget--thinking")) return
 
     const now = Date.now()
+    const idleFor = now - this.lastInteractionAt
+
+    if (idleFor >= IDLE_SLEEP_MS) {
+      this.playSustainedGesture("sleeping")
+      return
+    }
 
     if (now >= this.nextJuggleAt) {
       this.nextJuggleAt = now + IDLE_JUGGLE_MS
@@ -83,6 +106,11 @@ export default class extends Controller {
       this.element.classList.remove(`chat-widget--${name}`)
       this.currentGesture = null
     }, GESTURE_DURATION_MS[name])
+  }
+
+  playSustainedGesture(name) {
+    this.currentGesture = name
+    this.element.classList.add(`chat-widget--${name}`)
   }
 
   onMouseMove(event) {
