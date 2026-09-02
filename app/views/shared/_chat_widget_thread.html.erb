@@ -40,7 +40,7 @@
   <%= turbo_stream_from "chat_#{chat.id}" %>
   <div class="chat-widget__messages" id="messages" data-chat-widget-target="messages">
     <% chat.messages.visible_to_user.where.not(id: nil).each do |message| %>
-      <%= render message %>
+      <%= render "messages/message", message: message %>
     <% end %>
   </div>
 
