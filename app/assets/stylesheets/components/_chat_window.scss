@@ -10,7 +10,9 @@
 $chat-blob-a: #7fe3f5;
 $chat-blob-b: #1e9fd1;
 $chat-blob-gradient: linear-gradient(160deg, $chat-blob-a, $chat-blob-b);
-$chat-widget-right: clamp(12px, 3vw, 24px);
+// Extra margin from the viewport edge (beyond what the blob itself needs) so
+// her arms have room to swing during gestures without going off-screen.
+$chat-widget-right: clamp(28px, 5vw, 44px);
 $chat-launcher-size: clamp(64px, 7vw, 84px);
 
 .chat-widget {
@@ -148,44 +150,52 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
 @keyframes chat-mascot-juggle-arm-left {
   0%, 100% {
-    transform: rotate(35deg);
+    transform: rotate(22deg);
   }
 
   50% {
-    transform: rotate(-30deg);
+    transform: rotate(-16deg);
   }
 }
 
 @keyframes chat-mascot-juggle-arm-right {
   0%, 100% {
-    transform: rotate(-30deg);
+    transform: rotate(-16deg);
   }
 
   50% {
-    transform: rotate(35deg);
+    transform: rotate(22deg);
   }
 }
 
+// Each ball sweeps left-to-right in a tall arc (via left/bottom, which
+// resolve against .chat-widget__juggle-balls' own box — unlike transform's
+// percentages, which resolve against the ball's own tiny size and barely
+// moved it). Three balls staggered a third of a cycle apart read as a
+// classic cascade: one always rising while another falls.
 @keyframes chat-mascot-juggle-ball {
   0% {
-    transform: translate(-70%, 10%) scale(0.85);
+    left: 0%;
+    bottom: 0%;
     opacity: 0;
   }
 
-  15% {
+  12% {
     opacity: 1;
   }
 
   50% {
-    transform: translate(0, -120%) scale(1.05);
+    left: 39%;
+    bottom: 100%;
   }
 
-  85% {
+  88% {
     opacity: 1;
   }
 
   100% {
-    transform: translate(70%, 10%) scale(0.85);
+    left: 78%;
+    bottom: 0%;
     opacity: 0;
   }
 }
@@ -388,12 +398,12 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 
   .chat-widget__arm--left {
-    left: -4%;
+    left: 4%;
     transform: rotate(14deg);
   }
 
   .chat-widget__arm--right {
-    right: -4%;
+    right: 4%;
     transform: rotate(-14deg);
   }
 
@@ -423,21 +433,21 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
   .chat-widget__juggle-balls {
     position: absolute;
-    top: -34%;
-    left: 50%;
-    width: 74%;
-    display: flex;
-    justify-content: space-between;
-    transform: translateX(-50%);
+    top: -92%;
+    left: 12%;
+    right: 12%;
+    height: 55%;
     opacity: 0;
     pointer-events: none;
   }
 
   .chat-widget__juggle-ball {
-    width: 16%;
-    height: 16%;
+    position: absolute;
+    width: 24%;
+    height: 24%;
     border-radius: 50%;
     background: radial-gradient(circle at 35% 30%, #fff, $chat-blob-a 55%, $chat-blob-b);
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.25);
   }
 
   .chat-widget__snack {
@@ -658,27 +668,29 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 .chat-widget--juggling .chat-widget__launcher {
   .chat-widget__arm--left {
     opacity: 1;
-    animation: chat-mascot-juggle-arm-left 0.8s ease-in-out infinite;
+    animation: chat-mascot-juggle-arm-left 0.9s ease-in-out infinite;
   }
 
   .chat-widget__arm--right {
     opacity: 1;
-    animation: chat-mascot-juggle-arm-right 0.8s ease-in-out infinite;
+    animation: chat-mascot-juggle-arm-right 0.9s ease-in-out infinite;
   }
 
   .chat-widget__juggle-balls {
     opacity: 1;
   }
 
+  // Three balls, a third of the 0.9s cycle apart, so there's always one
+  // rising and one falling — the classic 3-ball cascade.
   .chat-widget__juggle-ball {
-    animation: chat-mascot-juggle-ball 0.8s ease-in-out infinite;
+    animation: chat-mascot-juggle-ball 0.9s ease-in-out infinite;
 
     &:nth-child(1) {
-      animation-delay: -0.53s;
+      animation-delay: -0.6s;
     }
 
     &:nth-child(2) {
-      animation-delay: -0.27s;
+      animation-delay: -0.3s;
     }
 
     &:nth-child(3) {
@@ -877,7 +889,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
 @media (max-width: 767px) {
   .chat-widget {
-    --chat-widget-right: 12px;
+    --chat-widget-right: 20px;
     --chat-launcher-size: 58px;
     --chat-launcher-bottom: calc(var(--chat-navbar-h) + var(--chat-navbar-gap) + 8px + env(safe-area-inset-bottom));
     --chat-panel-bottom: calc(var(--chat-launcher-bottom) + var(--chat-launcher-size) + 12px);
