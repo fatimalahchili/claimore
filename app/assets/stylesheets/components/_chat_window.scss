@@ -153,22 +153,34 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 // raised to meet it, so the toss reads as connected rather than two
 // unrelated animations layered on top of each other.
 @keyframes chat-mascot-juggle-arm-left {
-  0%, 100% {
+  0% {
     transform: rotate(95deg);
+    animation-timing-function: ease-out;
   }
 
   50% {
     transform: rotate(14deg);
+    animation-timing-function: ease-in;
+  }
+
+  100% {
+    transform: rotate(95deg);
   }
 }
 
 @keyframes chat-mascot-juggle-arm-right {
-  0%, 100% {
+  0% {
     transform: rotate(-14deg);
+    animation-timing-function: ease-out;
   }
 
   50% {
     transform: rotate(-95deg);
+    animation-timing-function: ease-in;
+  }
+
+  100% {
+    transform: rotate(-14deg);
   }
 }
 
@@ -178,25 +190,39 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 // continuous cascade rather than three balls each doing their own thing.
 // The low points (0/50/100%) are tuned to land right where the raised hand
 // actually is (measured, not guessed — see the arm keyframes above).
+//
+// Per-keyframe animation-timing-function gives each half of the arc its own
+// easing — ease-out leaving a hand (fast departure, slowing as gravity
+// takes over) and ease-in arriving at the other (accelerating back down) —
+// rather than one flat ease-in-out for the whole hop, which read as
+// mechanical/floaty rather than thrown.
 @keyframes chat-mascot-juggle-ball {
   0%, 100% {
     left: 0%;
     bottom: 0%;
+    transform: rotate(0deg);
+    animation-timing-function: ease-out;
   }
 
   25% {
     left: 42%;
     bottom: 100%;
+    transform: rotate(150deg);
+    animation-timing-function: ease-in;
   }
 
   50% {
     left: 90%;
     bottom: 0%;
+    transform: rotate(300deg);
+    animation-timing-function: ease-out;
   }
 
   75% {
     left: 42%;
     bottom: 100%;
+    transform: rotate(450deg);
+    animation-timing-function: ease-in;
   }
 }
 
@@ -834,29 +860,29 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 .chat-widget--juggling .chat-widget__launcher {
   .chat-widget__arm--left {
     opacity: 1;
-    animation: chat-mascot-juggle-arm-left 0.9s ease-in-out infinite;
+    animation: chat-mascot-juggle-arm-left 1.5s ease-in-out infinite;
   }
 
   .chat-widget__arm--right {
     opacity: 1;
-    animation: chat-mascot-juggle-arm-right 0.9s ease-in-out infinite;
+    animation: chat-mascot-juggle-arm-right 1.5s ease-in-out infinite;
   }
 
   .chat-widget__juggle-balls {
     opacity: 1;
   }
 
-  // Three balls, a third of the 0.9s cycle apart, so there's always one
+  // Three balls, a third of the 1.5s cycle apart, so there's always one
   // rising and one falling — the classic 3-ball cascade.
   .chat-widget__juggle-ball {
-    animation: chat-mascot-juggle-ball 0.9s ease-in-out infinite;
+    animation: chat-mascot-juggle-ball 1.5s ease-in-out infinite;
 
     &:nth-child(1) {
-      animation-delay: -0.6s;
+      animation-delay: -1s;
     }
 
     &:nth-child(2) {
-      animation-delay: -0.3s;
+      animation-delay: -0.5s;
     }
 
     &:nth-child(3) {

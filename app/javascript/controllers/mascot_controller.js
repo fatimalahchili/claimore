@@ -20,7 +20,7 @@ const GESTURE_DURATION_MS = {
   eating: 2600,
   whistling: 3600,
   "six-seven": 3200,
-  juggling: 6300,
+  juggling: 6000,
 }
 
 // "sleeping" is sustained rather than timed — see wakeUp().
