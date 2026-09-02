@@ -15,6 +15,10 @@
           Add a move-in date to complete the property details.
         <% end %>
       </p>
+      <%= link_to edit_property_path(@property), class: "btn btn-outline-primary mt-2" do %>
+        <i class="fa-solid fa-pen-to-square me-1" aria-hidden="true"></i>
+        Edit property
+      <% end %>
     </div>
 
     <div class="property-show__icon" aria-hidden="true">
