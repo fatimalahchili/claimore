@@ -11,15 +11,17 @@
       <table class="table align-middle">
         <thead>
           <tr>
+            <th>Name</th>
             <th>Email</th>
             <th>Role</th>
-            <th>Status</th>
+            <th>Invitation status</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           <% @tenants.each do |tenant| %>
             <tr>
+              <td class="fw-bold"><%= tenant.user.name %></td>
               <td><%= tenant.user.email %></td>
               <td class="text-capitalize"><%= tenant.role.to_s.humanize %></td>
               <td>

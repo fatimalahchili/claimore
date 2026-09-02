@@ -12,6 +12,6 @@ class Tenant < ApplicationRecord
 
   enum :status,
        { invited: "invited",
-         tenant: "tenant",
+         added: "added",
          removed: "removed" }, default: :invited
 end
