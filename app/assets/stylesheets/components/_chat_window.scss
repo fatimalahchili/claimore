@@ -200,28 +200,24 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   0%, 100% {
     left: 0%;
     bottom: 0%;
-    transform: rotate(0deg);
     animation-timing-function: ease-out;
   }
 
   25% {
     left: 42%;
     bottom: 100%;
-    transform: rotate(150deg);
     animation-timing-function: ease-in;
   }
 
   50% {
     left: 90%;
     bottom: 0%;
-    transform: rotate(300deg);
     animation-timing-function: ease-out;
   }
 
   75% {
     left: 42%;
     bottom: 100%;
-    transform: rotate(450deg);
     animation-timing-function: ease-in;
   }
 }
@@ -439,6 +435,42 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 }
 
+// Ninja-style disappear, played once when nav-clem-portal-controller fires
+// "clem:vanish" (clicking her lookalike in the bottom nav) — a quick anticipatory
+// puff-up, then she shrinks away into nothing while the smoke burst covers the exit.
+@keyframes chat-mascot-vanish {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  30% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.05);
+    opacity: 0;
+  }
+}
+
+@keyframes chat-mascot-poof-puff {
+  0% {
+    transform: translate(0, 0) scale(0.4);
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: translate(var(--poof-x), var(--poof-y)) scale(1.5);
+    opacity: 0;
+  }
+}
+
 .chat-widget__blob {
   position: relative;
   display: flex;
@@ -572,13 +604,20 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
     pointer-events: none;
   }
 
+  // The two juggling "balls" are the 6 and 7 digits themselves.
   .chat-widget__juggle-ball {
     position: absolute;
-    width: 10%;
-    height: 11%;
+    width: 17%;
+    height: 18%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 30%, #fff, $chat-blob-a 55%, $chat-blob-b);
-    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.25);
+    background: $chat-blob-b;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.25), inset 0 -2px 3px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.4);
   }
 
   .chat-widget__snack {
@@ -688,6 +727,28 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
   .chat-widget__seven {
     right: -10%;
+  }
+
+  // Ninja poof — a burst of smoke puffs radiating outward as she vanishes
+  // (see .chat-widget--vanishing below). Sized bigger than the blob itself
+  // so the burst reads clearly rather than looking clipped.
+  .chat-widget__poof {
+    position: absolute;
+    inset: -30%;
+    opacity: 0;
+    pointer-events: none;
+
+    span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40%;
+      height: 40%;
+      margin: -20% 0 0 -20%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(148, 163, 184, 0.6) 55%, rgba(148, 163, 184, 0) 75%);
+      opacity: 0;
+    }
   }
 
   &--xs {
@@ -872,20 +933,18 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
     opacity: 1;
   }
 
-  // Three balls, a third of the 1.5s cycle apart, so there's always one
-  // rising and one falling — the classic 3-ball cascade.
+  // The 6 and 7 share the exact same left-hand/right-hand arc, half a cycle
+  // (0.75s of 1.5s) apart — so whenever one is landing in the left hand,
+  // the other is landing in the right, like she's actually swapping them
+  // back and forth rather than each doing its own independent thing.
   .chat-widget__juggle-ball {
     animation: chat-mascot-juggle-ball 1.5s ease-in-out infinite;
 
     &:nth-child(1) {
-      animation-delay: -1s;
+      animation-delay: -0.75s;
     }
 
     &:nth-child(2) {
-      animation-delay: -0.5s;
-    }
-
-    &:nth-child(3) {
       animation-delay: 0s;
     }
   }
@@ -1016,6 +1075,48 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
   .chat-widget__chimney-smoke {
     animation: chat-chimney-smoke 0.9s ease-out;
+  }
+}
+
+// She vanishes into her nav-bar lookalike, ninja-style — see
+// nav_clem_portal_controller.js (fires "clem:vanish", caught by
+// mascot-controller) and app/views/shared/_navbar.html.erb.
+.chat-widget--vanishing .chat-widget__launcher {
+  pointer-events: none;
+
+  .chat-widget__blob {
+    animation: chat-mascot-vanish 0.5s cubic-bezier(0.55, 0, 0.85, 0.35) forwards;
+  }
+
+  .chat-widget__poof {
+    opacity: 1;
+
+    span {
+      animation: chat-mascot-poof-puff 0.55s ease-out forwards;
+    }
+
+    span:nth-child(1) {
+      --poof-x: -26px;
+      --poof-y: -16px;
+    }
+
+    span:nth-child(2) {
+      --poof-x: 24px;
+      --poof-y: -20px;
+      animation-delay: 0.04s;
+    }
+
+    span:nth-child(3) {
+      --poof-x: -20px;
+      --poof-y: 18px;
+      animation-delay: 0.08s;
+    }
+
+    span:nth-child(4) {
+      --poof-x: 22px;
+      --poof-y: 16px;
+      animation-delay: 0.06s;
+    }
   }
 }
 

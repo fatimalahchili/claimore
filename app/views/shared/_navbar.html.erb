@@ -12,8 +12,12 @@
     <%= link_to templates_path, class: "nav-icon-link #{'active' if request.path.start_with?(templates_path)}", "aria-label": "Templates", title: "Templates" do %>
       <i class="fa-solid fa-file-lines"></i>
     <% end %>
-    <%= link_to administrations_path, class: "nav-icon-link #{'active' if request.path.start_with?(administrations_path)}", "aria-label": "Administrations", title: "Administrations" do %>
-      <i class="fa-solid fa-building"></i>
+    <%= link_to administrations_path,
+          class: "nav-icon-link nav-icon-link--clem #{'active' if request.path.start_with?(administrations_path)}",
+          "aria-label": "Administrations",
+          title: "Administrations",
+          data: { controller: "nav-clem-portal", action: "nav-clem-portal#vanish", "nav-clem-portal-url-value": administrations_path } do %>
+      <%= render "shared/claim_blob", size: "xs" %>
     <% end %>
     <% if current_property %>
       <%= link_to property_path(current_property), class: "nav-icon-link #{'active' if request.path.start_with?(property_path(current_property))}", "aria-label": "My Property", title: "My Property" do %>

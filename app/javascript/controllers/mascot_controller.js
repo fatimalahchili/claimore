@@ -32,11 +32,13 @@ export default class extends Controller {
   connect() {
     this.onMouseMove = this.onMouseMove.bind(this)
     this.onInteraction = this.onInteraction.bind(this)
+    this.onVanish = this.onVanish.bind(this)
 
     document.addEventListener("mousemove", this.onMouseMove, { passive: true })
     this.element.addEventListener("pointerdown", this.onInteraction)
     this.element.addEventListener("keydown", this.onInteraction)
     this.element.addEventListener("input", this.onInteraction)
+    document.addEventListener("clem:vanish", this.onVanish)
 
     this.currentGesture = null
     this.gestureTimeout = null
@@ -50,8 +52,21 @@ export default class extends Controller {
     this.element.removeEventListener("pointerdown", this.onInteraction)
     this.element.removeEventListener("keydown", this.onInteraction)
     this.element.removeEventListener("input", this.onInteraction)
+    document.removeEventListener("clem:vanish", this.onVanish)
     clearInterval(this.tickTimer)
     clearTimeout(this.gestureTimeout)
+  }
+
+  // She's about to navigate to her nav-bar lookalike (nav_clem_portal_controller
+  // dispatches this right before it visits administrations_path) — stop
+  // whatever she's doing and let her vanish instead.
+  onVanish() {
+    clearTimeout(this.gestureTimeout)
+    Object.keys(GESTURE_DURATION_MS).concat("sleeping").forEach((name) => {
+      this.element.classList.remove(`chat-widget--${name}`)
+    })
+    this.currentGesture = "vanishing"
+    this.element.classList.add("chat-widget--vanishing")
   }
 
   onInteraction() {
