@@ -37,4 +37,23 @@ class ClaimsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :not_found
   end
+
+  test "show subscribes to the claim's entries stream and renders existing entries" do
+    entry = @active_claim.entries.create!(title: "Called the landlord", description: "Reported the leak.", date: Date.current)
+
+    get claim_url(@active_claim)
+
+    assert_response :success
+    assert_select "turbo-cable-stream-source"
+    assert_select "#entries" do
+      assert_select "##{dom_id(entry)}", text: /Called the landlord/
+    end
+  end
+
+  test "show renders an empty state inside the entries container when there are no entries" do
+    get claim_url(@active_claim)
+
+    assert_response :success
+    assert_select "#entries #entries_empty_state"
+  end
 end
