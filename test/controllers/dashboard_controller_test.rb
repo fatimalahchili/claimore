@@ -19,5 +19,15 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_select "h5.fw-bold.text-dark.mb-0", text: "Upcoming inspection"
     assert_select "div.fs-2.fw-bold.text-dark", text: "1"
     assert_select "a[href=?]", property_path(@property), text: /123 Main St/
+    assert_select "a[href=?]", new_property_path, text: /Add property/
+  end
+
+  test "shows add property icon in bottom navigation without a property" do
+    @user.tenants.destroy_all
+
+    get dashboard_url
+
+    assert_response :success
+    assert_select "a[aria-label='Add Property'][href=?]", new_property_path
   end
 end
