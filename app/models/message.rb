@@ -2,9 +2,19 @@ class Message < ApplicationRecord
   acts_as_message
   has_many_attached :attachments
 
-  scope :visible_to_user, -> { where.not(role: "system") }
+  scope :visible_to_user, -> {
+    where.not(role: %w[system tool])
+      .left_joins(:tool_calls)
+      .where(tool_calls: { id: nil })
+  }
 
-  broadcasts_to ->(message) { "chat_#{message.chat_id}" }, inserts_by: :append
+  after_create_commit -> { broadcast_append_later_to "chat_#{chat_id}", target: "messages" }, if: :visible_to_user?
+  after_update_commit -> { broadcast_replace_later_to "chat_#{chat_id}" }, if: :visible_to_user?
+  after_destroy_commit -> { broadcast_remove_to "chat_#{chat_id}" }
+
+  def visible_to_user?
+    !%w[system tool].include?(role) && !tool_calls.exists?
+  end
 
   def broadcast_append_chunk(content)
     broadcast_append_to "chat_#{chat_id}",
