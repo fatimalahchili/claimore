@@ -110,12 +110,103 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 }
 
+// Idle-gesture keyframes for the launcher mascot (scratching her head, filing
+// her nails, juggling) — triggered by mascot-controller when nobody's asked
+// Clem' anything for a while. Scoped to .chat-widget__launcher only, see the
+// .chat-widget--scratching / --filing-nails / --juggling rules below.
+@keyframes chat-mascot-scratch {
+  0%, 100% {
+    transform: rotate(14deg);
+  }
+
+  15%, 85% {
+    transform: rotate(-95deg);
+  }
+
+  25% {
+    transform: rotate(-80deg);
+  }
+
+  35% {
+    transform: rotate(-95deg);
+  }
+
+  45% {
+    transform: rotate(-80deg);
+  }
+
+  55% {
+    transform: rotate(-95deg);
+  }
+
+  65% {
+    transform: rotate(-80deg);
+  }
+
+  75% {
+    transform: rotate(-95deg);
+  }
+}
+
+@keyframes chat-mascot-file-arm {
+  0%, 100% {
+    transform: rotate(-105deg);
+  }
+
+  50% {
+    transform: rotate(-85deg);
+  }
+}
+
+@keyframes chat-mascot-juggle-arm-left {
+  0%, 100% {
+    transform: rotate(35deg);
+  }
+
+  50% {
+    transform: rotate(-30deg);
+  }
+}
+
+@keyframes chat-mascot-juggle-arm-right {
+  0%, 100% {
+    transform: rotate(-30deg);
+  }
+
+  50% {
+    transform: rotate(35deg);
+  }
+}
+
+@keyframes chat-mascot-juggle-ball {
+  0% {
+    transform: translate(-70%, 10%) scale(0.85);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate(0, -120%) scale(1.05);
+  }
+
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(70%, 10%) scale(0.85);
+    opacity: 0;
+  }
+}
+
 .chat-widget__blob {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14%;
   width: 34px;
   height: 34px;
   // A tall, rounded capsule rather than a perfect circle — Mr. Meeseeks' head shape.
@@ -126,13 +217,46 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
   // Sized as percentages of the blob's own box, so eyes/mouth scale with every
   // variant (including the launcher, whose size is a responsive clamp()).
+  //
+  // The face is a separate absolutely-positioned layer so mascot-controller can
+  // rotate it toward the cursor (--head-turn) without touching the blob's own
+  // hover/breathe transforms.
+  .chat-widget__face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14%;
+    transform: rotate(var(--head-turn, 0deg));
+    transform-origin: 50% 65%;
+    transition: transform 0.15s ease-out;
+  }
+
   .chat-widget__eye {
+    position: relative;
     width: 22%;
     height: 22%;
     margin-top: -16%;
     border-radius: 50%;
-    background: radial-gradient(circle at 50% 50%, #14151c 0 30%, #fff 32% 100%);
+    background: #fff;
     box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+
+  // Pupil sits inside the eye socket and is nudged toward the cursor
+  // (--pupil-x/--pupil-y, set by mascot-controller) — the overflow: hidden
+  // above keeps it from sliding out of the socket at extreme angles.
+  .chat-widget__pupil {
+    position: absolute;
+    top: 27%;
+    left: 27%;
+    width: 46%;
+    height: 46%;
+    border-radius: 50%;
+    background: #14151c;
+    transform: translate(var(--pupil-x, 0px), var(--pupil-y, 0px));
+    transition: transform 0.08s linear;
   }
 
   .chat-widget__mouth {
@@ -145,6 +269,74 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
     background: linear-gradient(to bottom, #fff 0 42%, #7a2222 42% 100%);
     border-radius: 10% 10% 50% 50% / 20% 20% 80% 80%;
     box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.25);
+  }
+
+  // Skinny Meeseeks-style arms, hidden until mascot-controller triggers an
+  // idle gesture (scratching / filing-nails / juggling — scoped to the
+  // launcher blob only, see rules below).
+  .chat-widget__arm {
+    position: absolute;
+    top: 52%;
+    width: 12%;
+    height: 44%;
+    border-radius: 999px;
+    background: $chat-blob-b;
+    transform-origin: 50% 8%;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chat-widget__arm--left {
+    left: -4%;
+    transform: rotate(14deg);
+  }
+
+  .chat-widget__arm--right {
+    right: -4%;
+    transform: rotate(-14deg);
+  }
+
+  .chat-widget__hand {
+    position: absolute;
+    bottom: -10%;
+    left: 50%;
+    width: 170%;
+    height: 34%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: $chat-blob-b;
+  }
+
+  .chat-widget__nail-file {
+    position: absolute;
+    bottom: 55%;
+    left: 50%;
+    width: 16%;
+    height: 130%;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, #f6c453, #dfa22a);
+    border-radius: 2px;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+    opacity: 0;
+  }
+
+  .chat-widget__juggle-balls {
+    position: absolute;
+    top: -34%;
+    left: 50%;
+    width: 74%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateX(-50%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chat-widget__juggle-ball {
+    width: 16%;
+    height: 16%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff, $chat-blob-a 55%, $chat-blob-b);
   }
 
   &--sm {
@@ -302,6 +494,61 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
     height: $chat-launcher-size;
     --hat-scale: 1.6;
     transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+}
+
+// Idle gestures only ever play on the launcher's blob — the header and
+// greeting blobs stay still so they don't upstage an active conversation.
+.chat-widget--scratching .chat-widget__launcher .chat-widget__arm--right {
+  opacity: 1;
+  animation: chat-mascot-scratch 1.8s ease-in-out;
+}
+
+.chat-widget--filing-nails .chat-widget__launcher {
+  .chat-widget__arm--right {
+    opacity: 1;
+    animation: chat-mascot-file-arm 0.45s ease-in-out infinite;
+  }
+
+  .chat-widget__arm--left {
+    opacity: 1;
+    transform: rotate(60deg);
+  }
+
+  .chat-widget__nail-file {
+    opacity: 1;
+  }
+}
+
+.chat-widget--juggling .chat-widget__launcher {
+  .chat-widget__arm--left {
+    opacity: 1;
+    animation: chat-mascot-juggle-arm-left 0.8s ease-in-out infinite;
+  }
+
+  .chat-widget__arm--right {
+    opacity: 1;
+    animation: chat-mascot-juggle-arm-right 0.8s ease-in-out infinite;
+  }
+
+  .chat-widget__juggle-balls {
+    opacity: 1;
+  }
+
+  .chat-widget__juggle-ball {
+    animation: chat-mascot-juggle-ball 0.8s ease-in-out infinite;
+
+    &:nth-child(1) {
+      animation-delay: -0.53s;
+    }
+
+    &:nth-child(2) {
+      animation-delay: -0.27s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0s;
+    }
   }
 }
 

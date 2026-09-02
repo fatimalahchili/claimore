@@ -1,7 +1,26 @@
 <% size ||= local_assigns[:size] %>
-<span class="chat-widget__blob <%= "chat-widget__blob--#{size}" if size %>" aria-hidden="true">
-  <span class="chat-widget__eye"></span><span class="chat-widget__eye"></span>
-  <span class="chat-widget__mouth"></span>
+<span class="chat-widget__blob <%= "chat-widget__blob--#{size}" if size %>" data-mascot-target="blob" aria-hidden="true">
+  <span class="chat-widget__face" data-mascot-target="face">
+    <span class="chat-widget__eye"><span class="chat-widget__pupil" data-mascot-target="pupil"></span></span>
+    <span class="chat-widget__eye"><span class="chat-widget__pupil" data-mascot-target="pupil"></span></span>
+    <span class="chat-widget__mouth"></span>
+  </span>
+
+  <span class="chat-widget__arm chat-widget__arm--left">
+    <span class="chat-widget__hand"></span>
+  </span>
+  <span class="chat-widget__arm chat-widget__arm--right">
+    <span class="chat-widget__hand">
+      <span class="chat-widget__nail-file"></span>
+    </span>
+  </span>
+
+  <span class="chat-widget__juggle-balls">
+    <span class="chat-widget__juggle-ball"></span>
+    <span class="chat-widget__juggle-ball"></span>
+    <span class="chat-widget__juggle-ball"></span>
+  </span>
+
   <span class="chat-widget__house" aria-hidden="true">
     <span class="chat-widget__chimney">
       <span class="chat-widget__chimney-smoke"></span>

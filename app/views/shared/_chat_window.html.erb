@@ -5,7 +5,7 @@ else
   Chat.find_by(session_id: guest_chat_session_id, user_id: nil)
 end %>
 
-<div class="chat-widget" data-controller="chat-widget">
+<div class="chat-widget" data-controller="chat-widget mascot">
   <div class="chat-widget__panel" id="chat_widget_panel" data-chat-widget-target="panel" role="dialog" aria-label="Assistant chat" aria-hidden="true">
     <header class="chat-widget__header">
       <%= render "shared/claim_blob", size: "sm" %>
