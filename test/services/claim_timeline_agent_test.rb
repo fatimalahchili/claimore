@@ -37,8 +37,8 @@ class ClaimTimelineAgentTest < ActiveSupport::TestCase
 
     assert_equal :response, result
     assert_includes chat.instructions, "explicitly asks"
-    expected_tools = [GetClaimContextTool, CreateClaimEntryTool, GetTemplatesTool, DraftLetterTool,
-                      GetRelevantLawTextsTool]
+    expected_tools = [GetClaimContextTool, CreateClaimEntryTool, UpdateClaimEntryTool, GetTemplatesTool,
+                      DraftLetterTool, GetRelevantLawTextsTool]
     assert_equal expected_tools, chat.tools.map(&:class)
     assert_includes chat.instructions, "never create a new entry when the user asked to edit one"
     assert_equal "Record my call", chat.asked_content
