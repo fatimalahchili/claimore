@@ -1,7 +1,7 @@
 <% content_for :title, @property.address.presence || "Property" %>
 
 <div class="property-show container py-5">
-  <%= render "shared/back_link", fallback_path: dashboard_path, label: "Dashboard" %>
+  <%= render "shared/back_link", fallback_path: dashboard_path %>
 
   <header class="property-show__hero">
     <div>
