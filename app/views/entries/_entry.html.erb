@@ -1,0 +1,20 @@
+<article class="position-relative mb-4 pb-2" id="<%= dom_id(entry) %>">
+  <span class="position-absolute translate-middle rounded-circle bg-primary border border-white" style="left: -3rem; top: 1.25rem; width: 22px; height: 22px;"></span>
+  <div class="timeline-entry <%= entry_status_classes(entry.status) %> card p-3 shadow-sm rounded-3"
+       tabindex="-1"
+       <%= 'data-timeline-focus-target="current"'.html_safe if focused %>>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+      <h6 class="fw-bold mb-0"><%= link_to entry.title, entry_path(entry), class: "text-decoration-none text-dark" %></h6>
+      <div class="d-flex align-items-center gap-2">
+        <% if entry.status.present? %>
+          <span class="badge bg-white text-dark border text-capitalize"><%= entry.status %></span>
+        <% end %>
+        <span class="text-muted small"><%= entry.date&.strftime("%b %d, %Y") || entry.created_at.strftime("%b %d, %Y") %></span>
+      </div>
+    </div>
+    <% if entry.description.present? %>
+      <p class="text-secondary small mb-2"><%= truncate(entry.description, length: 180) %></p>
+    <% end %>
+    <%= link_to "View details", entry_path(entry), class: "small fw-semibold text-decoration-none" %>
+  </div>
+</article>
