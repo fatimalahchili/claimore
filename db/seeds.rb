@@ -11,7 +11,6 @@ Contact.destroy_all
 Tenant.destroy_all
 Property.destroy_all
 User.destroy_all
-Administration.destroy_all
 Template.destroy_all
 LawText.destroy_all
 
@@ -342,22 +341,6 @@ puts "➔ #{Claim.count} claims created\n\n"
 puts "-------------------------"
 puts "-------------------------"
 
-
-
-##### ADMINISTRATION #####
-
-puts "6 - Creating administrations..."
-puts "-------------------------"
-
-Administration.find_or_create_by!(name: "Gesundheitsamt Friedrichshain-Kreuzberg") do |administration|
-  administration.role = "Gesundheitsamt"
-  administration.address = "Curt Bejach Gesundheitshaus, Urbanstraße 24, 10967 Berlin-Bezirk Friedrichshain-Kreuzberg"
-  administration.phone_number = "030 115"
-end
-
-puts "➔ #{Administration.count} administrations created\n\n"
-puts "-------------------------"
-puts "-------------------------"
 
 
 ##### LETTER TEMPLATES #####
