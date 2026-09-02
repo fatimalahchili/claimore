@@ -30,6 +30,12 @@ const IDLE_GESTURES = ["scratching", "filing-nails", "yawning", "eating", "whist
 const VANISH_MS = 600
 const APPEAR_MS = 900
 
+// A different exit every time — one is picked at random whenever she's
+// hidden. Each has its own chat-widget--vanish-<name> CSS (keyframes +
+// props/particles in _claim_blob.html.erb), all sharing the same portal
+// travel mechanic (see updatePortalOffset) and VANISH_MS duration.
+const VANISH_VARIANTS = ["ninja", "pinball", "rocket", "ufo", "bubble", "magic", "bat"]
+
 export default class extends Controller {
   static targets = ["blob", "face", "pupil"]
 
@@ -84,8 +90,10 @@ export default class extends Controller {
     })
     this.currentGesture = null
     this.updatePortalOffset()
+
+    this.vanishVariant = VANISH_VARIANTS[Math.floor(Math.random() * VANISH_VARIANTS.length)]
     this.element.classList.remove("chat-widget--appearing")
-    this.element.classList.add("chat-widget--vanishing")
+    this.element.classList.add("chat-widget--vanishing", `chat-widget--vanish-${this.vanishVariant}`)
     document.dispatchEvent(new CustomEvent("clem:hidden-state", { detail: { hidden: true } }))
 
     this.gestureTimeout = setTimeout(() => {
@@ -98,6 +106,7 @@ export default class extends Controller {
     this.isHidden = false
     this.updatePortalOffset()
     this.element.classList.remove("chat-widget--vanishing")
+    VANISH_VARIANTS.forEach((name) => this.element.classList.remove(`chat-widget--vanish-${name}`))
     this.element.classList.add("chat-widget--appearing")
     document.dispatchEvent(new CustomEvent("clem:hidden-state", { detail: { hidden: false } }))
     this.registerInteraction()
