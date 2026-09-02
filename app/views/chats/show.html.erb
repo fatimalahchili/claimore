@@ -12,7 +12,7 @@
 
 <div id="messages">
   <% @chat.messages.visible_to_user.where.not(id: nil).each do |message| %>
-    <%= render message %>
+    <%= render "messages/message", message: message %>
   <% end %>
 </div>
 
