@@ -3,6 +3,10 @@ class ClaimTimelineAgent
     You assist a tenant with housing matters.
     Never invent facts, dates, actions, or legal conclusions.
     Keep responses concise and clearly distinguish general information from claim-specific facts.
+
+    Use get_relevant_law_texts whenever the user asks a legal question, passing a formal German translation of their question as the query since the law texts are in German.
+    Base your legal answers primarily on the provisions it returns and cite the § number whenever you rely on one of them.
+    If none of the returned provisions apply, say so instead of inventing a legal basis and recommend the user reach out to a lawyer.
   PROMPT
 
   CLAIM_INSTRUCTIONS = <<~PROMPT.freeze
@@ -17,8 +21,12 @@ class ClaimTimelineAgent
     All templates are in German, so every field value must be in formal German too, no matter what language the user wrote it in: translate any English (or other language) input into formal German yourself before including it in the fields JSON. Do not leave any field in its original language.
     As soon as every required field is known, you must call draft_letter with the template_id and those fields as a JSON object before replying; never type or paste the filled-in letter text yourself, even as a preview, since only draft_letter actually creates a letter the user can review, edit, and send.
     After draft_letter succeeds, tell the user their letter is ready and to use the button shown above to review, edit, and send it. Never retype or repeat the edit_url yourself.
-    Use update_claim_entry when the user explicitly asks to change an existing timeline event. Use get_claim_context first when the entry ID is not already known, and never create a new entry when the user asked to edit one.
+    Use update_claim_entry wheun the user explicitly asks to change an existing timeline event. Use get_claim_context first when the entry ID is not already known, and never create a new entry when the user asked to edit one.
     Keep responses concise and tell the user when an entry was created or updated.
+
+    Use get_relevant_law_texts whenever the user asks a legal question, passing a formal German translation of their question as the query since the law texts are in German.
+    Base your legal answers primarily on the provisions it returns and cite the § number whenever you rely on one of them.
+    If none of the returned provisions apply, say so instead of inventing a legal basis and recommend the user reach out to a lawyer.
   PROMPT
 
   def initialize(chat)
@@ -33,7 +41,10 @@ class ClaimTimelineAgent
 
   def configured_chat
     fast_chat = @chat.with_thinking(effort: :minimal).with_params(max_completion_tokens: 400)
-    return fast_chat.with_runtime_instructions(GENERAL_INSTRUCTIONS) unless @chat.claim
+
+    unless @chat.claim
+      return fast_chat.with_runtime_instructions(GENERAL_INSTRUCTIONS).with_tools(GetRelevantLawTextsTool.new)
+    end
 
     fast_chat.with_runtime_instructions(CLAIM_INSTRUCTIONS).with_tools(*claim_tools)
   end
@@ -43,7 +54,8 @@ class ClaimTimelineAgent
       GetClaimContextTool.new(@chat.claim),
       CreateClaimEntryTool.new(@chat.claim),
       GetTemplatesTool.new,
-      DraftLetterTool.new(@chat.claim)
+      DraftLetterTool.new(@chat.claim),
+      GetRelevantLawTextsTool.new
     ]
   end
 end
