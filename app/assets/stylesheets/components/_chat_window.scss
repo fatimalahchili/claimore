@@ -336,6 +336,63 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 }
 
+// "6 7" — hands alternate up/down like a scale, on the same shared phase
+// points (0/50/100%) as everything else so the arm and the digit it's
+// holding move together.
+@keyframes chat-mascot-six-seven-arm-left {
+  0%, 100% {
+    transform: rotate(58deg);
+  }
+
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+@keyframes chat-mascot-six-seven-arm-right {
+  0%, 100% {
+    transform: rotate(-10deg);
+  }
+
+  50% {
+    transform: rotate(-58deg);
+  }
+}
+
+@keyframes chat-mascot-six-bob {
+  0%, 100% {
+    opacity: 1;
+    transform: translateY(-9px) scale(1.08);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(5px) scale(0.92);
+  }
+}
+
+@keyframes chat-mascot-seven-bob {
+  0%, 100% {
+    opacity: 1;
+    transform: translateY(5px) scale(0.92);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-9px) scale(1.08);
+  }
+}
+
+@keyframes chat-mascot-six-seven-mouth {
+  0%, 50%, 100% {
+    transform: translateX(-50%) scaleY(1.3);
+  }
+
+  25%, 75% {
+    transform: translateX(-50%) scaleY(0.9);
+  }
+}
+
 // Played once whenever the panel opens — Clem "pops" like a genie shaking
 // off the lamp before settling back to size.
 @keyframes chat-mascot-genie-pop {
@@ -576,6 +633,35 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
       bottom: 4px;
       font-size: 13px;
     }
+  }
+
+  // The "6 7" meme — held up in each hand and bounced alternately, not
+  // attached to the (rotating) arm itself so the digits stay upright.
+  .chat-widget__six,
+  .chat-widget__seven {
+    position: absolute;
+    top: 30%;
+    width: 22%;
+    height: 22%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: #fff;
+    background: $chat-blob-b;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.3);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chat-widget__six {
+    left: -10%;
+  }
+
+  .chat-widget__seven {
+    right: -10%;
   }
 
   &--xs {
@@ -864,6 +950,32 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
   .chat-widget__notes span:nth-child(3) {
     animation-delay: 1s;
+  }
+}
+
+.chat-widget--six-seven .chat-widget__launcher {
+  .chat-widget__arm--left {
+    opacity: 1;
+    animation: chat-mascot-six-seven-arm-left 0.8s ease-in-out infinite;
+  }
+
+  .chat-widget__arm--right {
+    opacity: 1;
+    animation: chat-mascot-six-seven-arm-right 0.8s ease-in-out infinite;
+  }
+
+  .chat-widget__six {
+    opacity: 1;
+    animation: chat-mascot-six-bob 0.8s ease-in-out infinite;
+  }
+
+  .chat-widget__seven {
+    opacity: 1;
+    animation: chat-mascot-seven-bob 0.8s ease-in-out infinite;
+  }
+
+  .chat-widget__mouth {
+    animation: chat-mascot-six-seven-mouth 0.8s ease-in-out infinite;
   }
 }
 
