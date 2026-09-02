@@ -442,20 +442,42 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 // measured against her real nav-bar icon) is the on-screen distance from
 // the launcher to that icon — she travels the whole way there rather than
 // just shrinking in place.
+// A quick, direct dash rather than the other variants' whole-screen
+// journeys — she doesn't need 3+ seconds to duck straight into the icon.
+// More waypoints than before plus a distinct ease per leg (anticipation
+// eases out, the dash itself eases in, accelerating) so it reads as one
+// continuous move instead of a few poses snapping between each other.
 @keyframes chat-mascot-vanish {
   0% {
     transform: translate(0, 0) scale(1);
     opacity: 1;
+    animation-timing-function: ease-out;
   }
 
-  18% {
+  20% {
     transform: translate(0, 0) scale(1.15);
-    opacity: 1;
+    animation-timing-function: ease-in;
   }
 
-  55% {
-    transform: translate(calc(var(--portal-dx, 0px) * 0.55), calc(var(--portal-dy, 0px) * 0.55)) scale(0.7);
-    opacity: 0.9;
+  38% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.16), calc(var(--portal-dy, 0px) * 0.16)) scale(0.88);
+    animation-timing-function: ease-in;
+  }
+
+  58% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.42), calc(var(--portal-dy, 0px) * 0.42)) scale(0.62);
+    animation-timing-function: ease-in;
+  }
+
+  76% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.68), calc(var(--portal-dy, 0px) * 0.68)) scale(0.4);
+    opacity: 0.95;
+    animation-timing-function: ease-in;
+  }
+
+  90% {
+    transform: translate(calc(var(--portal-dx, 0px) * 0.9), calc(var(--portal-dy, 0px) * 0.9)) scale(0.2);
+    opacity: 0.7;
   }
 
   100% {
@@ -811,21 +833,19 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
     animation-timing-function: ease-in-out;
   }
 
-  78% {
-    transform: translate(calc(var(--portal-dx, 0px) * 0.68 - var(--vp-w, 1200px) * 0.03), calc(var(--portal-dy, 0px) * 0.68 - var(--vp-h, 800px) * 0.28)) scale(0.72);
-    animation-timing-function: ease-in;
+  // Bubbles float up and pop — she doesn't sink back down to the icon,
+  // she just keeps drifting up and off the top of the screen.
+  80% {
+    transform: translate(calc(var(--vp-w, 1200px) * -0.06), calc(var(--vp-h, 800px) * -0.98)) scale(0.6);
+    animation-timing-function: ease-in-out;
   }
 
-  93% {
-    transform: translate(calc(var(--portal-dx, 0px) * 0.97), calc(var(--portal-dy, 0px) * 0.97 - 4px)) scale(0.76);
-  }
-
-  97% {
-    transform: translate(var(--portal-dx, 0px), var(--portal-dy, 0px)) scale(0.85);
+  95% {
+    transform: translate(calc(var(--vp-w, 1200px) * 0.02), calc(var(--vp-h, 800px) * -1.3)) scale(0.75);
   }
 
   100% {
-    transform: translate(var(--portal-dx, 0px), var(--portal-dy, 0px)) scale(0.05);
+    transform: translate(calc(var(--vp-w, 1200px) * 0.02), calc(var(--vp-h, 800px) * -1.32)) scale(0.05);
     opacity: 0;
   }
 }
@@ -1005,21 +1025,19 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
   54% {
     transform: translate(calc(var(--vp-w, 1200px) * 0.06), calc(var(--vp-h, 800px) * -0.58)) scale(0.46) rotate(14deg);
-    animation-timing-function: ease-in;
+    animation-timing-function: ease-in-out;
   }
 
+  // She doesn't dive back down to the icon — like the UFO, a flying
+  // creature leaves by flying off, continuing up and away into the night
+  // sky instead of turning back toward the ground.
   76% {
-    transform: translate(calc(var(--portal-dx, 0px) * 0.6 - var(--vp-w, 1200px) * 0.05), calc(var(--portal-dy, 0px) * 0.6 - var(--vp-h, 800px) * 0.22)) scale(0.36) rotate(-10deg);
-    animation-timing-function: ease-in;
-  }
-
-  92% {
-    transform: translate(calc(var(--portal-dx, 0px) * 0.95), calc(var(--portal-dy, 0px) * 0.95 - 14px)) scale(0.16) rotate(6deg);
+    transform: translate(calc(var(--vp-w, 1200px) * -0.1), calc(var(--vp-h, 800px) * -0.95)) scale(0.28) rotate(-8deg);
     animation-timing-function: ease-in;
   }
 
   100% {
-    transform: translate(var(--portal-dx, 0px), var(--portal-dy, 0px)) scale(0.05) rotate(0deg);
+    transform: translate(calc(var(--vp-w, 1200px) * 0.02), calc(var(--vp-h, 800px) * -1.3)) scale(0.04) rotate(4deg);
     opacity: 0;
   }
 }
@@ -2115,11 +2133,11 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   .chat-widget__ninja-band,
   .chat-widget__ninja-mask {
     opacity: 1;
-    animation: chat-mascot-ninja-dress 0.25s ease-out 0.55s both;
+    animation: chat-mascot-ninja-dress 0.2s ease-out 0.4s both;
   }
 
   .chat-widget__blob {
-    animation: chat-mascot-vanish 3.2s cubic-bezier(0.55, 0, 0.85, 0.35) forwards;
+    animation: chat-mascot-vanish 2.2s forwards;
   }
 }
 
