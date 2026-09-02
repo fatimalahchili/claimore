@@ -19,6 +19,10 @@
       <%= link_to property_path(current_property), class: "nav-icon-link #{'active' if request.path.start_with?(property_path(current_property))}", "aria-label": "My Property", title: "My Property" do %>
         <i class="fa-solid fa-key"></i>
       <% end %>
+    <% else %>
+      <%= link_to new_property_path, class: "nav-icon-link #{'active' if current_page?(new_property_path)}", "aria-label": "Add Property", title: "Add Property" do %>
+        <i class="fa-solid fa-building"></i>
+      <% end %>
     <% end %>
 
     <div class="dropup nav-icon-link">

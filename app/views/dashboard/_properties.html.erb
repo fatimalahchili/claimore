@@ -4,6 +4,9 @@
       <div class="text-muted small text-uppercase fw-semibold">Your homes</div>
       <h2 id="dashboard-properties-heading" class="h4 fw-bold text-dark mb-0">Properties</h2>
     </div>
+    <%= link_to new_property_path, class: "btn btn-primary" do %>
+      <i class="fa-solid fa-building me-1" aria-hidden="true"></i> Add property
+    <% end %>
   </div>
 
   <% if properties.any? %>
@@ -24,6 +27,6 @@
       <% end %>
     </div>
   <% else %>
-    <div class="card border-0 shadow-sm"><div class="card-body p-4 text-muted">No properties yet.</div></div>
+    <div class="card border-0 shadow-sm"><div class="card-body p-4 text-muted">No properties yet. Add your first property to get started.</div></div>
   <% end %>
 </section>
