@@ -9,6 +9,7 @@
     </ul>
   <% end %>
 
+  <%= f.hidden_field :property_id, value: @property.id %>
   <%= f.text_field :category, placeholder: "Category" %>
   <%= f.text_field :status, placeholder: "Status" %>
   <%= f.submit "Create claim" %>
