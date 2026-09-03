@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= meta_title %></title>
-    <meta name="description" content="<%= meta_description %>">
+    <title><%= content_for?(:title) ? "#{content_for(:title)} | Claimore" : "Claimore - AI-Powered Housing & Tenancy Assistant" %></title>
+    <meta name="description" content="<%= content_for?(:description) ? content_for(:description) : "Log property maintenance issues, generate legally sound notices, and track landlord response deadlines effortlessly." %>">
 
     <!-- Facebook Open Graph -->
     <meta property="og:title" content="<%= meta_title %>" />
@@ -25,6 +25,15 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+
+    <meta property="og:title" content="<%= content_for?(:title) ? "#{content_for(:title)} | Claimore" : "Claimore - AI-Powered Housing & Tenancy Assistant" %>">
+    <meta property="og:description" content="<%= content_for?(:description) ? content_for(:description) : "Log property maintenance issues, generate legally sound notices, and track landlord response deadlines effortlessly." %>">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:image" content="<%= "#{request.base_url}/og-image.png" %>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Claimore">
 
     <%= yield :head %>
 
