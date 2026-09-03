@@ -30,6 +30,11 @@ const IDLE_GESTURES = ["scratching", "filing-nails", "yawning", "eating", "whist
 const VANISH_MS = 3200
 const APPEAR_MS = 900
 
+// Survives Turbo navigation (but not a fresh tab/browser restart) — clicking
+// her nav-bar icon should keep her tucked away as you move between pages,
+// not just until the next page loads her fresh.
+const HIDDEN_STORAGE_KEY = "clemHidden"
+
 // A different exit every time — one is picked at random whenever she's
 // hidden. Each has its own chat-widget--vanish-<name> CSS (keyframes +
 // props/particles in _claim_blob.html.erb), all sharing the same portal
@@ -52,11 +57,16 @@ export default class extends Controller {
 
     this.currentGesture = null
     this.gestureTimeout = null
-    this.isHidden = false
+    this.isHidden = sessionStorage.getItem(HIDDEN_STORAGE_KEY) === "1"
     this.isAnimating = false
     this.registerInteraction()
     this.scheduleNextIdleGesture()
     this.tickTimer = setInterval(() => this.evaluateIdleState(), TICK_MS)
+
+    if (this.isHidden) {
+      this.element.classList.add("chat-widget--vanished")
+      document.dispatchEvent(new CustomEvent("clem:hidden-state", { detail: { hidden: true } }))
+    }
   }
 
   disconnect() {
@@ -84,6 +94,7 @@ export default class extends Controller {
   hide() {
     this.isAnimating = true
     this.isHidden = true
+    sessionStorage.setItem(HIDDEN_STORAGE_KEY, "1")
     clearTimeout(this.gestureTimeout)
     Object.keys(GESTURE_DURATION_MS).concat("sleeping").forEach((name) => {
       this.element.classList.remove(`chat-widget--${name}`)
@@ -104,8 +115,9 @@ export default class extends Controller {
   reappear() {
     this.isAnimating = true
     this.isHidden = false
+    sessionStorage.setItem(HIDDEN_STORAGE_KEY, "0")
     this.updatePortalOffset()
-    this.element.classList.remove("chat-widget--vanishing")
+    this.element.classList.remove("chat-widget--vanishing", "chat-widget--vanished")
     VANISH_VARIANTS.forEach((name) => this.element.classList.remove(`chat-widget--vanish-${name}`))
     this.element.classList.add("chat-widget--appearing")
     document.dispatchEvent(new CustomEvent("clem:hidden-state", { detail: { hidden: false } }))
