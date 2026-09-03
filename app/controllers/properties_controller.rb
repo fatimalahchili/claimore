@@ -2,6 +2,10 @@ class PropertiesController < ApplicationController
   before_action :set_property, only: %i[edit update destroy show]
   before_action :authorize_property!, only: %i[edit update destroy show]
 
+  def index
+    @properties = current_user.properties.includes(:claims).order(:address)
+  end
+
   def new
     @property = Property.new
   end
