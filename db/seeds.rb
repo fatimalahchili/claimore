@@ -6,6 +6,7 @@ puts "-------------------------"
 puts "-------------------------"
 
 Entry.destroy_all
+Letter.destroy_all
 Claim.destroy_all
 Contact.destroy_all
 Tenant.destroy_all
