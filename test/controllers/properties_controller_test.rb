@@ -13,6 +13,22 @@ class PropertiesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "index lists only the current user's properties with claim counts" do
+    second_property = Property.create!(address: "456 Oak Ave", moved_on: Date.current)
+    Tenant.create!(user: @user, property: second_property, role: :main_tenant, status: :added)
+    2.times { |index| Claim.create!(property: @property, category: "Issue #{index}", status: :active) }
+    hidden_property = Property.create!(address: "789 Hidden St", moved_on: Date.current)
+
+    get properties_url
+
+    assert_response :success
+    assert_select "h1", text: "Properties"
+    assert_select "a[href=?]", property_path(@property), text: /123 Main St.*2 claims/m
+    assert_select "a[href=?]", property_path(second_property), text: /456 Oak Ave.*0 claims/m
+    assert_select "a[href=?]", property_path(hidden_property), count: 0
+    assert_select "a[href=?]", new_property_path, text: /Add property/
+  end
+
   test "should create property" do
     assert_difference("Property.count") do
       post properties_url, params: { property: { address: "456 Oak Ave", moved_on: Date.current } }
@@ -28,8 +44,21 @@ class PropertiesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "h1", text: "123 Main St"
+    assert_select "a[href=?]", edit_property_path(@property), text: /Edit property/
     assert_select "a[href=?]", property_tenants_path(@property), text: /View all tenants/
     assert_select "a[href=?]", claims_path(property_id: @property.id), text: /View property claims/
+  end
+
+  test "should get edit with the property form" do
+    get edit_property_url(@property)
+
+    assert_response :success
+    assert_select "h1", text: "Edit property"
+    assert_select "form[action=?]", property_path(@property) do
+      assert_select "input[name='property[address]'][value=?]", @property.address
+      assert_select "input[type='submit'][value='Save changes']"
+      assert_select "a[href=?]", property_path(@property), text: "Cancel"
+    end
   end
 
   test "rejects a property that does not belong to the current user" do

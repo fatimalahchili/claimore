@@ -20,11 +20,15 @@ class ClaimsController < ApplicationController
   end
 
   def new
-    @claim = Claim.new
+    @properties = current_user.properties.order(:address)
+    @property = claim_property
+    @claim = @property.claims.new
   end
 
   def create
-    @claim = Claim.new(claim_params)
+    @properties = current_user.properties.order(:address)
+    @property = claim_property
+    @claim = @property.claims.new(claim_params)
     if @claim.save
       redirect_to @claim, notice: "Claim was successfully created."
     else
@@ -72,7 +76,14 @@ class ClaimsController < ApplicationController
   end
 
   def claim_params
-    params.require(:claim).permit(:category, :status, :property_id)
+    params.require(:claim).permit(:category, :status)
+  end
+
+  def claim_property
+    property_id = params[:property_id].presence || params.dig(:claim, :property_id)
+    return @properties.first! if property_id.blank?
+
+    @properties.find(property_id)
   end
 
   private

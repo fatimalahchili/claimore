@@ -1,0 +1,5 @@
+<% if message.role == "assistant" %>
+  <%= render "messages/assistant", message: message %>
+<% else %>
+  <%= render "messages/user", message: message %>
+<% end %>
