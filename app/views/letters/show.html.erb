@@ -15,7 +15,7 @@
     <div class="d-flex gap-2">
       <%= link_to "Back to Claim", claim_path(@letter.claim), class: "btn btn-outline-primary" %>
       <% if @letter.pdf.attached? %>
-        <%= link_to "Download PDF", rails_blob_path(@letter.pdf, disposition: "attachment"), class: "btn btn-outline-secondary" %>
+        <%= link_to "Download PDF", cloudinary_url(@letter.pdf.key, disposition: "attachment"), class: "btn btn-outline-secondary" %>
       <% end %>
       <%= button_to "Delete Letter", letter_path(@letter), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-outline-danger" %>
     </div>
