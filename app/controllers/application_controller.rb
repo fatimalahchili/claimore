@@ -5,6 +5,9 @@ class ApplicationController < ActionController::Base
   # before every action runs, IF this is a devise controller (signup/login/etc)
   #         THEN do -> configure_permitted_parameters (defined below)
   before_action :configure_permitted_parameters, if: :devise_controller?
+
+  before_action :redirect_to_www
+
   helper_method :current_property
   helper_method :guest_chat_session_id
   # mark methods below as "internal use only" — not callable from routes/views directly
@@ -23,6 +26,12 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def redirect_to_www
+    if request.host == "claim-ore.de"
+      redirect_to "https://www.claim-ore.de#{request.fullpath}", status: :moved_permanently
+    end
+  end
 
   def current_property
     current_user&.properties&.first
