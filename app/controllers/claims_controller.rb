@@ -6,9 +6,12 @@ class ClaimsController < ApplicationController
     @properties = current_user.properties.order(:address)
     @property = selected_property
     @show_archived = params[:show_archived] == "1"
-    @claims = claims_for_property
-    @active_claims_count = @property ? @property.claims.where(status: "active").count : 0
-    @archived_claims_count = @property ? @property.claims.where(status: "archived").count : 0
+    claims_scope = claims_for_selection
+    @claims = claims_scope.where(status: @show_archived ? %w[active archived] : ["active"])
+                          .includes(:property)
+                          .order(created_at: :desc)
+    @active_claims_count = claims_scope.where(status: "active").count
+    @archived_claims_count = claims_scope.where(status: "archived").count
   end
 
   def show
@@ -89,15 +92,12 @@ class ClaimsController < ApplicationController
   private
 
   def selected_property
-    return @properties.first if params[:property_id].blank?
+    return if params[:property_id].blank? || params[:property_id] == "all"
 
     @properties.find(params[:property_id])
   end
 
-  def claims_for_property
-    return Claim.none unless @property
-
-    statuses = @show_archived ? %w[active archived] : ["active"]
-    @property.claims.where(status: statuses).order(created_at: :desc)
+  def claims_for_selection
+    @property ? @property.claims : current_user.claims
   end
 end
