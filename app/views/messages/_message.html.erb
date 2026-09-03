@@ -1,5 +1,9 @@
-<% if message.role == "assistant" %>
+<% if message.role == "assistant" && !message.to_llm.tool_call? %>
   <%= render "messages/assistant", message: message, final: local_assigns[:final] %>
+<% elsif message.role == "assistant" %>
+  <%= render "messages/tool_calls", tool_calls: message %>
+<% elsif message.role == "tool" %>
+  <%= render "messages/tool", tool: message %>
 <% else %>
   <%= render "messages/user", message: message %>
 <% end %>
