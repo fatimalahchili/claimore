@@ -1,0 +1,64 @@
+.topbar-air {
+  position: fixed;
+  top: calc(1rem + env(safe-area-inset-top));
+  right: calc(1rem + env(safe-area-inset-right));
+  z-index: 1030;
+}
+
+.topbar-air .dropdown-toggle-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  font-size: 1.25rem;
+  color: $text-secondary;
+  background: $bg-surface;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 8px 32px rgba(15, 23, 42, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    inset 0 -1px 8px rgba(255, 255, 255, 0.4);
+  transition: color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+  }
+}
+
+.topbar-air .dropdown-toggle-icon::after {
+  display: none;
+}
+
+.topbar-air .dropdown-toggle-icon:hover {
+  color: $brand-primary;
+  background: rgba($brand-primary-light, 0.72);
+}
+
+.topbar-air .dropdown-toggle-icon:focus-visible {
+  outline: 3px solid rgba($brand-primary, 0.22);
+  outline-offset: 2px;
+}
+
+.topbar-air .dropdown-toggle-icon:active {
+  transform: scale(0.9);
+}
+
+.topbar-air.show .dropdown-toggle-icon {
+  color: $brand-primary;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), $brand-primary-light);
+  box-shadow:
+    0 2px 8px rgba(109, 74, 255, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.topbar-air .dropdown-menu {
+  margin-top: 0.75rem;
+  z-index: 1060;
+  border-radius: 16px;
+  border: 1px solid $border-light;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.15);
+}

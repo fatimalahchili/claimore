@@ -12,14 +12,6 @@
     <%= link_to templates_path, class: "nav-icon-link #{'active' if request.path.start_with?(templates_path)}", "aria-label": "Templates", title: "Templates" do %>
       <i class="fa-solid fa-file-lines"></i>
     <% end %>
-    <a href="#"
-       class="nav-icon-link nav-icon-link--clem"
-       data-controller="nav-clem-portal"
-       data-action="click->nav-clem-portal#toggle"
-       aria-label="Show or hide Clem'"
-       title="Show or hide Clem'">
-      <%= render "shared/claim_blob", size: "xs" %>
-    </a>
     <% if current_property %>
       <%= link_to property_path(current_property), class: "nav-icon-link #{'active' if request.path.start_with?(property_path(current_property))}", "aria-label": "My Property", title: "My Property" do %>
         <i class="fa-solid fa-key"></i>
@@ -29,28 +21,15 @@
         <i class="fa-solid fa-building"></i>
       <% end %>
     <% end %>
+    <a href="#"
+       class="nav-icon-link nav-icon-link--clem"
+       data-controller="nav-clem-portal"
+       data-action="click->nav-clem-portal#toggle"
+       aria-label="Show or hide Clem'"
+       title="Show or hide Clem'">
+      <%= render "shared/claim_blob", size: "xs" %>
+    </a>
 
-    <div class="dropup nav-icon-link">
-      <a href="#" class="dropdown-toggle-icon" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Account" title="Account">
-        <i class="fa-solid fa-user"></i>
-      </a>
-      <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-        <span class="dropdown-item-text text-muted small">
-          <%= current_user.name.presence || current_user.email %>
-        </span>
-        <div class="dropdown-divider"></div>
-        <%= link_to "Edit profile", edit_user_registration_path, class: "dropdown-item" %>
-        <%= link_to "Email & password", edit_user_registration_path, class: "dropdown-item" %>
-        <% if current_property %>
-          <%= link_to "Address", edit_property_path(current_property), class: "dropdown-item" %>
-          <%= link_to "Invite tenant", new_property_tenant_path(current_property), class: "dropdown-item" %>
-        <% else %>
-          <%= link_to "Add address", new_property_path, class: "dropdown-item" %>
-        <% end %>
-        <div class="dropdown-divider"></div>
-        <%= link_to "Log out", destroy_user_session_path, data: { turbo_method: :delete }, class: "dropdown-item" %>
-      </div>
-    </div>
   <% else %>
     <%= link_to new_user_session_path, class: "nav-icon-link #{'active' if current_page?(new_user_session_path)}", "aria-label": "Login", title: "Login" do %>
       <i class="fa-solid fa-right-to-bracket"></i>
