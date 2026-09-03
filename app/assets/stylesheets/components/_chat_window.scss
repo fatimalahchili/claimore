@@ -2417,6 +2417,22 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   }
 }
 
+// Restored on connect() when she was tucked into her nav-bar icon before the
+// last Turbo visit (see mascot_controller.js) — no vanish animation to
+// replay, she's just already gone. The extra .chat-widget--page-scrolled
+// selector matches that rule's specificity so this still wins regardless of
+// scroll state.
+.chat-widget--vanished .chat-widget__launcher,
+.chat-widget--vanished.chat-widget--page-scrolled .chat-widget__launcher {
+  opacity: 0;
+  pointer-events: none;
+  transform: none;
+
+  &::after {
+    display: none;
+  }
+}
+
 @media (max-width: 767px) {
   .chat-widget {
     --chat-launcher-bottom: calc(var(--chat-navbar-h) + var(--chat-navbar-gap) + 10px + env(safe-area-inset-bottom));
