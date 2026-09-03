@@ -27,7 +27,7 @@ body {
   background: $bg-surface;
   border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow:
-    0 8px 32px rgba(15, 23, 42, 0.12),
+    0 8px 32px rgba($text-main, 0.12),
     inset 0 1px 1px rgba(255, 255, 255, 0.8),
     inset 0 -1px 8px rgba(255, 255, 255, 0.4);
 
@@ -76,7 +76,7 @@ body {
   color: $brand-primary;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), $brand-primary-light);
   box-shadow:
-    0 2px 8px rgba(109, 74, 255, 0.25),
+    0 2px 8px rgba($brand-primary, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
@@ -150,7 +150,7 @@ body {
   margin-bottom: 0.75rem;
   border-radius: 16px;
   border: 1px solid $border-light;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.15);
+  box-shadow: 0 12px 32px rgba($text-main, 0.15);
 }
 
 @media (max-width: 420px) {

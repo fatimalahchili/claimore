@@ -1,31 +1,38 @@
+// Palette source colors
+$ink-black: #04151F;
+$dark-slate-grey: #183A37;
+$wheat: #EFD6AC;
+$burnt-orange: #C44900;
+$midnight-violet: #432534;
+
 // Brand Colors
-$brand-primary: #6D4AFF;        // Claimore Signature Purple
-$brand-primary-hover: #5835E5;
-$brand-primary-light: #F0ECFF;
-$brand-primary-subtle: #FAF8FF;
+$brand-primary: $midnight-violet;      // Claimore Signature Plum
+$brand-primary-hover: darken($brand-primary, 8%);
+$brand-primary-light: lighten($brand-primary, 45%);
+$brand-primary-subtle: lighten($brand-primary, 50%);
 
 // Neutral & Text Colors
-$text-main: #0F172A;            // Deep Slate
-$text-secondary: #475569;       // Medium Slate
-$text-muted: #94A3B8;           // Light Slate
+$text-main: $ink-black;                          // Ink Black
+$text-secondary: mix($dark-slate-grey, white, 85%);  // Dark Slate Grey
+$text-muted: mix($dark-slate-grey, white, 48%);
 $text-white: #FFFFFF;
 
 // Backgrounds & Surface
-$bg-page: #F8FAFC;              // Off-white canvas
-$bg-surface: #FFFFFF;           // Clean card white
-$bg-subtle: #F1F5F9;
+$bg-page: mix($wheat, white, 30%);    // Warm off-white canvas
+$bg-surface: #FFFFFF;                 // Clean card white
+$bg-subtle: mix($wheat, white, 45%);
 
 // Borders
-$border-light: #E2E8F0;
-$border-medium: #CBD5E1;
-$border-focus: #6D4AFF;
+$border-light: mix($dark-slate-grey, white, 10%);
+$border-medium: mix($dark-slate-grey, white, 21%);
+$border-focus: $brand-primary;
 
 // Status & Alert Colors
-$success: #10B981;              // Green
-$success-light: #ECFDF5;
-$warning: #F59E0B;              // Amber / Urgency
-$warning-light: #FFFBEB;
-$danger: #EF4444;               // Red / Error
-$danger-light: #FEF2F2;
-$info: #3B82F6;                 // Blue / AI Notice
-$info-light: #EFF6FF;
+$success: $dark-slate-grey;
+$success-light: lighten($success, 48%);
+$warning: darken($wheat, 35%);        // Amber, deepened from Wheat
+$warning-light: $wheat;
+$danger: $burnt-orange;
+$danger-light: lighten($danger, 40%);
+$info: lighten($text-main, 30%);      // Blue drawn from Ink Black's navy undertone
+$info-light: lighten($info, 40%);
