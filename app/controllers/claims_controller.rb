@@ -20,11 +20,13 @@ class ClaimsController < ApplicationController
   end
 
   def new
+    @properties = current_user.properties.order(:address)
     @property = claim_property
     @claim = @property.claims.new
   end
 
   def create
+    @properties = current_user.properties.order(:address)
     @property = claim_property
     @claim = @property.claims.new(claim_params)
     if @claim.save
@@ -79,9 +81,9 @@ class ClaimsController < ApplicationController
 
   def claim_property
     property_id = params[:property_id].presence || params.dig(:claim, :property_id)
-    return current_user.properties.first! if property_id.blank?
+    return @properties.first! if property_id.blank?
 
-    current_user.properties.find(property_id)
+    @properties.find(property_id)
   end
 
   private
