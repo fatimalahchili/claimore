@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
 
   def redirect_to_www
     if request.host == "claim-ore.de"
-      redirect_to "https://www.claim-ore.de#{request.fullpath}", status: :moved_permanently
+      redirect_to "https://www.claim-ore.de#{request.fullpath}", status: :moved_permanently, allow_other_host: true
     end
   end
 
