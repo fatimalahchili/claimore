@@ -1,16 +1,44 @@
-<h1>New claim</h1>
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <%= render "shared/back_link", fallback_path: claims_path(property_id: @property.id) %>
 
-<%= form_with model: @claim, url: claims_path do |f| %>
-  <% if @claim.errors.any? %>
-    <ul>
-      <% @claim.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  <% end %>
+      <div class="card border-0 shadow-sm mt-3">
+        <div class="card-body p-4 p-md-5">
+          <div class="d-flex align-items-center gap-3 mb-4">
+            <span class="property-dashboard-card__icon" aria-hidden="true">
+              <i class="fa-solid fa-folder-plus"></i>
+            </span>
+            <div>
+              <p class="text-muted small text-uppercase fw-semibold mb-1">Housing issue</p>
+              <h1 class="h3 fw-bold mb-0">Add a new claim</h1>
+            </div>
+          </div>
 
-  <%= f.hidden_field :property_id, value: @property.id %>
-  <%= f.text_field :category, placeholder: "Category" %>
-  <%= f.text_field :status, placeholder: "Status" %>
-  <%= f.submit "Create claim" %>
-<% end %>
+          <%= simple_form_for @claim, url: claims_path do |f| %>
+            <%= f.error_notification %>
+
+            <%= f.input :property_id,
+                        collection: @properties,
+                        label: "Property",
+                        label_method: :address,
+                        value_method: :id,
+                        selected: @property.id,
+                        include_blank: false %>
+            <%= f.input :category,
+                        label: "What is the issue?",
+                        placeholder: "For example: Water leak or broken heating" %>
+            <%= f.input :status,
+                        collection: Claim.statuses.keys.map { |status| [status.humanize, status] },
+                        include_blank: false %>
+
+            <div class="d-flex flex-wrap gap-2 mt-4">
+              <%= f.button :submit, "Create claim", class: "btn btn-primary" %>
+              <%= link_to "Cancel", claims_path(property_id: @property.id), class: "btn btn-outline-secondary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

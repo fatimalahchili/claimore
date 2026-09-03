@@ -38,11 +38,16 @@ class ClaimsControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "new keeps the selected property in the form" do
+  test "new shows the current user's properties and selects the requested property" do
     get new_claim_url(property_id: @property.id)
 
     assert_response :success
-    assert_select "input[name='claim[property_id]'][value=?]", @property.id.to_s
+    assert_select "h1", text: "Add a new claim"
+    assert_select "select[name='claim[property_id]']" do
+      assert_select "option[value=?][selected]", @property.id.to_s, text: @property.address
+      assert_select "option[value=?]", @other_property.id.to_s, count: 0
+    end
+    assert_select "input[type='submit'][value='Create claim']"
   end
 
   test "create associates the claim with the selected property" do
