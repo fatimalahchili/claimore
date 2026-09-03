@@ -58,7 +58,7 @@ class ClaimTimelineAgent
   private
 
   def configured_chat
-    fast_chat = @chat.with_thinking(effort: :low).with_params(max_completion_tokens: 1200)
+    fast_chat = @chat.with_thinking(effort: :minimal).with_params(max_completion_tokens: 1200)
 
     unless @chat.claim
       return fast_chat.with_runtime_instructions(GENERAL_INSTRUCTIONS).with_tools(GetRelevantLawTextsTool.new)
