@@ -2598,7 +2598,7 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
   padding: 16px;
 }
 
@@ -2622,12 +2622,16 @@ $chat-launcher-size: clamp(64px, 7vw, 84px);
 
 .chat-bubble {
   max-width: 80%;
-  padding: 10px 14px;
+  padding: 6px 14px;
   border-radius: 16px;
   font-size: 0.88rem;
   line-height: 1.45;
-  white-space: pre-wrap;
   overflow-wrap: break-word;
+}
+
+.chat-bubble--user > div,
+.chat-bubble--error > div {
+  white-space: pre-wrap;
 }
 
 .chat-bubble--user {
