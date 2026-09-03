@@ -5,6 +5,6 @@
     <div class="chat-bubble__typing" data-typing-indicator-target="dots">
       <span></span><span></span><span></span>
     </div>
-    <div id="message_<%= assistant.id %>_content" data-typing-indicator-target="content"><%= assistant.content %></div>
+    <div id="message_<%= assistant.id %>_content" class="chat-bubble__markdown" data-controller="markdown" data-typing-indicator-target="content"><%= assistant.content %></div>
   </div>
 </div>
