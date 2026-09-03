@@ -1,0 +1,49 @@
+<% content_for :title, "Properties" %>
+
+<div class="container py-5">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <p class="text-muted small text-uppercase fw-semibold mb-1">Your homes</p>
+      <h1 class="h2 fw-bold mb-0">Properties</h1>
+    </div>
+    <%= link_to new_property_path, class: "btn btn-primary" do %>
+      <i class="fa-solid fa-plus me-1" aria-hidden="true"></i>
+      Add property
+    <% end %>
+  </div>
+
+  <% if @properties.any? %>
+    <div class="row g-3">
+      <% @properties.each do |property| %>
+        <div class="col-md-6">
+          <%= link_to property_path(property), class: "card h-100 border-0 shadow-sm text-decoration-none property-dashboard-card" do %>
+            <div class="card-body p-4 d-flex align-items-center gap-3">
+              <span class="property-dashboard-card__icon" aria-hidden="true">
+                <i class="fa-solid fa-building"></i>
+              </span>
+              <span class="flex-grow-1 min-width-0">
+                <strong class="d-block text-dark"><%= property.address.presence || "Property ##{property.id}" %></strong>
+                <small class="text-muted">
+                  <%= pluralize(property.claims.count, "claim") %>
+                  <% if property.moved_on.present? %>
+                    · Since <%= property.moved_on.strftime("%B %Y") %>
+                  <% end %>
+                </small>
+              </span>
+              <i class="fa-solid fa-arrow-right text-primary" aria-hidden="true"></i>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-5 text-center">
+        <i class="fa-solid fa-building-circle-xmark fs-1 text-muted mb-3" aria-hidden="true"></i>
+        <h2 class="h5 fw-bold">No properties yet</h2>
+        <p class="text-muted mb-3">Add your first property to start organising claims and tenants.</p>
+        <%= link_to "Add property", new_property_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>

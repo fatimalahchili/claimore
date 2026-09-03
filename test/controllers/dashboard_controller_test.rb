@@ -22,12 +22,12 @@ class DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", new_property_path, text: /Add property/
   end
 
-  test "shows add property icon in bottom navigation without a property" do
+  test "shows properties icon in bottom navigation without a property" do
     @user.tenants.destroy_all
 
     get dashboard_url
 
     assert_response :success
-    assert_select "a[aria-label='Add Property'][href=?]", new_property_path
+    assert_select "a[aria-label='Properties'][href=?]", properties_path
   end
 end
