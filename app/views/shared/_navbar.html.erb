@@ -9,17 +9,16 @@
     <%= link_to contacts_path, class: "nav-icon-link #{'active' if request.path.start_with?(contacts_path)}", "aria-label": "Contacts", title: "Contacts" do %>
       <i class="fa-solid fa-address-book"></i>
     <% end %>
-    <%= link_to templates_path, class: "nav-icon-link #{'active' if request.path.start_with?(templates_path)}", "aria-label": "Templates", title: "Templates" do %>
-      <i class="fa-solid fa-file-lines"></i>
-    <% end %>
-    <% if current_property %>
-      <%= link_to property_path(current_property), class: "nav-icon-link #{'active' if request.path.start_with?(property_path(current_property))}", "aria-label": "My Property", title: "My Property" do %>
-        <i class="fa-solid fa-key"></i>
-      <% end %>
-    <% else %>
-      <%= link_to new_property_path, class: "nav-icon-link #{'active' if current_page?(new_property_path)}", "aria-label": "Add Property", title: "Add Property" do %>
-        <i class="fa-solid fa-building"></i>
-      <% end %>
+    <a href="#"
+       class="nav-icon-link nav-icon-link--clem"
+       data-controller="nav-clem-portal"
+       data-action="click->nav-clem-portal#toggle"
+       aria-label="Show or hide Clem'"
+       title="Show or hide Clem'">
+      <%= render "shared/claim_blob", size: "xs" %>
+    </a>
+    <%= link_to properties_path, class: "nav-icon-link #{'active' if request.path.start_with?(properties_path)}", "aria-label": "Properties", title: "Properties" do %>
+      <i class="fa-solid fa-building"></i>
     <% end %>
     <a href="#"
        class="nav-icon-link nav-icon-link--clem"

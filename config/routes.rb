@@ -31,7 +31,7 @@ Rails.application.routes.draw do
     resources :letters, only: %i[new create]
   end
   resources :letters, only: %i[show destroy]
-  resources :properties, only: %i[new show edit create update destroy] do
+  resources :properties, only: %i[index new show edit create update destroy] do
     resources :tenants, only: %i[index new create]
     resources :tenant_invitations, only: %i[create show]
   end
@@ -40,7 +40,6 @@ Rails.application.routes.draw do
   post "invitations/:token/accept", to: "tenant_invitations#accept", as: :accept_invitation
 
   resources :entries, except: :index
-  resources :templates, only: %i[show index]
   resources :contacts
   resources :tenants, only: %i[edit update destroy]
 end
