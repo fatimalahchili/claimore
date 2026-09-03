@@ -9,9 +9,6 @@
     <%= link_to contacts_path, class: "nav-icon-link #{'active' if request.path.start_with?(contacts_path)}", "aria-label": "Contacts", title: "Contacts" do %>
       <i class="fa-solid fa-address-book"></i>
     <% end %>
-    <%= link_to templates_path, class: "nav-icon-link #{'active' if request.path.start_with?(templates_path)}", "aria-label": "Templates", title: "Templates" do %>
-      <i class="fa-solid fa-file-lines"></i>
-    <% end %>
     <a href="#"
        class="nav-icon-link nav-icon-link--clem"
        data-controller="nav-clem-portal"

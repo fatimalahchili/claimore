@@ -40,7 +40,6 @@ Rails.application.routes.draw do
   post "invitations/:token/accept", to: "tenant_invitations#accept", as: :accept_invitation
 
   resources :entries, except: :index
-  resources :templates, only: %i[show index]
   resources :contacts
   resources :tenants, only: %i[edit update destroy]
 end
