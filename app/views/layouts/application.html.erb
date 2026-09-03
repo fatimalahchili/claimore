@@ -26,6 +26,7 @@
   <body class="app-page app-page--<%= controller_name.dasherize %> app-page--<%= controller_name.dasherize %>-<%= action_name.dasherize %>">
     <%= yield %>
 
+    <%= render "shared/topbar" %>
     <%= render "shared/navbar" %>
     <%= render "shared/flashes" %>
     <%= render "shared/chat_window" %>
