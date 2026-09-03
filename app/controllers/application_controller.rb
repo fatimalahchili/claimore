@@ -12,6 +12,10 @@ class ApplicationController < ActionController::Base
   helper_method :guest_chat_session_id
   # mark methods below as "internal use only" — not callable from routes/views directly
 
+  def default_url_options
+    { host: ENV["DOMAIN"] || "localhost:3000" }
+  end
+
   protected
 
   # define a method that customizes which form fields Devise is allowed to read
