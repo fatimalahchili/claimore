@@ -1,5 +1,5 @@
 <% if message.role == "assistant" %>
-  <%= render "messages/assistant", message: message %>
+  <%= render "messages/assistant", message: message, final: local_assigns[:final] %>
 <% else %>
   <%= render "messages/user", message: message %>
 <% end %>
