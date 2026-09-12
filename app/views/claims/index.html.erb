@@ -18,7 +18,10 @@
       <%= form_with url: claims_path, method: :get, class: "flex-grow-1", data: { turbo_frame: "_top" } do |form| %>
         <%= form.label :property_id, "Property", class: "form-label small fw-semibold" %>
         <%= form.select :property_id,
-                        options_from_collection_for_select(@properties, :id, :address, @property&.id),
+                        options_for_select(
+                          [["All properties", "all"]] + @properties.map { |property| [property.address, property.id] },
+                          @property&.id || "all"
+                        ),
                         {},
                         class: "form-select",
                         onchange: "this.form.requestSubmit()" %>
@@ -31,13 +34,13 @@
     </div>
 
     <div class="claims-index__property-heading d-flex justify-content-between align-items-center mb-3">
-      <h2 class="h4 fw-bold mb-0"><%= @property.address %></h2>
+      <h2 class="h4 fw-bold mb-0"><%= @property&.address || "All properties" %></h2>
       <% if @archived_claims_count.positive? %>
         <% if @show_archived %>
-          <%= link_to "Hide archived claims", claims_path(property_id: @property.id), class: "btn btn-sm btn-outline-secondary" %>
+          <%= link_to "Hide archived claims", claims_path(property_id: @property&.id), class: "btn btn-sm btn-outline-secondary" %>
         <% else %>
           <%= link_to "Show archived claims",
-                      claims_path(property_id: @property.id, show_archived: 1),
+                      claims_path(property_id: @property&.id, show_archived: 1),
                       class: "btn btn-sm btn-outline-secondary" %>
         <% end %>
       <% end %>
@@ -54,6 +57,10 @@
                   <div class="min-width-0">
                     <p class="text-muted small mb-1">Claim #<%= claim.id %></p>
                     <h3 class="h5 fw-bold mb-0"><%= claim.category.presence || "Housing claim" %></h3>
+                    <p class="text-muted small mb-0 mt-1">
+                      <i class="fa-solid fa-building me-1" aria-hidden="true"></i>
+                      <%= claim.property.address.presence || "Property ##{claim.property.id}" %>
+                    </p>
                   </div>
                 </div>
                 <span class="badge rounded-pill <%= claim.status == 'archived' ? 'text-bg-secondary' : 'text-bg-success' %> text-uppercase">
@@ -72,8 +79,8 @@
     <% else %>
       <section class="text-center border rounded-4 p-5 bg-white">
         <h3 class="h5 fw-bold">No <%= @show_archived ? "claims" : "active claims" %> found</h3>
-        <p class="text-muted mb-3">This property has no claims in the selected view.</p>
-        <%= link_to "Create a claim", new_claim_path(property_id: @property.id), class: "btn btn-primary" %>
+        <p class="text-muted mb-3">There are no claims in the selected view.</p>
+        <%= link_to "Create a claim", new_claim_path(property_id: @property&.id), class: "btn btn-primary" %>
       </section>
     <% end %>
   <% else %>

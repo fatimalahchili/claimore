@@ -8,19 +8,36 @@ class ClaimsControllerTest < ActionDispatch::IntegrationTest
     @other_property = Property.create!(address: "456 Hidden St", moved_on: Date.current)
     Tenant.create!(user: @user, property: @property)
     Tenant.create!(user: @other_user, property: @other_property)
+    @second_property = Property.create!(address: "789 Oak Ave", moved_on: Date.current)
+    Tenant.create!(user: @user, property: @second_property)
     @active_claim = Claim.create!(property: @property, category: "Active leak", status: "active")
+    @second_claim = Claim.create!(property: @second_property, category: "Broken window", status: "active")
     @archived_claim = Claim.create!(property: @property, category: "Old heating issue", status: "archived")
     @hidden_claim = Claim.create!(property: @other_property, category: "Private claim", status: "active")
     sign_in @user
   end
 
-  test "index shows active claims for the current user's property" do
+  test "index defaults to all properties and shows their active claims with property names" do
     get claims_url
 
     assert_response :success
+    assert_select "option[value='all'][selected]", text: "All properties"
+    assert_select "h2", text: "All properties"
     assert_select "h3", text: @active_claim.category
+    assert_select "h3", text: @second_claim.category
+    assert_select "article", text: /#{Regexp.escape(@property.address)}/
+    assert_select "article", text: /#{Regexp.escape(@second_property.address)}/
     assert_select "h3", { text: @archived_claim.category, count: 0 }
     assert_select "h3", { text: @hidden_claim.category, count: 0 }
+  end
+
+  test "index filters claims by the selected property" do
+    get claims_url(property_id: @property.id)
+
+    assert_response :success
+    assert_select "h2", text: @property.address
+    assert_select "h3", text: @active_claim.category
+    assert_select "h3", { text: @second_claim.category, count: 0 }
   end
 
   test "index can reveal archived claims" do
